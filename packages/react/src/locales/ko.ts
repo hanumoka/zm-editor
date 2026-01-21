@@ -109,6 +109,7 @@ export const koLocale: ZmEditorLocale = {
       placeholder: '링크를 붙여넣어 북마크 생성...',
       editUrl: 'URL 수정',
       openInNewTab: '새 탭에서 열기',
+      addCaption: '캡션 추가...',
     },
     embed: {
       placeholder: 'YouTube, Vimeo, CodePen, CodeSandbox URL 붙여넣기...',

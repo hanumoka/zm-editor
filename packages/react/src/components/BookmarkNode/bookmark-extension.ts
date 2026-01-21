@@ -92,6 +92,14 @@ export const Bookmark = Node.create<BookmarkOptions>({
           return { 'data-site-name': attributes.siteName };
         },
       },
+      caption: {
+        default: '',
+        parseHTML: (element) => element.getAttribute('data-caption') || '',
+        renderHTML: (attributes) => {
+          if (!attributes.caption) return {};
+          return { 'data-caption': attributes.caption };
+        },
+      },
     };
   },
 

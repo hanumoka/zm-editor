@@ -109,6 +109,7 @@ export const enLocale: ZmEditorLocale = {
       placeholder: 'Paste a link to create bookmark...',
       editUrl: 'Edit URL',
       openInNewTab: 'Open in new tab',
+      addCaption: 'Add a caption...',
     },
     embed: {
       placeholder: 'Paste YouTube, Vimeo, CodePen, or CodeSandbox URL...',

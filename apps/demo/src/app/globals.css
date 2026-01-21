@@ -1387,3 +1387,38 @@ body {
   background-color: #f3f4f6;
   color: #374151;
 }
+
+/* Bookmark Caption */
+.zm-bookmark-caption {
+  padding: 8px 16px;
+  text-align: center;
+}
+
+.zm-bookmark-caption-text {
+  display: inline-block;
+  font-size: 0.875rem;
+  color: #6b7280;
+  cursor: text;
+  min-width: 100px;
+}
+
+.zm-bookmark-caption-text:hover {
+  color: #374151;
+}
+
+.zm-bookmark-caption-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 4px 8px;
+  font-size: 0.875rem;
+  color: #374151;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #3b82f6;
+  outline: none;
+  text-align: center;
+}
+
+.zm-bookmark-caption-input::placeholder {
+  color: #9ca3af;
+}

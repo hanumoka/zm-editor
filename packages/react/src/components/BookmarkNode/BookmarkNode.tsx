@@ -55,12 +55,17 @@ function getSafeHref(url: string): string {
  */
 export function BookmarkNode({ node, updateAttributes, selected }: BookmarkNodeProps) {
   const locale = useLocale();
-  const { url, title, description, image, favicon, siteName } = node.attrs;
+  const { url, title, description, image, favicon, siteName, caption = '' } = node.attrs;
 
   // URL 입력 상태
   const [isEditing, setIsEditing] = useState(!url);
   const [urlValue, setUrlValue] = useState(url || '');
   const urlInputRef = useRef<HTMLInputElement>(null);
+
+  // 캡션 편집 상태
+  const [isEditingCaption, setIsEditingCaption] = useState(false);
+  const [captionValue, setCaptionValue] = useState(caption);
+  const captionInputRef = useRef<HTMLInputElement>(null);
 
   // 이미지 로드 에러 상태 (DOM 직접 조작 대신 상태로 관리)
   const [faviconError, setFaviconError] = useState(false);
@@ -82,6 +87,11 @@ export function BookmarkNode({ node, updateAttributes, selected }: BookmarkNodeP
   useEffect(() => {
     setImageError(false);
   }, [image]);
+
+  // 캡션 동기화
+  useEffect(() => {
+    setCaptionValue(caption);
+  }, [caption]);
 
   // URL 저장
   const handleUrlSave = useCallback(() => {
@@ -131,6 +141,32 @@ export function BookmarkNode({ node, updateAttributes, selected }: BookmarkNodeP
   const handleEdit = useCallback(() => {
     setIsEditing(true);
     setTimeout(() => urlInputRef.current?.focus(), 0);
+  }, []);
+
+  // 캡션 저장
+  const handleCaptionSave = useCallback(() => {
+    updateAttributes({ caption: captionValue });
+    setIsEditingCaption(false);
+  }, [captionValue, updateAttributes]);
+
+  // 캡션 입력 키 핸들러
+  const handleCaptionKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleCaptionSave();
+      } else if (e.key === 'Escape') {
+        setCaptionValue(caption);
+        setIsEditingCaption(false);
+      }
+    },
+    [handleCaptionSave, caption]
+  );
+
+  // 캡션 편집 시작
+  const handleCaptionClick = useCallback(() => {
+    setIsEditingCaption(true);
+    setTimeout(() => captionInputRef.current?.focus(), 0);
   }, []);
 
   // 포커스 처리
@@ -247,6 +283,28 @@ export function BookmarkNode({ node, updateAttributes, selected }: BookmarkNodeP
           >
             <ExternalLinkIcon />
           </a>
+        </div>
+      )}
+
+      {/* 캡션 */}
+      {(selected || caption) && (
+        <div className="zm-bookmark-caption">
+          {isEditingCaption ? (
+            <input
+              ref={captionInputRef}
+              type="text"
+              className="zm-bookmark-caption-input"
+              value={captionValue}
+              onChange={(e) => setCaptionValue(e.target.value)}
+              onBlur={handleCaptionSave}
+              onKeyDown={handleCaptionKeyDown}
+              placeholder={locale.nodes.bookmark.addCaption}
+            />
+          ) : (
+            <span className="zm-bookmark-caption-text" onClick={handleCaptionClick}>
+              {caption || locale.nodes.bookmark.addCaption}
+            </span>
+          )}
         </div>
       )}
     </NodeViewWrapper>

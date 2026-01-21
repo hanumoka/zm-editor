@@ -89,6 +89,7 @@ export interface BookmarkNodeLocale {
   placeholder: string;
   editUrl: string;
   openInNewTab: string;
+  addCaption: string;
 }
 
 /**
