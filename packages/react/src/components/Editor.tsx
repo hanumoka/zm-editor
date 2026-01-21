@@ -516,17 +516,8 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
       };
     }, [editor, readOnly, mergedImageConfig, processImageFile]);
 
-    if (!editor) {
-      return (
-        <div className="zm-editor">
-          <div className="zm-editor-content" style={{ minHeight: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9ca3af' }}>
-            {locale.editor.loading}
-          </div>
-        </div>
-      );
-    }
-
     // 파일 선택 핸들러 (슬래시 명령어에서 트리거)
+    // Hooks는 조건부 return 전에 호출되어야 함
     const handleFileInputChange = useCallback(
       (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
@@ -538,6 +529,16 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
       },
       [processImageFile]
     );
+
+    if (!editor) {
+      return (
+        <div className="zm-editor">
+          <div className="zm-editor-content" style={{ minHeight: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9ca3af' }}>
+            {locale.editor.loading}
+          </div>
+        </div>
+      );
+    }
 
     return (
       <div className="zm-editor">
@@ -586,10 +587,38 @@ class SlashMenuComponent {
   private element: HTMLElement | null = null;
   private selectedIndex = 0;
   private clickHandlers: Array<{ element: Element; handler: () => void }> = [];
+  private keydownHandler: ((event: KeyboardEvent) => void) | null = null;
 
   constructor(props: SlashMenuRenderProps) {
     this.props = props;
     this.render();
+    this.addGlobalKeydownListener();
+  }
+
+  // 전역 keydown 리스너 추가 (테이블 셀에서 화살표 키 충돌 방지)
+  private addGlobalKeydownListener() {
+    this.keydownHandler = (event: KeyboardEvent) => {
+      if (['ArrowDown', 'ArrowUp', 'Enter', 'Escape'].includes(event.key)) {
+        // 이벤트 전파 중단하여 테이블 키보드 핸들링 방지
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (event.key === 'Escape') {
+          this.destroy();
+        } else {
+          this.onKeyDown(event);
+        }
+      }
+    };
+    // capture phase에서 이벤트를 가로채서 다른 핸들러보다 먼저 처리
+    document.addEventListener('keydown', this.keydownHandler, true);
+  }
+
+  private removeGlobalKeydownListener() {
+    if (this.keydownHandler) {
+      document.removeEventListener('keydown', this.keydownHandler, true);
+      this.keydownHandler = null;
+    }
   }
 
   updateProps(props: SlashMenuRenderProps) {
@@ -710,6 +739,7 @@ class SlashMenuComponent {
   }
 
   destroy() {
+    this.removeGlobalKeydownListener();
     this.removeEventListeners();
     this.element?.remove();
     this.element = null;

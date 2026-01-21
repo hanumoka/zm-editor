@@ -131,13 +131,18 @@ export function createStarterExtensions(options: ZmStarterKitOptions = {}) {
 
     // 플레이스홀더
     Placeholder.configure({
-      placeholder: ({ node }) => {
+      placeholder: ({ node, editor }) => {
+        // 테이블 내부에서는 placeholder 표시하지 않음
+        if (editor.isActive('table')) {
+          return '';
+        }
         if (node.type.name === 'heading') {
           return `Heading ${node.attrs.level}`;
         }
         return placeholder;
       },
-      includeChildren: true,
+      includeChildren: false, // 중첩 노드에서 placeholder 비활성화
+      showOnlyCurrent: true, // 현재 포커스된 노드에만 placeholder 표시
     }),
 
     // 글자 수 제한
