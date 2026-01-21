@@ -17,7 +17,17 @@ export function ImageNode({ node, updateAttributes, selected }: ImageNodeProps) 
   // 리사이즈 시작 시점의 초기값 저장 (중앙/우측 정렬에서 안정적인 리사이즈를 위함)
   const resizeStartRef = useRef<{ startX: number; startWidth: number } | null>(null);
 
-  const { src, alt, title, width, alignment = 'center' } = node.attrs;
+  const { src, alt, title, width, alignment = 'center', caption = '' } = node.attrs;
+
+  // 캡션 편집 상태
+  const [isEditingCaption, setIsEditingCaption] = useState(false);
+  const [captionValue, setCaptionValue] = useState(caption);
+  const captionInputRef = useRef<HTMLInputElement>(null);
+
+  // caption 속성이 변경되면 로컬 상태 동기화
+  useEffect(() => {
+    setCaptionValue(caption);
+  }, [caption]);
 
   // 이미지 로드 시 초기 크기 설정
   const handleImageLoad = useCallback(() => {
@@ -104,6 +114,41 @@ export function ImageNode({ node, updateAttributes, selected }: ImageNodeProps) 
     [updateAttributes]
   );
 
+  // 캡션 저장
+  const handleCaptionSave = useCallback(() => {
+    updateAttributes({ caption: captionValue });
+    setIsEditingCaption(false);
+  }, [captionValue, updateAttributes]);
+
+  // 캡션 입력 키 핸들러
+  const handleCaptionKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleCaptionSave();
+      } else if (e.key === 'Escape') {
+        setCaptionValue(caption);
+        setIsEditingCaption(false);
+      }
+    },
+    [handleCaptionSave, caption]
+  );
+
+  // 캡션 편집 시작
+  const handleCaptionClick = useCallback(() => {
+    setIsEditingCaption(true);
+    // 다음 렌더 후 input에 포커스
+    setTimeout(() => captionInputRef.current?.focus(), 0);
+  }, []);
+
+  // Alt 텍스트 편집
+  const handleAltTextEdit = useCallback(() => {
+    const newAlt = window.prompt('Alt text (이미지 설명):', alt || '');
+    if (newAlt !== null) {
+      updateAttributes({ alt: newAlt });
+    }
+  }, [alt, updateAttributes]);
+
   const alignmentStyle: React.CSSProperties = {
     display: 'flex',
     justifyContent:
@@ -172,8 +217,42 @@ export function ImageNode({ node, updateAttributes, selected }: ImageNodeProps) 
               >
                 <AlignRightIcon />
               </button>
+              <div className="zm-image-toolbar-divider" />
+              <button
+                type="button"
+                className="zm-image-toolbar-btn"
+                onClick={handleAltTextEdit}
+                title="Edit alt text"
+              >
+                <AltTextIcon />
+              </button>
             </div>
           </>
+        )}
+
+        {/* 캡션 (선택 시 또는 캡션이 있을 때 표시) */}
+        {(selected || caption) && (
+          <div className="zm-image-caption">
+            {isEditingCaption ? (
+              <input
+                ref={captionInputRef}
+                type="text"
+                className="zm-image-caption-input"
+                value={captionValue}
+                onChange={(e) => setCaptionValue(e.target.value)}
+                onBlur={handleCaptionSave}
+                onKeyDown={handleCaptionKeyDown}
+                placeholder="Add a caption..."
+              />
+            ) : (
+              <span
+                className="zm-image-caption-text"
+                onClick={handleCaptionClick}
+              >
+                {caption || 'Add a caption...'}
+              </span>
+            )}
+          </div>
         )}
       </div>
     </NodeViewWrapper>
@@ -207,6 +286,15 @@ function AlignRightIcon() {
       <line x1="3" y1="6" x2="21" y2="6" />
       <line x1="9" y1="12" x2="21" y2="12" />
       <line x1="6" y1="18" x2="21" y2="18" />
+    </svg>
+  );
+}
+
+function AltTextIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+      <text x="12" y="15" fontSize="8" textAnchor="middle" fill="currentColor" stroke="none">Alt</text>
     </svg>
   );
 }

@@ -670,7 +670,63 @@ body {
   color: #3b82f6;
 }
 
+/* 툴바 구분선 */
+.zm-image-toolbar-divider {
+  width: 1px;
+  height: 20px;
+  background-color: #e5e7eb;
+  margin: 0 4px;
+}
+
 /* 리사이즈 중 선택 방지 */
 .zm-image-node.is-resizing * {
   user-select: none;
+}
+
+/* ===== Image Caption ===== */
+.zm-image-caption {
+  width: 100%;
+  text-align: center;
+  margin-top: 8px;
+  padding: 4px 8px;
+}
+
+.zm-image-caption-text {
+  display: inline-block;
+  font-size: 0.875rem;
+  color: #6b7280;
+  cursor: text;
+  min-width: 100px;
+}
+
+.zm-image-caption-text:hover {
+  color: #374151;
+}
+
+/* 캡션이 비어있을 때 (placeholder 스타일) */
+.zm-image-node:not(.is-selected) .zm-image-caption-text:empty,
+.zm-image-caption-text:not(:empty) {
+  color: #374151;
+}
+
+.zm-image-node.is-selected .zm-image-caption-text:empty::before {
+  content: 'Add a caption...';
+  color: #9ca3af;
+}
+
+.zm-image-caption-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 4px 8px;
+  font-size: 0.875rem;
+  color: #374151;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #3b82f6;
+  outline: none;
+  text-align: center;
+}
+
+.zm-image-caption-input::placeholder {
+  color: #9ca3af;
 }

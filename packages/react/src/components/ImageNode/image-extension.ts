@@ -67,6 +67,20 @@ export const ResizableImage = Image.extend<ResizableImageOptions>({
           };
         },
       },
+      caption: {
+        default: '',
+        parseHTML: (element) => {
+          return element.getAttribute('data-caption') || '';
+        },
+        renderHTML: (attributes) => {
+          if (!attributes.caption) {
+            return {};
+          }
+          return {
+            'data-caption': attributes.caption,
+          };
+        },
+      },
     };
   },
 
