@@ -1,0 +1,46 @@
+{
+  "name": "@zm-editor/react",
+  "version": "0.1.0",
+  "description": "React components for zm-editor - Notion-like rich text editor",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@zm-editor/core": "workspace:*",
+    "@tiptap/core": "^2.11.0",
+    "@tiptap/react": "^2.11.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "keywords": ["react", "editor", "rich-text", "notion", "tiptap", "nextjs"],
+  "repository": {
+    "type": "git",
+    "url": ""
+  }
+}

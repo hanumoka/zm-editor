@@ -1,0 +1,258 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: #f9fafb;
+  color: #111827;
+}
+
+/* zm-editor styles */
+.zm-editor {
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.zm-editor-content {
+  min-height: 300px;
+  padding: 1rem;
+  outline: none;
+}
+
+.zm-editor-content:focus {
+  outline: none;
+}
+
+/* Typography */
+.zm-editor-content h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 1.5rem 0 0.5rem;
+  color: #111827;
+}
+
+.zm-editor-content h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 1.25rem 0 0.5rem;
+  color: #111827;
+}
+
+.zm-editor-content h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 1rem 0 0.5rem;
+  color: #111827;
+}
+
+.zm-editor-content p {
+  margin: 0.5rem 0;
+  line-height: 1.6;
+  color: #374151;
+}
+
+/* Lists */
+.zm-editor-content ul,
+.zm-editor-content ol {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.zm-editor-content li {
+  margin: 0.25rem 0;
+  line-height: 1.6;
+}
+
+.zm-editor-content ul {
+  list-style-type: disc;
+}
+
+.zm-editor-content ol {
+  list-style-type: decimal;
+}
+
+/* Task List */
+.zm-task-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.zm-task-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.zm-task-item input[type='checkbox'] {
+  margin-top: 0.25rem;
+}
+
+/* Blockquote */
+.zm-editor-content blockquote {
+  border-left: 4px solid #e5e7eb;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* Code */
+.zm-editor-content code {
+  background-color: #f3f4f6;
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+  font-size: 0.875em;
+}
+
+.zm-editor-content pre {
+  background-color: #1f2937;
+  color: #f9fafb;
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.zm-editor-content pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+/* Link */
+.zm-link {
+  color: #2563eb;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.zm-link:hover {
+  color: #1d4ed8;
+}
+
+/* Image */
+.zm-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+/* Highlight */
+.zm-highlight {
+  background-color: #fef08a;
+  padding: 0.125rem 0;
+}
+
+/* Horizontal Rule */
+.zm-horizontal-rule {
+  border: none;
+  border-top: 2px solid #e5e7eb;
+  margin: 1.5rem 0;
+}
+
+/* Placeholder */
+.zm-editor-content p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #9ca3af;
+  pointer-events: none;
+  height: 0;
+}
+
+/* Bubble Menu */
+.zm-bubble-menu {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.zm-bubble-menu-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #374151;
+  transition: background-color 0.15s;
+}
+
+.zm-bubble-menu-button:hover {
+  background-color: #f3f4f6;
+}
+
+.zm-bubble-menu-button.is-active {
+  background-color: #e5e7eb;
+  color: #111827;
+}
+
+.zm-bubble-menu-divider {
+  width: 1px;
+  height: 24px;
+  background-color: #e5e7eb;
+  margin: 0 4px;
+}
+
+/* Slash Menu */
+.zm-slash-menu {
+  position: fixed;
+  z-index: 50;
+  min-width: 240px;
+  max-height: 320px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  padding: 4px;
+}
+
+.zm-slash-menu-item {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.15s;
+}
+
+.zm-slash-menu-item:hover,
+.zm-slash-menu-item.selected {
+  background-color: #f3f4f6;
+}
+
+.zm-slash-menu-item-title {
+  font-weight: 500;
+  color: #111827;
+  font-size: 0.875rem;
+}
+
+.zm-slash-menu-item-description {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+.zm-slash-menu-empty {
+  padding: 12px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
