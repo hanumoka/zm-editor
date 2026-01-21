@@ -60,6 +60,10 @@ export const enLocale: ZmEditorLocale = {
         title: 'Image',
         description: 'Upload or embed an image',
       },
+      embed: {
+        title: 'Embed',
+        description: 'YouTube, Vimeo, Twitter, CodePen',
+      },
     },
   },
   bubbleMenu: {

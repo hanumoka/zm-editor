@@ -13,3 +13,5 @@ export { SlashMenu, type SlashMenuProps, type SlashMenuRef } from './SlashMenu';
 export { CodeBlock } from './CodeBlock';
 export { ImageNode, ResizableImage } from './ImageNode';
 export type { ImageNodeProps, ResizableImageOptions } from './ImageNode';
+export { EmbedNode, Embed, parseEmbedUrl, getEmbedLabel, isValidEmbedUrl } from './EmbedNode';
+export type { EmbedNodeProps, EmbedOptions, EmbedType, EmbedInfo } from './EmbedNode';

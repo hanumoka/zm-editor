@@ -15,6 +15,7 @@ import { BubbleMenu } from './BubbleMenu';
 import { TableBubbleMenu } from './TableBubbleMenu';
 import { CodeBlock } from './CodeBlock';
 import { ResizableImage } from './ImageNode';
+import { Embed } from './EmbedNode';
 import type { ZmEditorLocale } from '../locales';
 import { enLocale } from '../locales';
 
@@ -261,6 +262,14 @@ function createLocalizedSlashCommands(locale: ZmEditorLocale): SlashCommandItem[
         }
       },
     },
+    {
+      title: commands.embed.title,
+      description: commands.embed.description,
+      searchTerms: ['embed', 'youtube', 'vimeo', 'video', 'twitter', 'codepen', 'codesandbox'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setEmbed({ src: '' }).run();
+      },
+    },
   ];
 }
 
@@ -398,10 +407,18 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         },
       });
 
+      // 임베드 확장 (YouTube, Vimeo, Twitter 등)
+      const embedExtension = Embed.configure({
+        HTMLAttributes: {
+          class: 'zm-embed',
+        },
+      });
+
       return [
         ...baseExtensions,
         codeBlockExtension,
         resizableImageExtension,
+        embedExtension,
         ...(slashCommandExtension ? [slashCommandExtension] : []),
         ...customExtensions,
       ];

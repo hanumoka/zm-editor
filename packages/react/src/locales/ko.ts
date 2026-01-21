@@ -60,6 +60,10 @@ export const koLocale: ZmEditorLocale = {
         title: '이미지',
         description: '이미지 업로드 또는 삽입',
       },
+      embed: {
+        title: '임베드',
+        description: 'YouTube, Vimeo, Twitter, CodePen',
+      },
     },
   },
   bubbleMenu: {
