@@ -15,3 +15,5 @@ export { ImageNode, ResizableImage } from './ImageNode';
 export type { ImageNodeProps, ResizableImageOptions } from './ImageNode';
 export { EmbedNode, Embed, parseEmbedUrl, getEmbedLabel, isValidEmbedUrl } from './EmbedNode';
 export type { EmbedNodeProps, EmbedOptions, EmbedType, EmbedInfo } from './EmbedNode';
+export { CalloutNode, Callout } from './CalloutNode';
+export type { CalloutNodeProps, CalloutOptions, CalloutColor } from './CalloutNode';

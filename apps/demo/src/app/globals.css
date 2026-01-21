@@ -962,3 +962,162 @@ body {
 .zm-embed-caption-input::placeholder {
   color: #9ca3af;
 }
+
+/* ===== Callout Node Styles ===== */
+.zm-callout-node-wrapper {
+  margin: 1rem 0;
+}
+
+.zm-callout-node {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid;
+  position: relative;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.zm-callout-node.is-selected {
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+/* Emoji Button */
+.zm-callout-emoji-container {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.zm-callout-emoji-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-size: 1.25rem;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.zm-callout-emoji-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Emoji Picker */
+.zm-callout-emoji-picker {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 4px;
+  padding: 8px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 50;
+}
+
+.zm-callout-emoji-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-size: 1.125rem;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.zm-callout-emoji-option:hover {
+  background-color: #f3f4f6;
+}
+
+.zm-callout-emoji-option.is-selected {
+  background-color: #dbeafe;
+}
+
+/* Callout Content */
+.zm-callout-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.zm-callout-content-inner {
+  outline: none;
+}
+
+.zm-callout-content-inner p {
+  margin: 0;
+}
+
+.zm-callout-content-inner p + p {
+  margin-top: 0.5rem;
+}
+
+/* Color Toolbar */
+.zm-callout-toolbar {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.zm-callout-color-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.15s;
+}
+
+.zm-callout-color-btn:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+/* Color Picker */
+.zm-callout-color-picker {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  display: flex;
+  gap: 4px;
+  padding: 8px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 50;
+}
+
+.zm-callout-color-option {
+  width: 24px;
+  height: 24px;
+  border: 2px solid;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.zm-callout-color-option:hover {
+  transform: scale(1.1);
+}
+
+.zm-callout-color-option.is-selected {
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}

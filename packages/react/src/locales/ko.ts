@@ -64,6 +64,10 @@ export const koLocale: ZmEditorLocale = {
         title: '임베드',
         description: 'YouTube, Vimeo, Twitter, CodePen',
       },
+      callout: {
+        title: '콜아웃',
+        description: '아이콘이 있는 강조 박스',
+      },
     },
   },
   bubbleMenu: {

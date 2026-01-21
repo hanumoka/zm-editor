@@ -64,6 +64,10 @@ export const enLocale: ZmEditorLocale = {
         title: 'Embed',
         description: 'YouTube, Vimeo, Twitter, CodePen',
       },
+      callout: {
+        title: 'Callout',
+        description: 'Highlighted note box with icon',
+      },
     },
   },
   bubbleMenu: {

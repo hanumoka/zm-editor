@@ -16,6 +16,7 @@ import { TableBubbleMenu } from './TableBubbleMenu';
 import { CodeBlock } from './CodeBlock';
 import { ResizableImage } from './ImageNode';
 import { Embed } from './EmbedNode';
+import { Callout } from './CalloutNode';
 import type { ZmEditorLocale } from '../locales';
 import { enLocale } from '../locales';
 
@@ -270,6 +271,14 @@ function createLocalizedSlashCommands(locale: ZmEditorLocale): SlashCommandItem[
         editor.chain().focus().deleteRange(range).setEmbed({ src: '' }).run();
       },
     },
+    {
+      title: commands.callout.title,
+      description: commands.callout.description,
+      searchTerms: ['callout', 'note', 'info', 'warning', 'tip', 'alert', 'box'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setCallout().run();
+      },
+    },
   ];
 }
 
@@ -414,11 +423,19 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         },
       });
 
+      // Callout 확장 (강조 박스)
+      const calloutExtension = Callout.configure({
+        HTMLAttributes: {
+          class: 'zm-callout',
+        },
+      });
+
       return [
         ...baseExtensions,
         codeBlockExtension,
         resizableImageExtension,
         embedExtension,
+        calloutExtension,
         ...(slashCommandExtension ? [slashCommandExtension] : []),
         ...customExtensions,
       ];
