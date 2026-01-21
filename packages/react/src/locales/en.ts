@@ -55,6 +55,10 @@ export const enLocale: ZmEditorLocale = {
         title: 'Table',
         description: 'Insert a table',
       },
+      image: {
+        title: 'Image',
+        description: 'Upload or embed an image',
+      },
     },
   },
   bubbleMenu: {

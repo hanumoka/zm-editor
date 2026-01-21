@@ -1,7 +1,10 @@
 'use client';
 
-import { useState, useRef } from 'react';
-import { ZmEditor, type ZmEditorRef, type JSONContent } from '@zm-editor/react';
+import { useState, useRef, useCallback } from 'react';
+import { ZmEditor, type ZmEditorRef, type JSONContent, type ImageUploadHandler } from '@zm-editor/react';
+
+// demoapi 서버 URL
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
 const initialContent: JSONContent = {
   type: 'doc',
@@ -75,6 +78,48 @@ const initialContent: JSONContent = {
 export default function Home() {
   const editorRef = useRef<ZmEditorRef>(null);
   const [content, setContent] = useState<JSONContent>(initialContent);
+  const [uploadStatus, setUploadStatus] = useState<string>('');
+
+  // 이미지 업로드 핸들러 (demoapi 연동)
+  const handleImageUpload: ImageUploadHandler = useCallback(async ({ file }) => {
+    setUploadStatus(`Uploading ${file.name}...`);
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+      const response = await fetch(`${API_URL}/upload/image`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Upload failed');
+      }
+
+      const data = await response.json();
+      setUploadStatus(`Uploaded: ${file.name}`);
+
+      // 3초 후 상태 메시지 제거
+      setTimeout(() => setUploadStatus(''), 3000);
+
+      return {
+        url: data.url,
+        alt: file.name,
+      };
+    } catch (error) {
+      setUploadStatus(`Failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw error;
+    }
+  }, []);
+
+  // 이미지 업로드 에러 핸들러
+  const handleImageUploadError = useCallback((error: Error, file: File) => {
+    console.error('Image upload error:', error, file);
+    setUploadStatus(`Error: ${error.message}`);
+    setTimeout(() => setUploadStatus(''), 5000);
+  }, []);
 
   const handleExport = () => {
     const json = editorRef.current?.getJSON();
@@ -113,6 +158,13 @@ export default function Home() {
           </button>
         </div>
 
+        {/* 업로드 상태 표시 */}
+        {uploadStatus && (
+          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-700">
+            {uploadStatus}
+          </div>
+        )}
+
         <ZmEditor
           ref={editorRef}
           initialContent={content}
@@ -120,6 +172,8 @@ export default function Home() {
           placeholder="Type '/' for commands..."
           enableSlashCommand={true}
           enableBubbleMenu={true}
+          onImageUpload={handleImageUpload}
+          onImageUploadError={handleImageUploadError}
         />
 
         <div className="mt-8 p-4 bg-gray-100 rounded-lg">
@@ -129,7 +183,21 @@ export default function Home() {
             <li>Select text to see bubble menu for formatting</li>
             <li>Use markdown shortcuts: <code className="bg-gray-200 px-1 rounded">#</code>, <code className="bg-gray-200 px-1 rounded">##</code>, <code className="bg-gray-200 px-1 rounded">-</code>, <code className="bg-gray-200 px-1 rounded">1.</code></li>
             <li>Press <code className="bg-gray-200 px-1 rounded">Ctrl+B</code> for bold, <code className="bg-gray-200 px-1 rounded">Ctrl+I</code> for italic</li>
+            <li><strong>Image upload:</strong> Drag & drop, paste, or type <code className="bg-gray-200 px-1 rounded">/image</code></li>
           </ul>
+        </div>
+
+        <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <h2 className="text-lg font-semibold mb-2 text-yellow-800">Backend API Required</h2>
+          <p className="text-sm text-yellow-700 mb-2">
+            For image upload to work, start the demoapi server:
+          </p>
+          <code className="block bg-yellow-100 p-2 rounded text-sm text-yellow-900">
+            cd apps/demoapi && pnpm start:dev
+          </code>
+          <p className="text-xs text-yellow-600 mt-2">
+            API runs on http://localhost:4000
+          </p>
         </div>
       </div>
     </main>

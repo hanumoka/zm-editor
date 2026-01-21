@@ -27,6 +27,7 @@ export interface SlashMenuLocale {
     codeBlock: SlashCommandLocale;
     divider: SlashCommandLocale;
     table: SlashCommandLocale;
+    image: SlashCommandLocale;
   };
 }
 

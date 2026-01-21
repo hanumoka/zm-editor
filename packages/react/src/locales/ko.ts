@@ -55,6 +55,10 @@ export const koLocale: ZmEditorLocale = {
         title: '테이블',
         description: '표 삽입',
       },
+      image: {
+        title: '이미지',
+        description: '이미지 업로드 또는 삽입',
+      },
     },
   },
   bubbleMenu: {

@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, useImperativeHandle, useMemo, useCallback } from 'react';
+import { forwardRef, useImperativeHandle, useMemo, useCallback, useEffect } from 'react';
 import { useEditor, EditorContent, Editor as TiptapEditor, ReactNodeViewRenderer } from '@tiptap/react';
 import type { JSONContent, Extension } from '@tiptap/core';
 import {
@@ -16,6 +16,85 @@ import { TableBubbleMenu } from './TableBubbleMenu';
 import { CodeBlock } from './CodeBlock';
 import type { ZmEditorLocale } from '../locales';
 import { enLocale } from '../locales';
+
+// ===== 이미지 업로드 관련 타입 =====
+
+/** 이미지 업로드 결과 */
+export interface ImageUploadResult {
+  /** 업로드된 이미지 URL (필수) */
+  url: string;
+  /** alt 텍스트 (선택) */
+  alt?: string;
+  /** 이미지 제목 (선택) */
+  title?: string;
+}
+
+/** 이미지 업로드 옵션 */
+export interface ImageUploadOptions {
+  /** 업로드할 파일 */
+  file: File;
+  /** 업로드 진행률 콜백 (0-100) */
+  onProgress?: (percent: number) => void;
+}
+
+/** 이미지 업로드 핸들러 타입 */
+export type ImageUploadHandler = (options: ImageUploadOptions) => Promise<ImageUploadResult>;
+
+/** 이미지 업로드 설정 */
+export interface ImageUploadConfig {
+  /** 최대 파일 크기 (바이트, 기본: 5MB) */
+  maxSizeBytes?: number;
+  /** 허용 MIME 타입 (기본: png, jpeg, gif, webp) */
+  allowedMimeTypes?: string[];
+  /** 클립보드 붙여넣기 허용 (기본: true) */
+  enablePaste?: boolean;
+  /** 드래그앤드롭 허용 (기본: true) */
+  enableDrop?: boolean;
+  /** onImageUpload 없을 때 Base64 폴백 사용 (기본: true) */
+  fallbackToBase64?: boolean;
+}
+
+// 기본 이미지 설정
+const DEFAULT_IMAGE_CONFIG: Required<ImageUploadConfig> = {
+  maxSizeBytes: 5 * 1024 * 1024, // 5MB
+  allowedMimeTypes: ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp'],
+  enablePaste: true,
+  enableDrop: true,
+  fallbackToBase64: true,
+};
+
+/** 파일을 Base64로 변환 */
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+/** 이미지 파일 유효성 검사 */
+function validateImageFile(
+  file: File,
+  config: Required<ImageUploadConfig>
+): { valid: boolean; error?: string } {
+  if (!config.allowedMimeTypes.includes(file.type)) {
+    return {
+      valid: false,
+      error: `Invalid file type: ${file.type}. Allowed: ${config.allowedMimeTypes.join(', ')}`,
+    };
+  }
+
+  if (file.size > config.maxSizeBytes) {
+    const maxMB = (config.maxSizeBytes / (1024 * 1024)).toFixed(1);
+    return {
+      valid: false,
+      error: `File too large: ${(file.size / (1024 * 1024)).toFixed(1)}MB. Max: ${maxMB}MB`,
+    };
+  }
+
+  return { valid: true };
+}
 
 export interface ZmEditorProps {
   /** 초기 콘텐츠 (JSON) */
@@ -48,6 +127,12 @@ export interface ZmEditorProps {
   shouldRerenderOnTransaction?: boolean;
   /** 다국어 로케일 (기본값: enLocale) */
   locale?: ZmEditorLocale;
+  /** 이미지 업로드 핸들러 (없으면 Base64 폴백 또는 비활성화) */
+  onImageUpload?: ImageUploadHandler;
+  /** 이미지 업로드 설정 */
+  imageConfig?: ImageUploadConfig;
+  /** 이미지 업로드 에러 핸들러 */
+  onImageUploadError?: (error: Error, file: File) => void;
 }
 
 export interface ZmEditorRef {
@@ -162,6 +247,19 @@ function createLocalizedSlashCommands(locale: ZmEditorLocale): SlashCommandItem[
         editor.chain().focus().deleteRange(range).insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run();
       },
     },
+    {
+      title: commands.image.title,
+      description: commands.image.description,
+      searchTerms: ['image', 'picture', 'photo', 'img', 'upload'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).run();
+        // 파일 선택 다이얼로그 트리거
+        const fileInput = document.getElementById('zm-editor-image-upload') as HTMLInputElement;
+        if (fileInput) {
+          fileInput.click();
+        }
+      },
+    },
   ];
 }
 
@@ -188,9 +286,18 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
       extensions: customExtensions = [],
       shouldRerenderOnTransaction = false,
       locale = enLocale,
+      onImageUpload,
+      imageConfig,
+      onImageUploadError,
     },
     ref
   ) => {
+    // 이미지 설정 병합
+    const mergedImageConfig = useMemo<Required<ImageUploadConfig>>(
+      () => ({ ...DEFAULT_IMAGE_CONFIG, ...imageConfig }),
+      [imageConfig]
+    );
+
     // 로케일 기반 슬래시 명령어 (커스텀 명령어가 없을 경우)
     const localizedSlashCommands = useMemo(
       () => slashCommands ?? createLocalizedSlashCommands(locale),
@@ -310,6 +417,105 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
       clear: () => editor?.commands.clearContent(),
     }));
 
+    // 이미지 파일 처리 (에디터에 삽입)
+    const processImageFile = useCallback(
+      async (file: File) => {
+        if (!editor) return;
+
+        const validation = validateImageFile(file, mergedImageConfig);
+        if (!validation.valid) {
+          const error = new Error(validation.error);
+          onImageUploadError?.(error, file);
+          console.error('[ZmEditor] Image validation failed:', validation.error);
+          return;
+        }
+
+        try {
+          let imageUrl: string;
+          let alt: string | undefined;
+
+          if (onImageUpload) {
+            const result = await onImageUpload({ file });
+            imageUrl = result.url;
+            alt = result.alt;
+          } else if (mergedImageConfig.fallbackToBase64) {
+            imageUrl = await fileToBase64(file);
+            alt = file.name;
+          } else {
+            console.warn('[ZmEditor] Image upload disabled');
+            return;
+          }
+
+          // 에디터에 이미지 삽입
+          editor.chain().focus().setImage({ src: imageUrl, alt: alt || file.name }).run();
+        } catch (err) {
+          const error = err instanceof Error ? err : new Error('Image upload failed');
+          onImageUploadError?.(error, file);
+          console.error('[ZmEditor] Image upload failed:', error);
+        }
+      },
+      [editor, onImageUpload, mergedImageConfig, onImageUploadError]
+    );
+
+    // 드래그앤드롭 및 붙여넣기 이벤트 핸들러
+    useEffect(() => {
+      if (!editor || readOnly) return;
+
+      const editorElement = editor.view.dom;
+
+      // 드래그앤드롭 핸들러
+      const handleDrop = (event: DragEvent) => {
+        if (!mergedImageConfig.enableDrop) return;
+
+        const files = event.dataTransfer?.files;
+        if (!files || files.length === 0) return;
+
+        const imageFiles = Array.from(files).filter((file) =>
+          mergedImageConfig.allowedMimeTypes.includes(file.type)
+        );
+
+        if (imageFiles.length > 0) {
+          event.preventDefault();
+          event.stopPropagation();
+          imageFiles.forEach((file) => processImageFile(file));
+        }
+      };
+
+      // 드래그오버 핸들러 (드롭 허용)
+      const handleDragOver = (event: DragEvent) => {
+        if (!mergedImageConfig.enableDrop) return;
+        event.preventDefault();
+      };
+
+      // 붙여넣기 핸들러
+      const handlePaste = (event: ClipboardEvent) => {
+        if (!mergedImageConfig.enablePaste) return;
+
+        const files = event.clipboardData?.files;
+        if (!files || files.length === 0) return;
+
+        const imageFiles = Array.from(files).filter((file) =>
+          mergedImageConfig.allowedMimeTypes.includes(file.type)
+        );
+
+        if (imageFiles.length > 0) {
+          event.preventDefault();
+          event.stopPropagation();
+          imageFiles.forEach((file) => processImageFile(file));
+        }
+      };
+
+      editorElement.addEventListener('drop', handleDrop);
+      editorElement.addEventListener('dragover', handleDragOver);
+      editorElement.addEventListener('paste', handlePaste);
+
+      return () => {
+        editorElement.removeEventListener('drop', handleDrop);
+        editorElement.removeEventListener('dragover', handleDragOver);
+        editorElement.removeEventListener('paste', handlePaste);
+      };
+    }, [editor, readOnly, mergedImageConfig, processImageFile]);
+
     if (!editor) {
       return (
         <div className="zm-editor">
@@ -320,8 +526,30 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
       );
     }
 
+    // 파일 선택 핸들러 (슬래시 명령어에서 트리거)
+    const handleFileInputChange = useCallback(
+      (event: React.ChangeEvent<HTMLInputElement>) => {
+        const files = event.target.files;
+        if (files && files.length > 0) {
+          Array.from(files).forEach((file) => processImageFile(file));
+        }
+        // input 초기화 (같은 파일 다시 선택 가능하도록)
+        event.target.value = '';
+      },
+      [processImageFile]
+    );
+
     return (
       <div className="zm-editor">
+        {/* 숨겨진 파일 input (슬래시 명령어에서 사용) */}
+        <input
+          id="zm-editor-image-upload"
+          type="file"
+          accept={mergedImageConfig.allowedMimeTypes.join(',')}
+          multiple
+          style={{ display: 'none' }}
+          onChange={handleFileInputChange}
+        />
         {enableBubbleMenu && (
           <BubbleMenu
             editor={editor}

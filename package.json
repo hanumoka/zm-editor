@@ -8,6 +8,9 @@
   "author": "",
   "scripts": {
     "dev": "turbo dev",
+    "dev:demo": "pnpm --filter demo dev",
+    "dev:api": "pnpm --filter demoapi start:dev",
+    "dev:all": "concurrently \"pnpm dev:demo\" \"pnpm dev:api\"",
     "build": "turbo build",
     "lint": "turbo lint",
     "type-check": "turbo type-check",
