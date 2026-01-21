@@ -8,7 +8,7 @@ async function bootstrap() {
 
   // CORS 설정 (demo 앱에서 접근 가능하도록)
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:3001'],
+    origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3100'],
     methods: ['GET', 'POST', 'DELETE'],
     allowedHeaders: ['Content-Type'],
   });

@@ -555,3 +555,122 @@ body {
   height: 0;
   pointer-events: none;
 }
+
+/* ===== Resizable Image Node ===== */
+.zm-image-node-wrapper {
+  margin: 1rem 0;
+  width: 100%;
+}
+
+.zm-image-node {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+  transition: outline 0.15s;
+  border-radius: 8px;
+  overflow: visible;
+}
+
+.zm-image-node-img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+  user-select: none;
+}
+
+/* 선택 상태 */
+.zm-image-node.is-selected {
+  outline: 3px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.zm-image-node.is-resizing {
+  outline: 3px solid #2563eb;
+}
+
+/* 리사이즈 핸들 */
+.zm-image-resize-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 16px;
+  cursor: ew-resize;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.zm-image-resize-handle-left {
+  left: -8px;
+}
+
+.zm-image-resize-handle-right {
+  right: -8px;
+}
+
+.zm-image-resize-handle-bar {
+  width: 4px;
+  height: 40px;
+  max-height: 50%;
+  background-color: #3b82f6;
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.zm-image-node:hover .zm-image-resize-handle-bar,
+.zm-image-node.is-selected .zm-image-resize-handle-bar {
+  opacity: 1;
+}
+
+.zm-image-resize-handle:hover .zm-image-resize-handle-bar {
+  background-color: #2563eb;
+}
+
+/* 이미지 툴바 (정렬) */
+.zm-image-toolbar {
+  position: absolute;
+  bottom: -44px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  z-index: 20;
+}
+
+.zm-image-toolbar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.15s;
+}
+
+.zm-image-toolbar-btn:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.zm-image-toolbar-btn.is-active {
+  background-color: #eff6ff;
+  color: #3b82f6;
+}
+
+/* 리사이즈 중 선택 방지 */
+.zm-image-node.is-resizing * {
+  user-select: none;
+}

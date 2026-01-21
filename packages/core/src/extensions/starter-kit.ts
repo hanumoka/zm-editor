@@ -27,6 +27,8 @@ export interface ZmStarterKitOptions {
   excludeCodeBlock?: boolean;
   /** Table을 제외할지 여부 */
   excludeTable?: boolean;
+  /** Image를 제외할지 여부 (React NodeView 사용 시) */
+  excludeImage?: boolean;
 }
 
 // lowlight 인스턴스 export (React에서 커스텀 CodeBlock 사용 시 필요)
@@ -43,6 +45,7 @@ export function createStarterExtensions(options: ZmStarterKitOptions = {}) {
     characterLimit = 50000,
     excludeCodeBlock = false,
     excludeTable = false,
+    excludeImage = false,
   } = options;
 
   const extensions = [
@@ -108,14 +111,6 @@ export function createStarterExtensions(options: ZmStarterKitOptions = {}) {
       },
     }),
 
-    // 이미지
-    Image.configure({
-      allowBase64: true,
-      HTMLAttributes: {
-        class: 'zm-image',
-      },
-    }),
-
     // 체크리스트
     TaskList.configure({
       HTMLAttributes: {
@@ -159,6 +154,18 @@ export function createStarterExtensions(options: ZmStarterKitOptions = {}) {
         class: 'zm-code-block',
       },
     }));
+  }
+
+  // Image 포함 여부 (React NodeView 사용 시 제외)
+  if (!excludeImage) {
+    extensions.push(
+      Image.configure({
+        allowBase64: true,
+        HTMLAttributes: {
+          class: 'zm-image',
+        },
+      })
+    );
   }
 
   // Table 포함 여부

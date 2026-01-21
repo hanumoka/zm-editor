@@ -59,9 +59,22 @@ export function BubbleMenu({
     editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
   }, [editor, dialogLocale.linkUrlPrompt]);
 
+  // 버블 메뉴 표시 조건
+  const shouldShow = useCallback(() => {
+    // 이미지, 코드블록, 테이블이 선택된 경우 텍스트 버블 메뉴 숨김
+    if (editor.isActive('image')) return false;
+    if (editor.isActive('codeBlock')) return false;
+    if (editor.isActive('table')) return false;
+
+    // 텍스트가 선택된 경우에만 표시
+    const { from, to } = editor.state.selection;
+    return from !== to;
+  }, [editor]);
+
   return (
     <TiptapBubbleMenu
       editor={editor}
+      shouldShow={shouldShow}
       tippyOptions={{
         duration: 100,
         placement: 'top',

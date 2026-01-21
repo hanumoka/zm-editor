@@ -14,7 +14,9 @@
     },
     "./styles.css": "./dist/styles.css"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -22,9 +24,10 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@zm-editor/core": "workspace:*",
     "@tiptap/core": "^2.11.0",
-    "@tiptap/react": "^2.11.0"
+    "@tiptap/extension-image": "^2.11.0",
+    "@tiptap/react": "^2.11.0",
+    "@zm-editor/core": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^19",
@@ -38,7 +41,14 @@
     "react": ">=18",
     "react-dom": ">=18"
   },
-  "keywords": ["react", "editor", "rich-text", "notion", "tiptap", "nextjs"],
+  "keywords": [
+    "react",
+    "editor",
+    "rich-text",
+    "notion",
+    "tiptap",
+    "nextjs"
+  ],
   "repository": {
     "type": "git",
     "url": ""

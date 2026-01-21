@@ -11,3 +11,5 @@ export { BubbleMenu } from './BubbleMenu';
 export { TableBubbleMenu } from './TableBubbleMenu';
 export { SlashMenu, type SlashMenuProps, type SlashMenuRef } from './SlashMenu';
 export { CodeBlock } from './CodeBlock';
+export { ImageNode, ResizableImage } from './ImageNode';
+export type { ImageNodeProps, ResizableImageOptions } from './ImageNode';

@@ -14,6 +14,7 @@ import {
 import { BubbleMenu } from './BubbleMenu';
 import { TableBubbleMenu } from './TableBubbleMenu';
 import { CodeBlock } from './CodeBlock';
+import { ResizableImage } from './ImageNode';
 import type { ZmEditorLocale } from '../locales';
 import { enLocale } from '../locales';
 
@@ -313,6 +314,7 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         placeholder: editorPlaceholder,
         characterLimit,
         excludeCodeBlock: true, // React NodeView 사용을 위해 제외
+        excludeImage: true, // React NodeView (ResizableImage) 사용을 위해 제외
       } as ZmStarterKitOptions);
 
       // 커스텀 CodeBlock (언어 선택 UI 포함)
@@ -333,8 +335,21 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
       const slashCommandExtension = enableSlashCommand
         ? SlashCommand.configure({
             suggestion: {
-              items: ({ query }: { query: string }) => {
+              items: ({ query, editor: suggestionEditor }: { query: string; editor: TiptapEditor }) => {
+                const isInTable = suggestionEditor.isActive('table');
+
                 return localizedSlashCommands.filter((item) => {
+                  // 테이블 내부에서 제한된 명령어 필터링 (Notion-like)
+                  if (isInTable && item.searchTerms) {
+                    const restrictedTerms = ['table', 'h1', 'h2', 'h3', 'hr', 'code'];
+                    const isRestricted = restrictedTerms.some((term) =>
+                      item.searchTerms?.includes(term)
+                    );
+                    if (isRestricted) {
+                      return false;
+                    }
+                  }
+
                   const searchText = query.toLowerCase();
                   return (
                     item.title.toLowerCase().includes(searchText) ||
@@ -372,9 +387,18 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
           })
         : null;
 
+      // 리사이즈 가능한 이미지 확장
+      const resizableImageExtension = ResizableImage.configure({
+        allowBase64: true,
+        HTMLAttributes: {
+          class: 'zm-image',
+        },
+      });
+
       return [
         ...baseExtensions,
         codeBlockExtension,
+        resizableImageExtension,
         ...(slashCommandExtension ? [slashCommandExtension] : []),
         ...customExtensions,
       ];
