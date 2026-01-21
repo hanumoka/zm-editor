@@ -404,3 +404,121 @@ body {
   color: #6b7280;
   font-size: 0.875rem;
 }
+
+/* Table Styles */
+.zm-editor-content table {
+  border-collapse: collapse;
+  margin: 1rem 0;
+  width: 100%;
+  table-layout: fixed;
+  overflow: hidden;
+}
+
+.zm-editor-content table td,
+.zm-editor-content table th {
+  border: 1px solid #e5e7eb;
+  padding: 0.5rem 0.75rem;
+  position: relative;
+  vertical-align: top;
+  min-width: 100px;
+  box-sizing: border-box;
+}
+
+.zm-editor-content table th {
+  background-color: #f9fafb;
+  font-weight: 600;
+  text-align: left;
+}
+
+.zm-editor-content table .selectedCell:after {
+  background: rgba(59, 130, 246, 0.1);
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.zm-editor-content table .column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: -2px;
+  width: 4px;
+  background-color: #3b82f6;
+  pointer-events: none;
+}
+
+.zm-editor-content table p {
+  margin: 0;
+}
+
+/* Table resize cursor */
+.zm-editor-content .tableWrapper {
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.zm-editor-content.resize-cursor {
+  cursor: col-resize;
+}
+
+/* Table Bubble Menu */
+.zm-table-bubble-menu {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.zm-table-bubble-menu-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.zm-table-bubble-menu-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #374151;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.zm-table-bubble-menu-button:hover {
+  background-color: #f3f4f6;
+}
+
+.zm-table-bubble-menu-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.zm-table-bubble-menu-button:disabled:hover {
+  background: transparent;
+}
+
+.zm-table-bubble-menu-button-danger:hover {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.zm-table-bubble-menu-divider {
+  width: 1px;
+  height: 20px;
+  background-color: #e5e7eb;
+  margin: 0 4px;
+}

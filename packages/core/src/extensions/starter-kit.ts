@@ -11,6 +11,10 @@ import Placeholder from '@tiptap/extension-placeholder';
 import CharacterCount from '@tiptap/extension-character-count';
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import HorizontalRule from '@tiptap/extension-horizontal-rule';
+import Table from '@tiptap/extension-table';
+import TableRow from '@tiptap/extension-table-row';
+import TableHeader from '@tiptap/extension-table-header';
+import TableCell from '@tiptap/extension-table-cell';
 import { common, createLowlight } from 'lowlight';
 
 // lowlight 인스턴스 생성 (common languages 포함)
@@ -21,6 +25,8 @@ export interface ZmStarterKitOptions {
   characterLimit?: number;
   /** CodeBlock을 제외할지 여부 (React NodeView 사용 시) */
   excludeCodeBlock?: boolean;
+  /** Table을 제외할지 여부 */
+  excludeTable?: boolean;
 }
 
 // lowlight 인스턴스 export (React에서 커스텀 CodeBlock 사용 시 필요)
@@ -36,6 +42,7 @@ export function createStarterExtensions(options: ZmStarterKitOptions = {}) {
     placeholder = "Type '/' for commands...",
     characterLimit = 50000,
     excludeCodeBlock = false,
+    excludeTable = false,
   } = options;
 
   const extensions = [
@@ -149,6 +156,33 @@ export function createStarterExtensions(options: ZmStarterKitOptions = {}) {
     }));
   }
 
+  // Table 포함 여부
+  if (!excludeTable) {
+    extensions.push(
+      Table.configure({
+        resizable: true,
+        HTMLAttributes: {
+          class: 'zm-table',
+        },
+      }),
+      TableRow.configure({
+        HTMLAttributes: {
+          class: 'zm-table-row',
+        },
+      }),
+      TableHeader.configure({
+        HTMLAttributes: {
+          class: 'zm-table-header',
+        },
+      }),
+      TableCell.configure({
+        HTMLAttributes: {
+          class: 'zm-table-cell',
+        },
+      }),
+    );
+  }
+
   return extensions;
 }
 
@@ -166,4 +200,8 @@ export {
   CharacterCount,
   CodeBlockLowlight,
   HorizontalRule,
+  Table,
+  TableRow,
+  TableHeader,
+  TableCell,
 };

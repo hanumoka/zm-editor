@@ -26,6 +26,7 @@ export interface SlashMenuLocale {
     quote: SlashCommandLocale;
     codeBlock: SlashCommandLocale;
     divider: SlashCommandLocale;
+    table: SlashCommandLocale;
   };
 }
 
@@ -58,11 +59,30 @@ export interface DialogLocale {
 }
 
 /**
+ * 테이블 버블 메뉴 번역
+ */
+export interface TableBubbleMenuLocale {
+  addColumnBefore: string;
+  addColumnAfter: string;
+  deleteColumn: string;
+  addRowBefore: string;
+  addRowAfter: string;
+  deleteRow: string;
+  deleteTable: string;
+  mergeCells: string;
+  splitCell: string;
+  toggleHeaderColumn: string;
+  toggleHeaderRow: string;
+  toggleHeaderCell: string;
+}
+
+/**
  * zm-editor 전체 로케일 인터페이스
  */
 export interface ZmEditorLocale {
   editor: EditorLocale;
   slashMenu: SlashMenuLocale;
   bubbleMenu: BubbleMenuLocale;
+  tableBubbleMenu: TableBubbleMenuLocale;
   dialogs: DialogLocale;
 }

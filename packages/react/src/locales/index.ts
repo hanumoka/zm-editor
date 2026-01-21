@@ -5,6 +5,7 @@ export type {
   SlashMenuLocale,
   SlashCommandLocale,
   BubbleMenuLocale,
+  TableBubbleMenuLocale,
   DialogLocale,
 } from './types';
 

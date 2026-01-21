@@ -12,6 +12,7 @@ import {
   type ZmStarterKitOptions,
 } from '@zm-editor/core';
 import { BubbleMenu } from './BubbleMenu';
+import { TableBubbleMenu } from './TableBubbleMenu';
 import { CodeBlock } from './CodeBlock';
 import type { ZmEditorLocale } from '../locales';
 import { enLocale } from '../locales';
@@ -35,6 +36,8 @@ export interface ZmEditorProps {
   enableSlashCommand?: boolean;
   /** 버블 메뉴 활성화 */
   enableBubbleMenu?: boolean;
+  /** 테이블 버블 메뉴 활성화 */
+  enableTableBubbleMenu?: boolean;
   /** 커스텀 슬래시 명령어 (locale 기반 명령어 대신 사용) */
   slashCommands?: SlashCommandItem[];
   /** 자동 포커스 */
@@ -151,6 +154,14 @@ function createLocalizedSlashCommands(locale: ZmEditorLocale): SlashCommandItem[
         editor.chain().focus().deleteRange(range).setHorizontalRule().run();
       },
     },
+    {
+      title: commands.table.title,
+      description: commands.table.description,
+      searchTerms: ['table', 'grid', 'spreadsheet', 'rows', 'columns'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run();
+      },
+    },
   ];
 }
 
@@ -171,6 +182,7 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
       characterLimit = 50000,
       enableSlashCommand = true,
       enableBubbleMenu = true,
+      enableTableBubbleMenu = true,
       slashCommands,
       autoFocus = false,
       extensions: customExtensions = [],
@@ -315,6 +327,12 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
             editor={editor}
             locale={locale.bubbleMenu}
             dialogLocale={locale.dialogs}
+          />
+        )}
+        {enableTableBubbleMenu && (
+          <TableBubbleMenu
+            editor={editor}
+            locale={locale.tableBubbleMenu}
           />
         )}
         <EditorContent editor={editor} />

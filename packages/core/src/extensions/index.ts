@@ -14,6 +14,10 @@ export {
   CharacterCount,
   CodeBlockLowlight,
   HorizontalRule,
+  Table,
+  TableRow,
+  TableHeader,
+  TableCell,
   lowlight,
   type ZmStarterKitOptions,
 } from './starter-kit';

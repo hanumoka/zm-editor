@@ -51,6 +51,10 @@ export const koLocale: ZmEditorLocale = {
         title: '구분선',
         description: '가로 구분선',
       },
+      table: {
+        title: '테이블',
+        description: '표 삽입',
+      },
     },
   },
   bubbleMenu: {
@@ -61,6 +65,20 @@ export const koLocale: ZmEditorLocale = {
     code: '코드',
     highlight: '강조',
     link: '링크',
+  },
+  tableBubbleMenu: {
+    addColumnBefore: '왼쪽에 열 추가',
+    addColumnAfter: '오른쪽에 열 추가',
+    deleteColumn: '열 삭제',
+    addRowBefore: '위에 행 추가',
+    addRowAfter: '아래에 행 추가',
+    deleteRow: '행 삭제',
+    deleteTable: '테이블 삭제',
+    mergeCells: '셀 병합',
+    splitCell: '셀 분할',
+    toggleHeaderColumn: '헤더 열 전환',
+    toggleHeaderRow: '헤더 행 전환',
+    toggleHeaderCell: '헤더 셀 전환',
   },
   dialogs: {
     linkUrlPrompt: 'URL을 입력하세요',

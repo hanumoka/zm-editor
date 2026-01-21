@@ -51,6 +51,10 @@ export const enLocale: ZmEditorLocale = {
         title: 'Divider',
         description: 'Horizontal divider line',
       },
+      table: {
+        title: 'Table',
+        description: 'Insert a table',
+      },
     },
   },
   bubbleMenu: {
@@ -61,6 +65,20 @@ export const enLocale: ZmEditorLocale = {
     code: 'Code',
     highlight: 'Highlight',
     link: 'Link',
+  },
+  tableBubbleMenu: {
+    addColumnBefore: 'Add column before',
+    addColumnAfter: 'Add column after',
+    deleteColumn: 'Delete column',
+    addRowBefore: 'Add row before',
+    addRowAfter: 'Add row after',
+    deleteRow: 'Delete row',
+    deleteTable: 'Delete table',
+    mergeCells: 'Merge cells',
+    splitCell: 'Split cell',
+    toggleHeaderColumn: 'Toggle header column',
+    toggleHeaderRow: 'Toggle header row',
+    toggleHeaderCell: 'Toggle header cell',
   },
   dialogs: {
     linkUrlPrompt: 'URL',
