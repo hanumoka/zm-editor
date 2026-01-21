@@ -270,19 +270,21 @@ interface ZmEditorLocale {
 | 슬래시 명령어 | `/` 입력 시 메뉴 | ✅ |
 | 버블 메뉴 | 텍스트 선택 시 도구 | ✅ |
 | 코드블록 | 언어 선택 + 신택스 하이라이팅 | ✅ |
+| 다국어 지원 (i18n) | 영어/한국어 locale | ✅ |
+| 테이블 | 생성/편집/삭제 + 버블 메뉴 | ✅ |
 
-### 테이블 기능
+### 테이블 기능 (구현 완료)
 
-| 기능 | 설명 | 우선순위 |
-|------|------|----------|
-| 테이블 생성/삭제 | `insertTable()`, `deleteTable()` | 필수 |
-| 행/열 추가/삭제 | 컨텍스트 메뉴 | 필수 |
-| 셀 병합/분할 | `mergeCells()`, `splitCell()` | 필수 |
-| 헤더 행/열 | 첫 행/열 헤더 지정 | 필수 |
-| 셀 크기 조절 | 드래그로 조절 | 권장 |
-| 셀 배경색 | 색상 선택기 | 권장 |
+| 기능 | 설명 | 상태 |
+|------|------|------|
+| 테이블 생성/삭제 | `/table` 명령어, `deleteTable()` | ✅ |
+| 행/열 추가/삭제 | TableBubbleMenu UI | ✅ |
+| 셀 병합/분할 | `mergeCells()`, `splitCell()` | ✅ |
+| 헤더 행/열/셀 토글 | 버블 메뉴에서 전환 | ✅ |
+| 셀 크기 조절 | 드래그로 열 너비 조절 | ✅ |
+| 셀 배경색 | 색상 선택기 | 📋 대기 |
 
-**필요 패키지**: `@tiptap/extension-table`, `@tiptap/extension-table-row`, `@tiptap/extension-table-header`, `@tiptap/extension-table-cell`
+**사용 패키지**: `@tiptap/extension-table@^2.11.0`, `table-row`, `table-header`, `table-cell`
 
 ### 이미지 업로드
 

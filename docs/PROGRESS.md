@@ -6,8 +6,8 @@
 
 - **버전**: 0.1.0 (개발 중)
 - **상태**: Alpha
-- **완료**: Phase 1~4
-- **다음**: Phase 5 (다국어 지원)
+- **완료**: Phase 1~6
+- **다음**: Phase 7 (이미지 업로드)
 
 ---
 
@@ -19,8 +19,8 @@
 | 2 | 핵심 에디터 기능 | ✅ 완료 |
 | 3 | Notion-like 기능 | ✅ 완료 |
 | 4 | 코드블록 고급 기능 | ✅ 완료 |
-| 5 | 다국어 지원 (i18n) | 📋 대기 |
-| 6 | 테이블 기능 | 📋 대기 |
+| 5 | 다국어 지원 (i18n) | ✅ 완료 |
+| 6 | 테이블 기능 | ✅ 완료 |
 | 7 | 이미지 업로드 | 📋 대기 |
 | 8 | 파일 업로드/첨부 | 📋 대기 |
 | 9 | 보안 강화 | 📋 대기 |
@@ -71,31 +71,31 @@
 - [x] 신택스 하이라이팅 (GitHub Dark 테마)
 - [x] 26개 언어 지원
 
+### Phase 5: 다국어 지원 (i18n) ✅
+
+- [x] i18n 타입/인터페이스 설계 (`ZmEditorLocale`)
+- [x] 영어 로케일 정의 (`enLocale`)
+- [x] 한국어 로케일 정의 (`koLocale`)
+- [x] Editor 컴포넌트에 locale prop 적용
+- [x] SlashMenu 다국어 적용
+- [x] BubbleMenu 다국어 적용
+- [x] 로케일 export 및 문서화
+
+### Phase 6: 테이블 기능 ✅
+
+- [x] `@tiptap/extension-table` 패키지 설치
+- [x] 테이블 생성/삭제 기능
+- [x] 행/열 추가/삭제
+- [x] 셀 병합/분할
+- [x] 헤더 행/열/셀 토글
+- [x] 테이블 버블 메뉴 UI (TableBubbleMenu)
+- [x] 슬래시 명령어에 "Table" 추가
+- [x] 셀 크기 조절 (드래그)
+- [ ] 셀 배경색 선택 (Phase 6.1로 이동)
+
 ---
 
 ## 예정된 작업
-
-### Phase 5: 다국어 지원 (i18n)
-
-- [ ] i18n 타입/인터페이스 설계 (`ZmEditorLocale`)
-- [ ] 영어 로케일 정의 (`enLocale`)
-- [ ] 한국어 로케일 정의 (`koLocale`)
-- [ ] Editor 컴포넌트에 locale prop 적용
-- [ ] SlashMenu 다국어 적용
-- [ ] BubbleMenu 다국어 적용
-- [ ] 로케일 export 및 문서화
-
-### Phase 6: 테이블 기능
-
-- [ ] `@tiptap/extension-table` 패키지 설치
-- [ ] 테이블 생성/삭제 기능
-- [ ] 행/열 추가/삭제
-- [ ] 셀 병합/분할
-- [ ] 헤더 행/열 지원
-- [ ] 테이블 버블 메뉴 UI
-- [ ] 슬래시 명령어에 "Table" 추가
-- [ ] 셀 크기 조절 (드래그)
-- [ ] 셀 배경색 선택
 
 ### Phase 7: 이미지 업로드
 
@@ -236,7 +236,25 @@
 
 ## 변경 이력
 
-### 2026-01-21
+### 2026-01-21 (오후)
+
+**Phase 5: 다국어 지원 (i18n) 완료**
+- `ZmEditorLocale` 타입 시스템 설계 및 구현
+- 영어(`enLocale`), 한국어(`koLocale`) 로케일 정의
+- Editor, BubbleMenu, SlashMenu 컴포넌트에 locale prop 적용
+- `@zm-editor/react`에서 locales export
+- 커밋: `adba6d3` feat(react): Add i18n support with locale system
+
+**Phase 6: 테이블 기능 완료**
+- `@tiptap/extension-table` 관련 패키지 설치 (table, table-row, table-header, table-cell)
+- Table, TableRow, TableHeader, TableCell 확장 추가
+- `/table` 슬래시 명령어 (3x3 테이블 + 헤더 행)
+- `TableBubbleMenu` 컴포넌트 생성 (행/열 추가·삭제, 셀 병합·분할, 헤더 토글, 테이블 삭제)
+- 테이블 CSS 스타일링 (선택 셀 하이라이트, 열 리사이즈 핸들)
+- i18n 지원 (영어/한국어)
+- 커밋: `839aa00` feat(table): Add table support with bubble menu
+
+### 2026-01-21 (오전)
 
 **코드 작업**
 - Phase 1~4 완료 (핵심 에디터 기능)
