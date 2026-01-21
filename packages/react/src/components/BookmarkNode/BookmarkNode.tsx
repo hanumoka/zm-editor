@@ -60,6 +60,10 @@ export function BookmarkNode({ node, updateAttributes, selected }: BookmarkNodeP
   const [urlValue, setUrlValue] = useState(url || '');
   const urlInputRef = useRef<HTMLInputElement>(null);
 
+  // 이미지 로드 에러 상태 (DOM 직접 조작 대신 상태로 관리)
+  const [faviconError, setFaviconError] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
   // URL 동기화
   useEffect(() => {
     setUrlValue(url || '');
@@ -67,6 +71,15 @@ export function BookmarkNode({ node, updateAttributes, selected }: BookmarkNodeP
       setIsEditing(false);
     }
   }, [url]);
+
+  // 이미지 소스 변경 시 에러 상태 초기화
+  useEffect(() => {
+    setFaviconError(false);
+  }, [favicon, url]);
+
+  useEffect(() => {
+    setImageError(false);
+  }, [image]);
 
   // URL 저장
   const handleUrlSave = useCallback(() => {
@@ -181,14 +194,12 @@ export function BookmarkNode({ node, updateAttributes, selected }: BookmarkNodeP
             <div className="zm-bookmark-description">{description}</div>
           )}
           <div className="zm-bookmark-meta">
-            {displayFavicon && (
+            {displayFavicon && !faviconError && (
               <img
                 src={displayFavicon}
                 alt=""
                 className="zm-bookmark-favicon"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = 'none';
-                }}
+                onError={() => setFaviconError(true)}
               />
             )}
             <span className="zm-bookmark-site">{displaySiteName}</span>
@@ -196,15 +207,13 @@ export function BookmarkNode({ node, updateAttributes, selected }: BookmarkNodeP
         </div>
 
         {/* 이미지 영역 */}
-        {image && (
+        {image && !imageError && (
           <div className="zm-bookmark-image-container">
             <img
               src={image}
               alt=""
               className="zm-bookmark-image"
-              onError={(e) => {
-                (e.target as HTMLImageElement).parentElement!.style.display = 'none';
-              }}
+              onError={() => setImageError(true)}
             />
           </div>
         )}
