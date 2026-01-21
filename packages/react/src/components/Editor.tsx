@@ -17,6 +17,7 @@ import { CodeBlock } from './CodeBlock';
 import { ResizableImage } from './ImageNode';
 import { Embed } from './EmbedNode';
 import { Callout } from './CalloutNode';
+import { Toggle } from './ToggleNode';
 import type { ZmEditorLocale } from '../locales';
 import { enLocale } from '../locales';
 
@@ -279,6 +280,14 @@ function createLocalizedSlashCommands(locale: ZmEditorLocale): SlashCommandItem[
         editor.chain().focus().deleteRange(range).setCallout().run();
       },
     },
+    {
+      title: commands.toggle.title,
+      description: commands.toggle.description,
+      searchTerms: ['toggle', 'collapse', 'expand', 'accordion', 'dropdown', 'fold'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setToggle().run();
+      },
+    },
   ];
 }
 
@@ -430,12 +439,20 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         },
       });
 
+      // Toggle 확장 (접기/펼치기)
+      const toggleExtension = Toggle.configure({
+        HTMLAttributes: {
+          class: 'zm-toggle',
+        },
+      });
+
       return [
         ...baseExtensions,
         codeBlockExtension,
         resizableImageExtension,
         embedExtension,
         calloutExtension,
+        toggleExtension,
         ...(slashCommandExtension ? [slashCommandExtension] : []),
         ...customExtensions,
       ];

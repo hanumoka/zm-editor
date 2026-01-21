@@ -17,3 +17,5 @@ export { EmbedNode, Embed, parseEmbedUrl, getEmbedLabel, isValidEmbedUrl } from 
 export type { EmbedNodeProps, EmbedOptions, EmbedType, EmbedInfo } from './EmbedNode';
 export { CalloutNode, Callout } from './CalloutNode';
 export type { CalloutNodeProps, CalloutOptions, CalloutColor } from './CalloutNode';
+export { ToggleNode, Toggle } from './ToggleNode';
+export type { ToggleNodeProps, ToggleOptions } from './ToggleNode';

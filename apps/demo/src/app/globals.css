@@ -1121,3 +1121,105 @@ body {
 .zm-callout-color-option.is-selected {
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
 }
+
+/* ===== Toggle Node Styles ===== */
+.zm-toggle-node-wrapper {
+  margin: 0.5rem 0;
+}
+
+.zm-toggle-node {
+  border-radius: 4px;
+  transition: background-color 0.15s;
+}
+
+.zm-toggle-node:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.zm-toggle-node.is-selected {
+  background-color: rgba(59, 130, 246, 0.05);
+}
+
+/* Toggle Header */
+.zm-toggle-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 0;
+}
+
+.zm-toggle-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #9ca3af;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.zm-toggle-arrow:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #6b7280;
+}
+
+.zm-toggle-arrow svg {
+  transition: transform 0.2s ease;
+}
+
+.zm-toggle-node.is-open .zm-toggle-arrow svg {
+  transform: rotate(90deg);
+}
+
+/* Toggle Title */
+.zm-toggle-title {
+  flex: 1;
+  padding: 4px 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #374151;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.zm-toggle-title::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+.zm-toggle-title:focus {
+  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: 4px;
+}
+
+/* Toggle Content */
+.zm-toggle-content {
+  padding-left: 28px;
+  border-left: 2px solid #e5e7eb;
+  margin-left: 11px;
+}
+
+.zm-toggle-content-inner {
+  padding: 4px 0 8px 8px;
+  outline: none;
+}
+
+.zm-toggle-content-inner p {
+  margin: 0;
+}
+
+.zm-toggle-content-inner p + p {
+  margin-top: 0.5rem;
+}
+
+/* Nested toggles */
+.zm-toggle-node .zm-toggle-node {
+  margin-left: 0;
+}

@@ -68,6 +68,10 @@ export const koLocale: ZmEditorLocale = {
         title: '콜아웃',
         description: '아이콘이 있는 강조 박스',
       },
+      toggle: {
+        title: '토글',
+        description: '접기/펼치기 가능한 블록',
+      },
     },
   },
   bubbleMenu: {

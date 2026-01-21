@@ -30,6 +30,7 @@ export interface SlashMenuLocale {
     image: SlashCommandLocale;
     embed: SlashCommandLocale;
     callout: SlashCommandLocale;
+    toggle: SlashCommandLocale;
   };
 }
 

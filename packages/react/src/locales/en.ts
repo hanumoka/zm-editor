@@ -68,6 +68,10 @@ export const enLocale: ZmEditorLocale = {
         title: 'Callout',
         description: 'Highlighted note box with icon',
       },
+      toggle: {
+        title: 'Toggle',
+        description: 'Collapsible content block',
+      },
     },
   },
   bubbleMenu: {
