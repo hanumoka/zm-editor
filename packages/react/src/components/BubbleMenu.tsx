@@ -1,14 +1,24 @@
 import { BubbleMenu as TiptapBubbleMenu, Editor } from '@tiptap/react';
 import { useCallback } from 'react';
+import type { BubbleMenuLocale, DialogLocale } from '../locales';
+import { enLocale } from '../locales';
 
 interface BubbleMenuProps {
   editor: Editor;
+  /** 버블 메뉴 번역 */
+  locale?: BubbleMenuLocale;
+  /** 다이얼로그 번역 */
+  dialogLocale?: DialogLocale;
 }
 
 /**
  * BubbleMenu - 텍스트 선택 시 나타나는 서식 도구 메뉴
  */
-export function BubbleMenu({ editor }: BubbleMenuProps) {
+export function BubbleMenu({
+  editor,
+  locale = enLocale.bubbleMenu,
+  dialogLocale = enLocale.dialogs,
+}: BubbleMenuProps) {
   const toggleBold = useCallback(() => {
     editor.chain().focus().toggleBold().run();
   }, [editor]);
@@ -35,7 +45,7 @@ export function BubbleMenu({ editor }: BubbleMenuProps) {
 
   const setLink = useCallback(() => {
     const previousUrl = editor.getAttributes('link').href;
-    const url = window.prompt('URL', previousUrl);
+    const url = window.prompt(dialogLocale.linkUrlPrompt, previousUrl);
 
     if (url === null) {
       return;
@@ -47,7 +57,7 @@ export function BubbleMenu({ editor }: BubbleMenuProps) {
     }
 
     editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
-  }, [editor]);
+  }, [editor, dialogLocale.linkUrlPrompt]);
 
   return (
     <TiptapBubbleMenu
@@ -62,7 +72,7 @@ export function BubbleMenu({ editor }: BubbleMenuProps) {
         type="button"
         onClick={toggleBold}
         className={`zm-bubble-menu-button ${editor.isActive('bold') ? 'is-active' : ''}`}
-        title="Bold"
+        title={locale.bold}
       >
         <BoldIcon />
       </button>
@@ -70,7 +80,7 @@ export function BubbleMenu({ editor }: BubbleMenuProps) {
         type="button"
         onClick={toggleItalic}
         className={`zm-bubble-menu-button ${editor.isActive('italic') ? 'is-active' : ''}`}
-        title="Italic"
+        title={locale.italic}
       >
         <ItalicIcon />
       </button>
@@ -78,7 +88,7 @@ export function BubbleMenu({ editor }: BubbleMenuProps) {
         type="button"
         onClick={toggleUnderline}
         className={`zm-bubble-menu-button ${editor.isActive('underline') ? 'is-active' : ''}`}
-        title="Underline"
+        title={locale.underline}
       >
         <UnderlineIcon />
       </button>
@@ -86,7 +96,7 @@ export function BubbleMenu({ editor }: BubbleMenuProps) {
         type="button"
         onClick={toggleStrike}
         className={`zm-bubble-menu-button ${editor.isActive('strike') ? 'is-active' : ''}`}
-        title="Strikethrough"
+        title={locale.strikethrough}
       >
         <StrikeIcon />
       </button>
@@ -95,7 +105,7 @@ export function BubbleMenu({ editor }: BubbleMenuProps) {
         type="button"
         onClick={toggleCode}
         className={`zm-bubble-menu-button ${editor.isActive('code') ? 'is-active' : ''}`}
-        title="Code"
+        title={locale.code}
       >
         <CodeIcon />
       </button>
@@ -103,7 +113,7 @@ export function BubbleMenu({ editor }: BubbleMenuProps) {
         type="button"
         onClick={toggleHighlight}
         className={`zm-bubble-menu-button ${editor.isActive('highlight') ? 'is-active' : ''}`}
-        title="Highlight"
+        title={locale.highlight}
       >
         <HighlightIcon />
       </button>
@@ -111,7 +121,7 @@ export function BubbleMenu({ editor }: BubbleMenuProps) {
         type="button"
         onClick={setLink}
         className={`zm-bubble-menu-button ${editor.isActive('link') ? 'is-active' : ''}`}
-        title="Link"
+        title={locale.link}
       >
         <LinkIcon />
       </button>

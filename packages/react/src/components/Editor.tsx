@@ -6,7 +6,6 @@ import type { JSONContent, Extension } from '@tiptap/core';
 import {
   createStarterExtensions,
   SlashCommand,
-  defaultSlashCommands,
   CodeBlockLowlight,
   lowlight,
   type SlashCommandItem,
@@ -14,6 +13,8 @@ import {
 } from '@zm-editor/core';
 import { BubbleMenu } from './BubbleMenu';
 import { CodeBlock } from './CodeBlock';
+import type { ZmEditorLocale } from '../locales';
+import { enLocale } from '../locales';
 
 export interface ZmEditorProps {
   /** 초기 콘텐츠 (JSON) */
@@ -26,7 +27,7 @@ export interface ZmEditorProps {
   readOnly?: boolean;
   /** 에디터 클래스명 */
   className?: string;
-  /** 플레이스홀더 텍스트 */
+  /** 플레이스홀더 텍스트 (locale 사용 시 무시됨) */
   placeholder?: string;
   /** 글자 수 제한 */
   characterLimit?: number;
@@ -34,7 +35,7 @@ export interface ZmEditorProps {
   enableSlashCommand?: boolean;
   /** 버블 메뉴 활성화 */
   enableBubbleMenu?: boolean;
-  /** 커스텀 슬래시 명령어 */
+  /** 커스텀 슬래시 명령어 (locale 기반 명령어 대신 사용) */
   slashCommands?: SlashCommandItem[];
   /** 자동 포커스 */
   autoFocus?: boolean;
@@ -42,6 +43,8 @@ export interface ZmEditorProps {
   extensions?: Extension[];
   /** 트랜잭션마다 리렌더링 여부 (성능 최적화) */
   shouldRerenderOnTransaction?: boolean;
+  /** 다국어 로케일 (기본값: enLocale) */
+  locale?: ZmEditorLocale;
 }
 
 export interface ZmEditorRef {
@@ -62,6 +65,96 @@ export interface ZmEditorRef {
 }
 
 /**
+ * 로케일 기반 슬래시 명령어 생성
+ */
+function createLocalizedSlashCommands(locale: ZmEditorLocale): SlashCommandItem[] {
+  const { commands } = locale.slashMenu;
+
+  return [
+    {
+      title: commands.text.title,
+      description: commands.text.description,
+      searchTerms: ['paragraph', 'text', 'p'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setParagraph().run();
+      },
+    },
+    {
+      title: commands.heading1.title,
+      description: commands.heading1.description,
+      searchTerms: ['h1', 'heading', 'title', 'large'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setHeading({ level: 1 }).run();
+      },
+    },
+    {
+      title: commands.heading2.title,
+      description: commands.heading2.description,
+      searchTerms: ['h2', 'heading', 'subtitle', 'medium'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setHeading({ level: 2 }).run();
+      },
+    },
+    {
+      title: commands.heading3.title,
+      description: commands.heading3.description,
+      searchTerms: ['h3', 'heading', 'small'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setHeading({ level: 3 }).run();
+      },
+    },
+    {
+      title: commands.bulletList.title,
+      description: commands.bulletList.description,
+      searchTerms: ['unordered', 'bullet', 'list', 'ul'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).toggleBulletList().run();
+      },
+    },
+    {
+      title: commands.numberedList.title,
+      description: commands.numberedList.description,
+      searchTerms: ['ordered', 'number', 'list', 'ol'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).toggleOrderedList().run();
+      },
+    },
+    {
+      title: commands.taskList.title,
+      description: commands.taskList.description,
+      searchTerms: ['todo', 'task', 'checkbox', 'check'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).toggleTaskList().run();
+      },
+    },
+    {
+      title: commands.quote.title,
+      description: commands.quote.description,
+      searchTerms: ['quote', 'blockquote', 'citation'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).toggleBlockquote().run();
+      },
+    },
+    {
+      title: commands.codeBlock.title,
+      description: commands.codeBlock.description,
+      searchTerms: ['code', 'codeblock', 'pre', 'programming'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).toggleCodeBlock().run();
+      },
+    },
+    {
+      title: commands.divider.title,
+      description: commands.divider.description,
+      searchTerms: ['hr', 'divider', 'horizontal', 'rule', 'line'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setHorizontalRule().run();
+      },
+    },
+  ];
+}
+
+/**
  * ZmEditor - Notion-like Rich Text Editor
  *
  * React/Next.js용 Notion 스타일 에디터 컴포넌트
@@ -74,21 +167,31 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
       onHtmlChange,
       readOnly = false,
       className = '',
-      placeholder = "Type '/' for commands...",
+      placeholder,
       characterLimit = 50000,
       enableSlashCommand = true,
       enableBubbleMenu = true,
-      slashCommands = defaultSlashCommands,
+      slashCommands,
       autoFocus = false,
       extensions: customExtensions = [],
       shouldRerenderOnTransaction = false,
+      locale = enLocale,
     },
     ref
   ) => {
+    // 로케일 기반 슬래시 명령어 (커스텀 명령어가 없을 경우)
+    const localizedSlashCommands = useMemo(
+      () => slashCommands ?? createLocalizedSlashCommands(locale),
+      [slashCommands, locale]
+    );
+
+    // 플레이스홀더 (props 우선, 없으면 locale 사용)
+    const editorPlaceholder = placeholder ?? locale.editor.placeholder;
+
     // 확장 기능 구성 (메모이제이션으로 불필요한 재생성 방지)
     const extensions = useMemo(() => {
       const baseExtensions = createStarterExtensions({
-        placeholder,
+        placeholder: editorPlaceholder,
         characterLimit,
         excludeCodeBlock: true, // React NodeView 사용을 위해 제외
       } as ZmStarterKitOptions);
@@ -112,7 +215,7 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         ? SlashCommand.configure({
             suggestion: {
               items: ({ query }: { query: string }) => {
-                return slashCommands.filter((item) => {
+                return localizedSlashCommands.filter((item) => {
                   const searchText = query.toLowerCase();
                   return (
                     item.title.toLowerCase().includes(searchText) ||
@@ -125,13 +228,14 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
               },
               render: () => {
                 let component: SlashMenuComponent | null = null;
+                const noResultsText = locale.slashMenu.noResults;
 
                 return {
                   onStart: (props: SlashMenuRenderProps) => {
-                    component = new SlashMenuComponent(props);
+                    component = new SlashMenuComponent({ ...props, noResultsText });
                   },
                   onUpdate: (props: SlashMenuRenderProps) => {
-                    component?.updateProps(props);
+                    component?.updateProps({ ...props, noResultsText });
                   },
                   onKeyDown: (props: { event: KeyboardEvent }) => {
                     if (props.event.key === 'Escape') {
@@ -155,7 +259,7 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         ...(slashCommandExtension ? [slashCommandExtension] : []),
         ...customExtensions,
       ];
-    }, [placeholder, characterLimit, enableSlashCommand, slashCommands, customExtensions]);
+    }, [editorPlaceholder, characterLimit, enableSlashCommand, localizedSlashCommands, customExtensions, locale]);
 
     // onChange 콜백 메모이제이션
     const handleUpdate = useCallback(
@@ -198,7 +302,7 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
       return (
         <div className="zm-editor">
           <div className="zm-editor-content" style={{ minHeight: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9ca3af' }}>
-            Loading editor...
+            {locale.editor.loading}
           </div>
         </div>
       );
@@ -206,7 +310,13 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
 
     return (
       <div className="zm-editor">
-        {enableBubbleMenu && <BubbleMenu editor={editor} />}
+        {enableBubbleMenu && (
+          <BubbleMenu
+            editor={editor}
+            locale={locale.bubbleMenu}
+            dialogLocale={locale.dialogs}
+          />
+        )}
         <EditorContent editor={editor} />
       </div>
     );
@@ -222,6 +332,7 @@ interface SlashMenuRenderProps {
   items: SlashCommandItem[];
   command: (item: SlashCommandItem) => void;
   clientRect?: (() => DOMRect | null) | null;
+  noResultsText?: string;
 }
 
 class SlashMenuComponent {
@@ -302,7 +413,7 @@ class SlashMenuComponent {
     if (this.props.items.length === 0) {
       const emptyDiv = document.createElement('div');
       emptyDiv.className = 'zm-slash-menu-empty';
-      emptyDiv.textContent = 'No results found';
+      emptyDiv.textContent = this.props.noResultsText ?? 'No results found';
       this.element.appendChild(emptyDiv);
       return;
     }

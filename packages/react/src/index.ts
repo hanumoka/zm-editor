@@ -4,6 +4,9 @@ export * from './components';
 // Hooks
 export * from './hooks';
 
+// Locales
+export * from './locales';
+
 // Re-export core
 export * from '@zm-editor/core';
 
