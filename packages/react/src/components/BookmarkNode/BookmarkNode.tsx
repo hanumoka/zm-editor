@@ -28,6 +28,28 @@ function getDefaultFavicon(url: string): string {
 }
 
 /**
+ * URL이 안전한 프로토콜(http/https)을 사용하는지 검증
+ * javascript:, data:, vbscript: 등 위험한 프로토콜 차단
+ */
+function isSafeUrl(url: string): boolean {
+  if (!url) return false;
+  try {
+    const urlObj = new URL(url);
+    return urlObj.protocol === 'http:' || urlObj.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * 안전한 href 값 반환 (XSS 방지)
+ * 위험한 URL인 경우 빈 문자열 반환
+ */
+function getSafeHref(url: string): string {
+  return isSafeUrl(url) ? url : '';
+}
+
+/**
  * BookmarkNode - 링크 미리보기 카드 NodeView
  */
 export function BookmarkNode({ node, updateAttributes, selected }: BookmarkNodeProps) {
@@ -57,6 +79,12 @@ export function BookmarkNode({ node, updateAttributes, selected }: BookmarkNodeP
     let normalizedUrl = trimmedUrl;
     if (!/^https?:\/\//i.test(normalizedUrl)) {
       normalizedUrl = `https://${normalizedUrl}`;
+    }
+
+    // 안전한 URL인지 검증 (javascript:, data: 등 차단)
+    if (!isSafeUrl(normalizedUrl)) {
+      // 위험한 URL은 저장하지 않음
+      return;
     }
 
     updateAttributes({
@@ -128,17 +156,20 @@ export function BookmarkNode({ node, updateAttributes, selected }: BookmarkNodeP
   const displayTitle = title || extractDomain(url);
   const displaySiteName = siteName || extractDomain(url);
 
+  // 안전한 href (XSS 방지)
+  const safeHref = getSafeHref(url);
+
   return (
     <NodeViewWrapper className="zm-bookmark-node-wrapper">
       <a
-        href={url}
+        href={safeHref}
         target="_blank"
         rel="noopener noreferrer"
         className={`zm-bookmark-node zm-bookmark-card ${selected ? 'is-selected' : ''}`}
         data-drag-handle
         onClick={(e) => {
-          // 선택 상태에서는 링크 이동 방지
-          if (selected) {
+          // 선택 상태에서는 링크 이동 방지, 안전하지 않은 URL도 방지
+          if (selected || !safeHref) {
             e.preventDefault();
           }
         }}
@@ -191,11 +222,17 @@ export function BookmarkNode({ node, updateAttributes, selected }: BookmarkNodeP
             <EditIcon />
           </button>
           <a
-            href={url}
+            href={safeHref}
             target="_blank"
             rel="noopener noreferrer"
             className="zm-bookmark-toolbar-btn"
             title="Open in new tab"
+            onClick={(e) => {
+              // 안전하지 않은 URL 클릭 방지
+              if (!safeHref) {
+                e.preventDefault();
+              }
+            }}
           >
             <ExternalLinkIcon />
           </a>
