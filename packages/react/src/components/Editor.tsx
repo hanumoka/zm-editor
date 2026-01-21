@@ -21,6 +21,7 @@ import { Toggle } from './ToggleNode';
 import { Bookmark } from './BookmarkNode';
 import type { ZmEditorLocale } from '../locales';
 import { enLocale } from '../locales';
+import { LocaleProvider } from '../context';
 
 // ===== 이미지 업로드 관련 타입 =====
 
@@ -643,40 +644,42 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
     }
 
     return (
-      <div className="zm-editor">
-        {/* 숨겨진 파일 input (슬래시 명령어에서 사용) */}
-        <input
-          id="zm-editor-image-upload"
-          type="file"
-          accept={mergedImageConfig.allowedMimeTypes.join(',')}
-          multiple
-          style={{ display: 'none' }}
-          onChange={handleFileInputChange}
-        />
-        {enableBubbleMenu && (
-          <BubbleMenu
-            editor={editor}
-            locale={locale.bubbleMenu}
-            dialogLocale={locale.dialogs}
+      <LocaleProvider locale={locale}>
+        <div className="zm-editor">
+          {/* 숨겨진 파일 input (슬래시 명령어에서 사용) */}
+          <input
+            id="zm-editor-image-upload"
+            type="file"
+            accept={mergedImageConfig.allowedMimeTypes.join(',')}
+            multiple
+            style={{ display: 'none' }}
+            onChange={handleFileInputChange}
           />
-        )}
-        {enableTableBubbleMenu && (
-          <TableBubbleMenu
-            editor={editor}
-            locale={locale.tableBubbleMenu}
-          />
-        )}
-        <EditorContent editor={editor} />
-        {/* 이미지 업로드 중 인디케이터 */}
-        {uploadingCount > 0 && (
-          <div className="zm-editor-upload-indicator">
-            <div className="zm-editor-upload-indicator-spinner" />
-            <span className="zm-editor-upload-indicator-text">
-              {locale.editor.uploading ?? 'Uploading image...'}
-            </span>
-          </div>
-        )}
-      </div>
+          {enableBubbleMenu && (
+            <BubbleMenu
+              editor={editor}
+              locale={locale.bubbleMenu}
+              dialogLocale={locale.dialogs}
+            />
+          )}
+          {enableTableBubbleMenu && (
+            <TableBubbleMenu
+              editor={editor}
+              locale={locale.tableBubbleMenu}
+            />
+          )}
+          <EditorContent editor={editor} />
+          {/* 이미지 업로드 중 인디케이터 */}
+          {uploadingCount > 0 && (
+            <div className="zm-editor-upload-indicator">
+              <div className="zm-editor-upload-indicator-spinner" />
+              <span className="zm-editor-upload-indicator-text">
+                {locale.editor.uploading ?? 'Uploading image...'}
+              </span>
+            </div>
+          )}
+        </div>
+      </LocaleProvider>
     );
   }
 );

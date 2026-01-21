@@ -83,6 +83,36 @@ export interface TableBubbleMenuLocale {
 }
 
 /**
+ * 북마크 노드 번역
+ */
+export interface BookmarkNodeLocale {
+  placeholder: string;
+  editUrl: string;
+  openInNewTab: string;
+}
+
+/**
+ * 임베드 노드 번역
+ */
+export interface EmbedNodeLocale {
+  placeholder: string;
+  hint: string;
+  editUrl: string;
+  openInNewTab: string;
+  addCaption: string;
+  viewOnTwitter: string;
+  unableToEmbed: string;
+}
+
+/**
+ * NodeView 컴포넌트 번역
+ */
+export interface NodesLocale {
+  bookmark: BookmarkNodeLocale;
+  embed: EmbedNodeLocale;
+}
+
+/**
  * zm-editor 전체 로케일 인터페이스
  */
 export interface ZmEditorLocale {
@@ -91,4 +121,5 @@ export interface ZmEditorLocale {
   bubbleMenu: BubbleMenuLocale;
   tableBubbleMenu: TableBubbleMenuLocale;
   dialogs: DialogLocale;
+  nodes: NodesLocale;
 }

@@ -1,5 +1,6 @@
 import { NodeViewWrapper, NodeViewProps } from '@tiptap/react';
 import { useCallback, useState, useRef, useEffect } from 'react';
+import { useLocale } from '../../context';
 
 export type BookmarkNodeProps = NodeViewProps;
 
@@ -53,6 +54,7 @@ function getSafeHref(url: string): string {
  * BookmarkNode - 링크 미리보기 카드 NodeView
  */
 export function BookmarkNode({ node, updateAttributes, selected }: BookmarkNodeProps) {
+  const locale = useLocale();
   const { url, title, description, image, favicon, siteName } = node.attrs;
 
   // URL 입력 상태
@@ -156,7 +158,7 @@ export function BookmarkNode({ node, updateAttributes, selected }: BookmarkNodeP
               onChange={(e) => setUrlValue(e.target.value)}
               onBlur={handleUrlSave}
               onKeyDown={handleUrlKeyDown}
-              placeholder="Paste a link to create bookmark..."
+              placeholder={locale.nodes.bookmark.placeholder}
             />
           </div>
         </div>
@@ -226,7 +228,7 @@ export function BookmarkNode({ node, updateAttributes, selected }: BookmarkNodeP
             type="button"
             className="zm-bookmark-toolbar-btn"
             onClick={handleEdit}
-            title="Edit URL"
+            title={locale.nodes.bookmark.editUrl}
           >
             <EditIcon />
           </button>
@@ -235,7 +237,7 @@ export function BookmarkNode({ node, updateAttributes, selected }: BookmarkNodeP
             target="_blank"
             rel="noopener noreferrer"
             className="zm-bookmark-toolbar-btn"
-            title="Open in new tab"
+            title={locale.nodes.bookmark.openInNewTab}
             onClick={(e) => {
               // 안전하지 않은 URL 클릭 방지
               if (!safeHref) {

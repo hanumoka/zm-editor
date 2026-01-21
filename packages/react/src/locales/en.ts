@@ -104,4 +104,20 @@ export const enLocale: ZmEditorLocale = {
   dialogs: {
     linkUrlPrompt: 'URL',
   },
+  nodes: {
+    bookmark: {
+      placeholder: 'Paste a link to create bookmark...',
+      editUrl: 'Edit URL',
+      openInNewTab: 'Open in new tab',
+    },
+    embed: {
+      placeholder: 'Paste YouTube, Vimeo, CodePen, or CodeSandbox URL...',
+      hint: 'Supported: YouTube, Vimeo, Twitter/X, CodePen, CodeSandbox',
+      editUrl: 'Edit URL',
+      openInNewTab: 'Open in new tab',
+      addCaption: 'Add a caption...',
+      viewOnTwitter: 'View on Twitter/X',
+      unableToEmbed: 'Unable to embed this URL',
+    },
+  },
 };

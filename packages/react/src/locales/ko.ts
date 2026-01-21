@@ -104,4 +104,20 @@ export const koLocale: ZmEditorLocale = {
   dialogs: {
     linkUrlPrompt: 'URL을 입력하세요',
   },
+  nodes: {
+    bookmark: {
+      placeholder: '링크를 붙여넣어 북마크 생성...',
+      editUrl: 'URL 수정',
+      openInNewTab: '새 탭에서 열기',
+    },
+    embed: {
+      placeholder: 'YouTube, Vimeo, CodePen, CodeSandbox URL 붙여넣기...',
+      hint: '지원: YouTube, Vimeo, Twitter/X, CodePen, CodeSandbox',
+      editUrl: 'URL 수정',
+      openInNewTab: '새 탭에서 열기',
+      addCaption: '캡션 추가...',
+      viewOnTwitter: 'Twitter/X에서 보기',
+      unableToEmbed: '이 URL을 임베드할 수 없습니다',
+    },
+  },
 };
