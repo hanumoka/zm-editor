@@ -14,6 +14,7 @@ export {
   CharacterCount,
   CodeBlockLowlight,
   HorizontalRule,
+  lowlight,
   type ZmStarterKitOptions,
 } from './starter-kit';
 

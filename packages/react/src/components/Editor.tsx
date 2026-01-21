@@ -1,16 +1,19 @@
 'use client';
 
 import { forwardRef, useImperativeHandle, useMemo, useCallback } from 'react';
-import { useEditor, EditorContent, Editor as TiptapEditor } from '@tiptap/react';
+import { useEditor, EditorContent, Editor as TiptapEditor, ReactNodeViewRenderer } from '@tiptap/react';
 import type { JSONContent, Extension } from '@tiptap/core';
 import {
   createStarterExtensions,
   SlashCommand,
   defaultSlashCommands,
+  CodeBlockLowlight,
+  lowlight,
   type SlashCommandItem,
   type ZmStarterKitOptions,
 } from '@zm-editor/core';
 import { BubbleMenu } from './BubbleMenu';
+import { CodeBlock } from './CodeBlock';
 
 export interface ZmEditorProps {
   /** 초기 콘텐츠 (JSON) */
@@ -87,7 +90,22 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
       const baseExtensions = createStarterExtensions({
         placeholder,
         characterLimit,
+        excludeCodeBlock: true, // React NodeView 사용을 위해 제외
       } as ZmStarterKitOptions);
+
+      // 커스텀 CodeBlock (언어 선택 UI 포함)
+      const codeBlockExtension = CodeBlockLowlight
+        .extend({
+          addNodeView() {
+            return ReactNodeViewRenderer(CodeBlock);
+          },
+        })
+        .configure({
+          lowlight,
+          HTMLAttributes: {
+            class: 'zm-code-block',
+          },
+        });
 
       // 슬래시 명령어 확장 설정
       const slashCommandExtension = enableSlashCommand
@@ -133,6 +151,7 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
 
       return [
         ...baseExtensions,
+        codeBlockExtension,
         ...(slashCommandExtension ? [slashCommandExtension] : []),
         ...customExtensions,
       ];

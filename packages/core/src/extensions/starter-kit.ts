@@ -19,7 +19,12 @@ const lowlight = createLowlight(common);
 export interface ZmStarterKitOptions {
   placeholder?: string;
   characterLimit?: number;
+  /** CodeBlock을 제외할지 여부 (React NodeView 사용 시) */
+  excludeCodeBlock?: boolean;
 }
+
+// lowlight 인스턴스 export (React에서 커스텀 CodeBlock 사용 시 필요)
+export { lowlight };
 
 /**
  * zm-editor 기본 확장 세트
@@ -27,10 +32,13 @@ export interface ZmStarterKitOptions {
  * Notion-like 에디터에 필요한 모든 기본 확장을 포함합니다.
  */
 export function createStarterExtensions(options: ZmStarterKitOptions = {}) {
-  const { placeholder = "Type '/' for commands...", characterLimit = 50000 } =
-    options;
+  const {
+    placeholder = "Type '/' for commands...",
+    characterLimit = 50000,
+    excludeCodeBlock = false,
+  } = options;
 
-  return [
+  const extensions = [
     // 기본 텍스트 편집 (마크다운 단축키 포함)
     StarterKit.configure({
       heading: {
@@ -64,14 +72,6 @@ export function createStarterExtensions(options: ZmStarterKitOptions = {}) {
       dropcursor: {
         color: '#3b82f6',
         width: 2,
-      },
-    }),
-
-    // 코드 블록 (신택스 하이라이팅)
-    CodeBlockLowlight.configure({
-      lowlight,
-      HTMLAttributes: {
-        class: 'zm-code-block',
       },
     }),
 
@@ -138,6 +138,18 @@ export function createStarterExtensions(options: ZmStarterKitOptions = {}) {
       limit: characterLimit,
     }),
   ];
+
+  // CodeBlock 포함 여부
+  if (!excludeCodeBlock) {
+    extensions.splice(1, 0, CodeBlockLowlight.configure({
+      lowlight,
+      HTMLAttributes: {
+        class: 'zm-code-block',
+      },
+    }));
+  }
+
+  return extensions;
 }
 
 export {
