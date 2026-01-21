@@ -19,6 +19,7 @@ import { Embed } from './EmbedNode';
 import { Callout } from './CalloutNode';
 import { Toggle } from './ToggleNode';
 import { Bookmark } from './BookmarkNode';
+import { MathExtension } from './MathNode';
 import type { ZmEditorLocale } from '../locales';
 import { enLocale } from '../locales';
 import { LocaleProvider } from '../context';
@@ -298,6 +299,14 @@ function createLocalizedSlashCommands(locale: ZmEditorLocale): SlashCommandItem[
         editor.chain().focus().deleteRange(range).setBookmark().run();
       },
     },
+    {
+      title: commands.math.title,
+      description: commands.math.description,
+      searchTerms: ['math', 'latex', 'equation', 'formula', 'katex', 'tex'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setMath().run();
+      },
+    },
   ];
 }
 
@@ -463,6 +472,13 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         },
       });
 
+      // Math 확장 (KaTeX 수학 수식)
+      const mathExtension = MathExtension.configure({
+        HTMLAttributes: {
+          class: 'zm-math',
+        },
+      });
+
       return [
         ...baseExtensions,
         codeBlockExtension,
@@ -471,6 +487,7 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         calloutExtension,
         toggleExtension,
         bookmarkExtension,
+        mathExtension,
         ...(slashCommandExtension ? [slashCommandExtension] : []),
         ...customExtensions,
       ];

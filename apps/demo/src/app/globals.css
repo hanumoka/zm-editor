@@ -1422,3 +1422,180 @@ body {
 .zm-bookmark-caption-input::placeholder {
   color: #9ca3af;
 }
+
+/* ======================================
+   Math Node (KaTeX)
+   ====================================== */
+
+.zm-math-node-wrapper {
+  margin: 16px 0;
+}
+
+.zm-math-node {
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.zm-math-node.is-selected {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Input Mode */
+.zm-math-input-mode {
+  padding: 16px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+.zm-math-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.zm-math-input-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.zm-math-input-header svg {
+  color: #9ca3af;
+}
+
+.zm-math-input-label {
+  color: #374151;
+}
+
+.zm-math-latex-input {
+  width: 100%;
+  min-height: 60px;
+  padding: 12px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #1f2937;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.zm-math-latex-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.zm-math-latex-input::placeholder {
+  color: #9ca3af;
+}
+
+.zm-math-preview {
+  padding: 16px;
+  background: #ffffff;
+  border: 1px dashed #d1d5db;
+  border-radius: 6px;
+  text-align: center;
+  overflow-x: auto;
+}
+
+.zm-math-hint {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  text-align: right;
+}
+
+/* Display Mode */
+.zm-math-display {
+  padding: 24px 16px;
+  background: #fafafa;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  text-align: center;
+  overflow-x: auto;
+}
+
+.zm-math-display:hover {
+  background: #f3f4f6;
+}
+
+.zm-math-rendered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.zm-math-rendered .katex-display {
+  margin: 0;
+}
+
+/* Error Display */
+.zm-math-error {
+  padding: 8px 12px;
+  font-size: 0.75rem;
+  color: #dc2626;
+  background: #fef2f2;
+  border-radius: 4px;
+}
+
+.zm-math-error-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+}
+
+.zm-math-error-icon {
+  color: #dc2626;
+}
+
+.zm-math-error-message {
+  font-size: 0.875rem;
+  color: #dc2626;
+}
+
+.zm-math-error-source {
+  padding: 8px 12px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.75rem;
+  color: #6b7280;
+  background: #f3f4f6;
+  border-radius: 4px;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* Toolbar */
+.zm-math-toolbar {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.zm-math-toolbar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: #6b7280;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.zm-math-toolbar-btn:hover {
+  color: #374151;
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}

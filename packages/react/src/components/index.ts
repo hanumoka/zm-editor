@@ -21,3 +21,5 @@ export { ToggleNode, Toggle } from './ToggleNode';
 export type { ToggleNodeProps, ToggleOptions } from './ToggleNode';
 export { BookmarkNode, Bookmark } from './BookmarkNode';
 export type { BookmarkNodeProps, BookmarkOptions, BookmarkMetadata } from './BookmarkNode';
+export { MathNode, MathExtension } from './MathNode';
+export type { MathNodeProps, MathOptions } from './MathNode';

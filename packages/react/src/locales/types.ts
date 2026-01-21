@@ -32,6 +32,7 @@ export interface SlashMenuLocale {
     callout: SlashCommandLocale;
     toggle: SlashCommandLocale;
     bookmark: SlashCommandLocale;
+    math: SlashCommandLocale;
   };
 }
 
@@ -106,11 +107,22 @@ export interface EmbedNodeLocale {
 }
 
 /**
+ * 수학 수식 노드 번역
+ */
+export interface MathNodeLocale {
+  label: string;
+  placeholder: string;
+  hint: string;
+  edit: string;
+}
+
+/**
  * NodeView 컴포넌트 번역
  */
 export interface NodesLocale {
   bookmark: BookmarkNodeLocale;
   embed: EmbedNodeLocale;
+  math: MathNodeLocale;
 }
 
 /**

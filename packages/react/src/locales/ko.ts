@@ -76,6 +76,10 @@ export const koLocale: ZmEditorLocale = {
         title: '북마크',
         description: '링크 미리보기 카드',
       },
+      math: {
+        title: '수식',
+        description: 'LaTeX 수학 수식 블록',
+      },
     },
   },
   bubbleMenu: {
@@ -119,6 +123,12 @@ export const koLocale: ZmEditorLocale = {
       addCaption: '캡션 추가...',
       viewOnTwitter: 'Twitter/X에서 보기',
       unableToEmbed: '이 URL을 임베드할 수 없습니다',
+    },
+    math: {
+      label: '수학 수식',
+      placeholder: 'LaTeX 입력 (예: E = mc^2)',
+      hint: 'Ctrl+Enter로 확인, Escape로 취소',
+      edit: '수식 수정',
     },
   },
 };

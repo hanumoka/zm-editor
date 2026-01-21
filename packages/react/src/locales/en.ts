@@ -76,6 +76,10 @@ export const enLocale: ZmEditorLocale = {
         title: 'Bookmark',
         description: 'Link preview card',
       },
+      math: {
+        title: 'Math',
+        description: 'LaTeX equation block',
+      },
     },
   },
   bubbleMenu: {
@@ -119,6 +123,12 @@ export const enLocale: ZmEditorLocale = {
       addCaption: 'Add a caption...',
       viewOnTwitter: 'View on Twitter/X',
       unableToEmbed: 'Unable to embed this URL',
+    },
+    math: {
+      label: 'Math equation',
+      placeholder: 'Enter LaTeX (e.g., E = mc^2)',
+      hint: 'Press Ctrl+Enter to confirm, Escape to cancel',
+      edit: 'Edit equation',
     },
   },
 };
