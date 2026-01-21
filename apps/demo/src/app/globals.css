@@ -730,3 +730,35 @@ body {
 .zm-image-caption-input::placeholder {
   color: #9ca3af;
 }
+
+/* ===== Upload Indicator ===== */
+.zm-editor-upload-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.zm-editor-upload-indicator-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #bfdbfe;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: zm-spinner 0.8s linear infinite;
+}
+
+@keyframes zm-spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.zm-editor-upload-indicator-text {
+  font-size: 0.875rem;
+  color: #1d4ed8;
+}

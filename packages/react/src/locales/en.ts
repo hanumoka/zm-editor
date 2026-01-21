@@ -7,6 +7,7 @@ export const enLocale: ZmEditorLocale = {
   editor: {
     placeholder: "Type '/' for commands...",
     loading: 'Loading editor...',
+    uploading: 'Uploading image...',
   },
   slashMenu: {
     noResults: 'No results found',

@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, useImperativeHandle, useMemo, useCallback, useEffect } from 'react';
+import { forwardRef, useImperativeHandle, useMemo, useCallback, useEffect, useState } from 'react';
 import { useEditor, EditorContent, Editor as TiptapEditor, ReactNodeViewRenderer } from '@tiptap/react';
 import type { JSONContent, Extension } from '@tiptap/core';
 import {
@@ -299,6 +299,9 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
       [imageConfig]
     );
 
+    // 업로드 중인 파일 수 추적
+    const [uploadingCount, setUploadingCount] = useState(0);
+
     // 로케일 기반 슬래시 명령어 (커스텀 명령어가 없을 경우)
     const localizedSlashCommands = useMemo(
       () => slashCommands ?? createLocalizedSlashCommands(locale),
@@ -454,6 +457,9 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
           return;
         }
 
+        // 업로드 시작
+        setUploadingCount((prev) => prev + 1);
+
         try {
           let imageUrl: string;
           let alt: string | undefined;
@@ -467,6 +473,7 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
             alt = file.name;
           } else {
             console.warn('[ZmEditor] Image upload disabled');
+            setUploadingCount((prev) => Math.max(0, prev - 1));
             return;
           }
 
@@ -476,6 +483,9 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
           const error = err instanceof Error ? err : new Error('Image upload failed');
           onImageUploadError?.(error, file);
           console.error('[ZmEditor] Image upload failed:', error);
+        } finally {
+          // 업로드 완료
+          setUploadingCount((prev) => Math.max(0, prev - 1));
         }
       },
       [editor, onImageUpload, mergedImageConfig, onImageUploadError]
@@ -589,6 +599,15 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
           />
         )}
         <EditorContent editor={editor} />
+        {/* 이미지 업로드 중 인디케이터 */}
+        {uploadingCount > 0 && (
+          <div className="zm-editor-upload-indicator">
+            <div className="zm-editor-upload-indicator-spinner" />
+            <span className="zm-editor-upload-indicator-text">
+              {locale.editor.uploading ?? 'Uploading image...'}
+            </span>
+          </div>
+        )}
       </div>
     );
   }

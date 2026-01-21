@@ -7,6 +7,7 @@ export const koLocale: ZmEditorLocale = {
   editor: {
     placeholder: "'/'를 입력하여 명령어 사용...",
     loading: '에디터 로딩 중...',
+    uploading: '이미지 업로드 중...',
   },
   slashMenu: {
     noResults: '검색 결과 없음',

@@ -50,6 +50,7 @@ export interface BubbleMenuLocale {
 export interface EditorLocale {
   placeholder: string;
   loading: string;
+  uploading: string;
 }
 
 /**

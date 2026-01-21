@@ -79,44 +79,73 @@ export default function Home() {
   const editorRef = useRef<ZmEditorRef>(null);
   const [content, setContent] = useState<JSONContent>(initialContent);
   const [uploadStatus, setUploadStatus] = useState<string>('');
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
 
-  // 이미지 업로드 핸들러 (demoapi 연동)
-  const handleImageUpload: ImageUploadHandler = useCallback(async ({ file }) => {
+  // 이미지 업로드 핸들러 (demoapi 연동, 진행률 지원)
+  const handleImageUpload: ImageUploadHandler = useCallback(async ({ file, onProgress }) => {
     setUploadStatus(`Uploading ${file.name}...`);
+    setIsUploading(true);
+    setUploadProgress(0);
 
     const formData = new FormData();
     formData.append('image', file);
 
-    try {
-      const response = await fetch(`${API_URL}/upload/image`, {
-        method: 'POST',
-        body: formData,
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+
+      // 업로드 진행률 이벤트
+      xhr.upload.addEventListener('progress', (event) => {
+        if (event.lengthComputable) {
+          const percent = Math.round((event.loaded / event.total) * 100);
+          setUploadProgress(percent);
+          onProgress?.(percent);
+        }
       });
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Upload failed');
-      }
+      // 업로드 완료
+      xhr.addEventListener('load', () => {
+        setIsUploading(false);
 
-      const data = await response.json();
-      setUploadStatus(`Uploaded: ${file.name}`);
+        if (xhr.status >= 200 && xhr.status < 300) {
+          const data = JSON.parse(xhr.responseText);
+          setUploadStatus(`Uploaded: ${file.name}`);
+          setUploadProgress(100);
 
-      // 3초 후 상태 메시지 제거
-      setTimeout(() => setUploadStatus(''), 3000);
+          // 3초 후 상태 메시지 제거
+          setTimeout(() => {
+            setUploadStatus('');
+            setUploadProgress(0);
+          }, 3000);
 
-      return {
-        url: data.url,
-        alt: file.name,
-      };
-    } catch (error) {
-      setUploadStatus(`Failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      throw error;
-    }
+          resolve({
+            url: data.url,
+            alt: file.name,
+          });
+        } else {
+          const error = xhr.responseText ? JSON.parse(xhr.responseText) : { message: 'Upload failed' };
+          setUploadStatus(`Failed: ${error.message || 'Unknown error'}`);
+          reject(new Error(error.message || 'Upload failed'));
+        }
+      });
+
+      // 업로드 에러
+      xhr.addEventListener('error', () => {
+        setIsUploading(false);
+        setUploadStatus('Failed: Network error');
+        reject(new Error('Network error'));
+      });
+
+      xhr.open('POST', `${API_URL}/upload/image`);
+      xhr.send(formData);
+    });
   }, []);
 
   // 이미지 업로드 에러 핸들러
   const handleImageUploadError = useCallback((error: Error, file: File) => {
     console.error('Image upload error:', error, file);
+    setIsUploading(false);
+    setUploadProgress(0);
     setUploadStatus(`Error: ${error.message}`);
     setTimeout(() => setUploadStatus(''), 5000);
   }, []);
@@ -158,10 +187,21 @@ export default function Home() {
           </button>
         </div>
 
-        {/* 업로드 상태 표시 */}
-        {uploadStatus && (
-          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-700">
-            {uploadStatus}
+        {/* 업로드 상태 표시 (프로그레스 바 포함) */}
+        {(uploadStatus || isUploading) && (
+          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="flex items-center justify-between text-sm text-blue-700 mb-2">
+              <span>{uploadStatus}</span>
+              {isUploading && <span>{uploadProgress}%</span>}
+            </div>
+            {isUploading && (
+              <div className="w-full bg-blue-200 rounded-full h-2 overflow-hidden">
+                <div
+                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${uploadProgress}%` }}
+                />
+              </div>
+            )}
           </div>
         )}
 
