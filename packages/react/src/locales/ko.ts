@@ -72,6 +72,10 @@ export const koLocale: ZmEditorLocale = {
         title: '토글',
         description: '접기/펼치기 가능한 블록',
       },
+      bookmark: {
+        title: '북마크',
+        description: '링크 미리보기 카드',
+      },
     },
   },
   bubbleMenu: {

@@ -31,6 +31,7 @@ export interface SlashMenuLocale {
     embed: SlashCommandLocale;
     callout: SlashCommandLocale;
     toggle: SlashCommandLocale;
+    bookmark: SlashCommandLocale;
   };
 }
 

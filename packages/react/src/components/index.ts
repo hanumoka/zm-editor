@@ -19,3 +19,5 @@ export { CalloutNode, Callout } from './CalloutNode';
 export type { CalloutNodeProps, CalloutOptions, CalloutColor } from './CalloutNode';
 export { ToggleNode, Toggle } from './ToggleNode';
 export type { ToggleNodeProps, ToggleOptions } from './ToggleNode';
+export { BookmarkNode, Bookmark } from './BookmarkNode';
+export type { BookmarkNodeProps, BookmarkOptions, BookmarkMetadata } from './BookmarkNode';

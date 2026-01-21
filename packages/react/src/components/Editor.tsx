@@ -18,6 +18,7 @@ import { ResizableImage } from './ImageNode';
 import { Embed } from './EmbedNode';
 import { Callout } from './CalloutNode';
 import { Toggle } from './ToggleNode';
+import { Bookmark } from './BookmarkNode';
 import type { ZmEditorLocale } from '../locales';
 import { enLocale } from '../locales';
 
@@ -288,6 +289,14 @@ function createLocalizedSlashCommands(locale: ZmEditorLocale): SlashCommandItem[
         editor.chain().focus().deleteRange(range).setToggle().run();
       },
     },
+    {
+      title: commands.bookmark.title,
+      description: commands.bookmark.description,
+      searchTerms: ['bookmark', 'link', 'preview', 'url', 'website', 'web'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setBookmark().run();
+      },
+    },
   ];
 }
 
@@ -446,6 +455,13 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         },
       });
 
+      // Bookmark 확장 (링크 미리보기 카드)
+      const bookmarkExtension = Bookmark.configure({
+        HTMLAttributes: {
+          class: 'zm-bookmark',
+        },
+      });
+
       return [
         ...baseExtensions,
         codeBlockExtension,
@@ -453,6 +469,7 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         embedExtension,
         calloutExtension,
         toggleExtension,
+        bookmarkExtension,
         ...(slashCommandExtension ? [slashCommandExtension] : []),
         ...customExtensions,
       ];

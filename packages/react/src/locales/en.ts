@@ -72,6 +72,10 @@ export const enLocale: ZmEditorLocale = {
         title: 'Toggle',
         description: 'Collapsible content block',
       },
+      bookmark: {
+        title: 'Bookmark',
+        description: 'Link preview card',
+      },
     },
   },
   bubbleMenu: {
