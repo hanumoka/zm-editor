@@ -6,6 +6,10 @@ export {
   type ImageUploadOptions,
   type ImageUploadHandler,
   type ImageUploadConfig,
+  type FileUploadResult,
+  type FileUploadOptions,
+  type FileUploadHandler,
+  type FileUploadConfig,
 } from './Editor';
 export { BubbleMenu } from './BubbleMenu';
 export { TableBubbleMenu } from './TableBubbleMenu';
@@ -23,3 +27,5 @@ export { BookmarkNode, Bookmark } from './BookmarkNode';
 export type { BookmarkNodeProps, BookmarkOptions, BookmarkMetadata } from './BookmarkNode';
 export { MathNode, MathExtension } from './MathNode';
 export type { MathNodeProps, MathOptions } from './MathNode';
+export { FileAttachmentNode, FileAttachment, getFileIcon, formatFileSize } from './FileAttachmentNode';
+export type { FileAttachmentNodeProps, FileAttachmentOptions, FileAttachmentAttributes } from './FileAttachmentNode';

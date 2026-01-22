@@ -28,6 +28,7 @@ export interface SlashMenuLocale {
     divider: SlashCommandLocale;
     table: SlashCommandLocale;
     image: SlashCommandLocale;
+    file: SlashCommandLocale;
     embed: SlashCommandLocale;
     callout: SlashCommandLocale;
     toggle: SlashCommandLocale;
@@ -117,12 +118,22 @@ export interface MathNodeLocale {
 }
 
 /**
+ * 파일 첨부 노드 번역
+ */
+export interface FileAttachmentNodeLocale {
+  download: string;
+  addCaption: string;
+  uploadingFile: string;
+}
+
+/**
  * NodeView 컴포넌트 번역
  */
 export interface NodesLocale {
   bookmark: BookmarkNodeLocale;
   embed: EmbedNodeLocale;
   math: MathNodeLocale;
+  fileAttachment: FileAttachmentNodeLocale;
 }
 
 /**

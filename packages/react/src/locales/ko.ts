@@ -60,6 +60,10 @@ export const koLocale: ZmEditorLocale = {
         title: '이미지',
         description: '이미지 업로드 또는 삽입',
       },
+      file: {
+        title: '파일',
+        description: '파일 첨부',
+      },
       embed: {
         title: '임베드',
         description: 'YouTube, Vimeo, Twitter, CodePen',
@@ -129,6 +133,11 @@ export const koLocale: ZmEditorLocale = {
       placeholder: 'LaTeX 입력 (예: E = mc^2)',
       hint: 'Ctrl+Enter로 확인, Escape로 취소',
       edit: '수식 수정',
+    },
+    fileAttachment: {
+      download: '다운로드',
+      addCaption: '캡션 추가...',
+      uploadingFile: '파일 업로드 중...',
     },
   },
 };

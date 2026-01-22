@@ -60,6 +60,10 @@ export const enLocale: ZmEditorLocale = {
         title: 'Image',
         description: 'Upload or embed an image',
       },
+      file: {
+        title: 'File',
+        description: 'Upload a file attachment',
+      },
       embed: {
         title: 'Embed',
         description: 'YouTube, Vimeo, Twitter, CodePen',
@@ -129,6 +133,11 @@ export const enLocale: ZmEditorLocale = {
       placeholder: 'Enter LaTeX (e.g., E = mc^2)',
       hint: 'Press Ctrl+Enter to confirm, Escape to cancel',
       edit: 'Edit equation',
+    },
+    fileAttachment: {
+      download: 'Download',
+      addCaption: 'Add a caption...',
+      uploadingFile: 'Uploading file...',
     },
   },
 };

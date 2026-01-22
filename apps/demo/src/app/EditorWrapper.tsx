@@ -1,7 +1,7 @@
 'use client';
 
 import { forwardRef } from 'react';
-import { ZmEditor, type ZmEditorRef, type JSONContent, type ZmEditorLocale, type ImageUploadHandler } from '@zm-editor/react';
+import { ZmEditor, type ZmEditorRef, type JSONContent, type ZmEditorLocale, type ImageUploadHandler, type FileUploadHandler } from '@zm-editor/react';
 
 interface EditorWrapperProps {
   initialContent: JSONContent;
@@ -10,10 +10,12 @@ interface EditorWrapperProps {
   placeholder: string;
   onImageUpload?: ImageUploadHandler;
   onImageUploadError?: (error: Error, file: File) => void;
+  onFileUpload?: FileUploadHandler;
+  onFileUploadError?: (error: Error, file: File) => void;
 }
 
 const EditorWrapper = forwardRef<ZmEditorRef, EditorWrapperProps>(
-  ({ initialContent, onChange, locale, placeholder, onImageUpload, onImageUploadError }, ref) => {
+  ({ initialContent, onChange, locale, placeholder, onImageUpload, onImageUploadError, onFileUpload, onFileUploadError }, ref) => {
     return (
       <ZmEditor
         ref={ref}
@@ -25,6 +27,8 @@ const EditorWrapper = forwardRef<ZmEditorRef, EditorWrapperProps>(
         enableBubbleMenu={true}
         onImageUpload={onImageUpload}
         onImageUploadError={onImageUploadError}
+        onFileUpload={onFileUpload}
+        onFileUploadError={onFileUploadError}
       />
     );
   }

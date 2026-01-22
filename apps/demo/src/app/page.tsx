@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback } from 'react';
 import dynamic from 'next/dynamic';
-import { koLocale, enLocale, type ZmEditorRef, type JSONContent, type ImageUploadHandler } from '@zm-editor/react';
+import { koLocale, enLocale, type ZmEditorRef, type JSONContent, type ImageUploadHandler, type FileUploadHandler } from '@zm-editor/react';
 
 // SSR 비활성화하여 hydration 불일치 방지
 const EditorWrapper = dynamic(() => import('./EditorWrapper'), {
@@ -14,8 +14,8 @@ const EditorWrapper = dynamic(() => import('./EditorWrapper'), {
   ),
 });
 
-// demoapi 서버 URL
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+// API URL (동일한 앱의 API 라우트 사용)
+const API_URL = '/api';
 
 const initialContent: JSONContent = {
   type: 'doc',
@@ -228,13 +228,77 @@ export default function Home() {
         reject(new Error('Network error'));
       });
 
-      xhr.open('POST', `${API_URL}/upload/image`);
+      xhr.open('POST', `${API_URL}/upload`);
       xhr.send(formData);
     });
   }, []);
 
   const handleImageUploadError = useCallback((error: Error, file: File) => {
     console.error('Image upload error:', error, file);
+    setIsUploading(false);
+    setUploadProgress(0);
+    setUploadStatus(`Error: ${error.message}`);
+    setTimeout(() => setUploadStatus(''), 5000);
+  }, []);
+
+  // 파일 업로드 핸들러 (API 라우트 연동)
+  const handleFileUpload: FileUploadHandler = useCallback(async ({ file, onProgress }) => {
+    setUploadStatus(`Uploading ${file.name}...`);
+    setIsUploading(true);
+    setUploadProgress(0);
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+
+      xhr.upload.addEventListener('progress', (event) => {
+        if (event.lengthComputable) {
+          const percent = Math.round((event.loaded / event.total) * 100);
+          setUploadProgress(percent);
+          onProgress?.(percent);
+        }
+      });
+
+      xhr.addEventListener('load', () => {
+        setIsUploading(false);
+
+        if (xhr.status >= 200 && xhr.status < 300) {
+          const data = JSON.parse(xhr.responseText);
+          setUploadStatus(`Uploaded: ${file.name}`);
+          setUploadProgress(100);
+          setTimeout(() => {
+            setUploadStatus('');
+            setUploadProgress(0);
+          }, 3000);
+
+          resolve({
+            url: data.url,
+            fileName: data.fileName || file.name,
+            fileSize: data.fileSize || file.size,
+            mimeType: data.mimeType || file.type,
+          });
+        } else {
+          const error = xhr.responseText ? JSON.parse(xhr.responseText) : { error: 'Upload failed' };
+          setUploadStatus(`Failed: ${error.error || 'Unknown error'}`);
+          reject(new Error(error.error || 'Upload failed'));
+        }
+      });
+
+      xhr.addEventListener('error', () => {
+        setIsUploading(false);
+        setUploadStatus('Failed: Network error');
+        reject(new Error('Network error'));
+      });
+
+      xhr.open('POST', `${API_URL}/upload`);
+      xhr.send(formData);
+    });
+  }, []);
+
+  const handleFileUploadError = useCallback((error: Error, file: File) => {
+    console.error('File upload error:', error, file);
     setIsUploading(false);
     setUploadProgress(0);
     setUploadStatus(`Error: ${error.message}`);
@@ -374,6 +438,8 @@ export default function Home() {
                 placeholder={locale === 'ko' ? "'/'를 입력하여 명령어 사용..." : "Type '/' for commands..."}
                 onImageUpload={handleImageUpload}
                 onImageUploadError={handleImageUploadError}
+                onFileUpload={handleFileUpload}
+                onFileUploadError={handleFileUploadError}
               />
             </div>
 
@@ -442,6 +508,7 @@ export default function Home() {
                     { cmd: '/divider', desc: 'Divider' },
                     { cmd: '/table', desc: 'Table' },
                     { cmd: '/image', desc: 'Image' },
+                    { cmd: '/file', desc: 'File' },
                     { cmd: '/embed', desc: 'Embed' },
                     { cmd: '/callout', desc: 'Callout' },
                     { cmd: '/toggle', desc: 'Toggle' },
@@ -511,6 +578,10 @@ export default function Home() {
                   <p>Drag & drop, paste, or /image. Click to resize/align.</p>
                 </div>
                 <div>
+                  <strong className="text-gray-800">File:</strong>
+                  <p>Drag & drop or /file. PDF, DOC, XLS, ZIP, etc.</p>
+                </div>
+                <div>
                   <strong className="text-gray-800">Table:</strong>
                   <p>Click inside table for row/column controls.</p>
                 </div>
@@ -529,17 +600,14 @@ export default function Home() {
               </div>
             </div>
 
-            {/* API Notice */}
-            <div className="bg-amber-50 rounded-xl border border-amber-200 p-4">
-              <h3 className="font-semibold text-amber-800 mb-2 text-sm">Image Upload API</h3>
-              <p className="text-xs text-amber-700 mb-2">
-                For server upload, start the backend:
+            {/* Upload API Info */}
+            <div className="bg-green-50 rounded-xl border border-green-200 p-4">
+              <h3 className="font-semibold text-green-800 mb-2 text-sm">Upload API</h3>
+              <p className="text-xs text-green-700">
+                This demo uses built-in Next.js API routes for image and file uploads. Files are saved to <code className="bg-green-100 px-1 rounded">public/uploads/</code>.
               </p>
-              <code className="block bg-amber-100 p-2 rounded text-[10px] text-amber-900 font-mono">
-                cd apps/demoapi && pnpm start:dev
-              </code>
-              <p className="text-[10px] text-amber-600 mt-2">
-                Without API, images use Base64 (local only).
+              <p className="text-[10px] text-green-600 mt-2">
+                Max: Images 5MB, Files 50MB
               </p>
             </div>
 
