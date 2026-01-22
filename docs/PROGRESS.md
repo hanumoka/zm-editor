@@ -1,13 +1,13 @@
 # zm-editor 진행상황
 
-> 최종 업데이트: 2026-01-21
+> 최종 업데이트: 2026-01-22
 
 ## 현재 버전
 
 - **버전**: 0.1.0 (개발 중)
 - **상태**: Alpha
-- **완료**: Phase 1~6
-- **다음**: Phase 7 (이미지 업로드)
+- **완료**: Phase 1~6, Phase 7 대부분 완료
+- **다음**: Phase 8 (파일 업로드/첨부)
 
 ---
 
@@ -21,7 +21,7 @@
 | 4 | 코드블록 고급 기능 | ✅ 완료 |
 | 5 | 다국어 지원 (i18n) | ✅ 완료 |
 | 6 | 테이블 기능 | ✅ 완료 |
-| 7 | 이미지 업로드 | 📋 대기 |
+| 7 | 이미지 및 커스텀 노드 | ✅ 대부분 완료 |
 | 8 | 파일 업로드/첨부 | 📋 대기 |
 | 9 | 보안 강화 | 📋 대기 |
 | 10 | 개발자 기능 (필수) | 📋 대기 |
@@ -97,17 +97,66 @@
 
 ## 예정된 작업
 
-### Phase 7: 이미지 업로드
+### Phase 7: 이미지 및 커스텀 노드 ✅ (대부분 완료)
 
-- [ ] `@tiptap/extension-file-handler` 설정
-- [ ] 드래그 앤 드롭 업로드
-- [ ] 복사/붙여넣기 업로드
-- [ ] 업로드 진행률 UI
-- [ ] 이미지 플레이스홀더 (업로드 중)
-- [ ] 이미지 리사이즈 핸들
-- [ ] 이미지 캡션 (커스텀 노드뷰)
-- [ ] 이미지 정렬 (좌/중/우)
-- [ ] Alt 텍스트 편집 UI
+#### 7.1: ImageNode
+- [x] `ImageNode` 커스텀 노드뷰 (NodeView)
+- [x] 이미지 리사이즈 (드래그 핸들)
+- [x] 이미지 정렬 (좌/중/우)
+- [x] 이미지 캡션 편집
+- [x] 드래그 앤 드롭 업로드
+- [x] 복사/붙여넣기 업로드
+- [x] 파일 선택 다이얼로그
+- [x] 업로드 진행률 콜백 (`onProgress`)
+- [x] 에러 핸들러 (`onImageUploadError`)
+- [x] Base64 폴백 (서버 없이 동작)
+- [x] `/image` 슬래시 명령어
+- [ ] 이미지 플레이스홀더 (업로드 중 스켈레톤) - 선택
+- [ ] Alt 텍스트 편집 UI 개선 - 선택
+
+#### 7.2: EmbedNode
+- [x] `EmbedNode` 커스텀 노드뷰
+- [x] YouTube 임베드
+- [x] Vimeo 임베드
+- [x] Twitter/X 임베드
+- [x] CodePen 임베드
+- [x] CodeSandbox 임베드
+- [x] `/embed` 슬래시 명령어
+
+#### 7.3: CalloutNode
+- [x] `CalloutNode` 커스텀 노드뷰
+- [x] 6가지 색상 테마 (info, warning, error, success, tip, note)
+- [x] 아이콘 + 편집 가능한 텍스트
+- [x] `/callout` 슬래시 명령어
+
+#### 7.4: ToggleNode
+- [x] `ToggleNode` 커스텀 노드뷰
+- [x] 접기/펼치기 기능
+- [x] 중첩 콘텐츠 지원
+- [x] `/toggle` 슬래시 명령어
+
+#### 7.5: BookmarkNode
+- [x] `BookmarkNode` 커스텀 노드뷰
+- [x] 링크 메타데이터 가져오기
+- [x] 미리보기 카드 (제목, 설명, 이미지, 도메인)
+- [x] 캡션 편집 지원
+- [x] `/bookmark` 슬래시 명령어
+- [x] XSS 방지 (javascript: URL 차단)
+
+#### 7.6: MathNode
+- [x] `MathNode` 커스텀 노드뷰
+- [x] KaTeX 렌더링
+- [x] LaTeX 문법 지원
+- [x] 인라인/블록 수식
+- [x] `/math` 슬래시 명령어
+
+#### 7.7: 데모 앱 개선
+- [x] 사용 가이드 사이드바 (슬래시 명령어, 단축키, 마크다운)
+- [x] 언어 토글 (한국어/영어)
+- [x] JSON 출력 뷰어
+- [x] Markdown 출력 뷰어 (커스텀 변환기)
+- [x] Hydration 오류 수정 (dynamic import with ssr: false)
+- [x] TaskList 체크박스 정렬 수정
 
 ### Phase 8: 파일 업로드/첨부
 
@@ -135,16 +184,16 @@
 - [ ] 코드블록 복사 버튼
 - [ ] 마크다운 Export (`editor.getMarkdown()`)
 - [ ] 마크다운 Import (`setContent` with markdown)
-- [ ] Callout/Admonition 블록 (note, tip, warning, danger)
+- [x] Callout/Admonition 블록 (note, tip, warning, danger) - Phase 7에서 구현 (CalloutNode)
 - [ ] 목차 (TOC) 자동 생성
 - [ ] 터미널/CLI 블록 (명령어 + 출력 + 복사 버튼)
 - [ ] API Request/Response 블록
 
 ### Phase 11: 개발자 친화적 기능 (권장)
 
-- [ ] 수학 공식 (KaTeX) - `@tiptap/extension-mathematics`
+- [x] 수학 공식 (KaTeX) - Phase 7에서 구현 (MathNode)
 - [ ] 다이어그램 (Mermaid) - 커스텀 노드뷰
-- [ ] 접이식 블록 (`<details>`)
+- [x] 접이식 블록 (`<details>`) - Phase 7에서 구현 (ToggleNode)
 - [ ] `<kbd>` 태그 (키보드 단축키)
 - [ ] 코드블록 파일명 표시
 - [ ] 코드블록 라인 하이라이트
@@ -159,8 +208,9 @@
 
 ### Phase 12: 개발자 친화적 기능 (선택)
 
-- [ ] 링크 미리보기 (OEmbed)
-- [ ] StackBlitz/CodePen/Replit 임베드
+- [x] 링크 미리보기 (OEmbed) - Phase 7에서 구현 (BookmarkNode)
+- [x] CodePen/CodeSandbox 임베드 - Phase 7에서 구현 (EmbedNode)
+- [ ] StackBlitz/Replit 임베드
 - [ ] OpenAPI/Swagger 임베드
 - [ ] GraphQL 쿼리 블록
 - [ ] 내부 링크/앵커
@@ -235,6 +285,43 @@
 ---
 
 ## 변경 이력
+
+### 2026-01-22
+
+**Phase 7: 이미지 및 커스텀 노드 대부분 완료**
+
+#### ImageNode 구현
+- `ImageNode` 커스텀 노드뷰 (NodeView)
+- 이미지 리사이즈 (드래그 핸들), 정렬 (좌/중/우), 캡션 편집
+- 드래그앤드롭, 붙여넣기, 파일 선택 업로드
+- 업로드 진행률 콜백 (`onProgress`), 에러 핸들러
+- Base64 폴백 (서버 없이 동작)
+
+#### EmbedNode 구현
+- YouTube, Vimeo, Twitter/X, CodePen, CodeSandbox 임베드 지원
+
+#### CalloutNode 구현
+- 6가지 색상 테마 (info, warning, error, success, tip, note)
+
+#### ToggleNode 구현
+- 접기/펼치기 기능, 중첩 콘텐츠 지원
+
+#### BookmarkNode 구현
+- 링크 메타데이터 가져오기, 미리보기 카드
+- XSS 방지 (javascript: URL 차단)
+
+#### MathNode 구현
+- KaTeX 렌더링, LaTeX 문법 지원
+- 커밋: `1bba32f` feat(math): Add LaTeX equation block with KaTeX rendering
+
+#### 데모 앱 개선
+- 사용 가이드 사이드바 (슬래시 명령어, 단축키, 마크다운)
+- 언어 토글 (한국어/영어)
+- JSON/Markdown 출력 뷰어
+- Hydration 오류 수정 (dynamic import with ssr: false)
+- TaskList 체크박스 정렬 수정
+
+---
 
 ### 2026-01-21 (오후)
 
