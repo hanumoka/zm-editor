@@ -100,6 +100,87 @@ export default function Home() {
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [locale, setLocale] = useState<'ko' | 'en'>('ko');
   const [showJson, setShowJson] = useState(false);
+  const [showMarkdown, setShowMarkdown] = useState(false);
+  const [markdown, setMarkdown] = useState('');
+
+  // 간단한 HTML to Markdown 변환 함수
+  const htmlToMarkdown = useCallback((html: string): string => {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+
+    const processNode = (node: Node): string => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return node.textContent || '';
+      }
+
+      if (node.nodeType !== Node.ELEMENT_NODE) {
+        return '';
+      }
+
+      const el = node as HTMLElement;
+      const tag = el.tagName.toLowerCase();
+      const children = Array.from(el.childNodes).map(processNode).join('');
+
+      switch (tag) {
+        case 'h1': return `# ${children}\n\n`;
+        case 'h2': return `## ${children}\n\n`;
+        case 'h3': return `### ${children}\n\n`;
+        case 'p': return `${children}\n\n`;
+        case 'strong':
+        case 'b': return `**${children}**`;
+        case 'em':
+        case 'i': return `*${children}*`;
+        case 'u': return `<u>${children}</u>`;
+        case 's':
+        case 'strike': return `~~${children}~~`;
+        case 'code': return el.parentElement?.tagName === 'PRE' ? children : `\`${children}\``;
+        case 'pre': {
+          const code = el.querySelector('code');
+          const lang = code?.className.match(/language-(\w+)/)?.[1] || '';
+          const text = code?.textContent || el.textContent || '';
+          return `\n\`\`\`${lang}\n${text}\n\`\`\`\n\n`;
+        }
+        case 'blockquote': return `> ${children.trim().replace(/\n/g, '\n> ')}\n\n`;
+        case 'ul': return `${children}\n`;
+        case 'ol': return `${children}\n`;
+        case 'li': {
+          const parent = el.parentElement;
+          if (el.classList.contains('zm-task-item')) {
+            const checkbox = el.querySelector('input[type="checkbox"]');
+            const checked = checkbox?.hasAttribute('checked') ? 'x' : ' ';
+            return `- [${checked}] ${children.trim()}\n`;
+          }
+          if (parent?.tagName === 'OL') {
+            const index = Array.from(parent.children).indexOf(el) + 1;
+            return `${index}. ${children.trim()}\n`;
+          }
+          return `- ${children.trim()}\n`;
+        }
+        case 'a': return `[${children}](${el.getAttribute('href') || ''})`;
+        case 'img': return `![${el.getAttribute('alt') || ''}](${el.getAttribute('src') || ''})`;
+        case 'hr': return `---\n\n`;
+        case 'br': return '\n';
+        case 'table': return `\n${children}\n`;
+        case 'thead':
+        case 'tbody': return children;
+        case 'tr': {
+          const cells = Array.from(el.children).map(cell => processNode(cell)).join(' | ');
+          const isHeader = el.parentElement?.tagName === 'THEAD';
+          if (isHeader) {
+            const separator = Array.from(el.children).map(() => '---').join(' | ');
+            return `| ${cells} |\n| ${separator} |\n`;
+          }
+          return `| ${cells} |\n`;
+        }
+        case 'th':
+        case 'td': return children.trim();
+        case 'mark': return `==${children}==`;
+        default: return children;
+      }
+    };
+
+    return processNode(div).trim().replace(/\n{3,}/g, '\n\n');
+  }, []);
 
   // 이미지 업로드 핸들러 (demoapi 연동, 진행률 지원)
   const handleImageUpload: ImageUploadHandler = useCallback(async ({ file, onProgress }) => {
@@ -165,7 +246,21 @@ export default function Home() {
     if (json) {
       console.log('Editor JSON:', json);
       setShowJson(!showJson);
+      if (!showJson) setShowMarkdown(false); // JSON 표시 시 Markdown 숨김
     }
+  };
+
+  const handleToggleMarkdown = () => {
+    if (!showMarkdown) {
+      const html = editorRef.current?.getHTML();
+      if (html) {
+        const md = htmlToMarkdown(html);
+        setMarkdown(md);
+        console.log('Editor Markdown:', md);
+      }
+      setShowJson(false); // Markdown 표시 시 JSON 숨김
+    }
+    setShowMarkdown(!showMarkdown);
   };
 
   const handleExportHtml = () => {
@@ -222,6 +317,14 @@ export default function Home() {
             {/* Toolbar */}
             <div className="mb-4 flex flex-wrap gap-2">
               <button
+                onClick={handleToggleMarkdown}
+                className={`px-3 py-1.5 text-sm font-medium rounded-lg transition ${
+                  showMarkdown ? 'bg-purple-600 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                {showMarkdown ? 'Hide Markdown' : 'Show Markdown'}
+              </button>
+              <button
                 onClick={handleExportJson}
                 className={`px-3 py-1.5 text-sm font-medium rounded-lg transition ${
                   showJson ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
@@ -274,9 +377,42 @@ export default function Home() {
               />
             </div>
 
+            {/* Markdown Output */}
+            {showMarkdown && (
+              <div className="mt-4 bg-gray-900 rounded-xl p-4 overflow-auto max-h-96">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs text-purple-400 font-semibold">Markdown</span>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(markdown);
+                      alert('Markdown copied to clipboard!');
+                    }}
+                    className="text-xs text-gray-400 hover:text-white transition"
+                  >
+                    Copy
+                  </button>
+                </div>
+                <pre className="text-xs text-gray-300 font-mono whitespace-pre-wrap">
+                  {markdown}
+                </pre>
+              </div>
+            )}
+
             {/* JSON Output */}
             {showJson && (
               <div className="mt-4 bg-gray-900 rounded-xl p-4 overflow-auto max-h-96">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs text-green-400 font-semibold">JSON</span>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(JSON.stringify(content, null, 2));
+                      alert('JSON copied to clipboard!');
+                    }}
+                    className="text-xs text-gray-400 hover:text-white transition"
+                  >
+                    Copy
+                  </button>
+                </div>
                 <pre className="text-xs text-green-400 font-mono">
                   {JSON.stringify(content, null, 2)}
                 </pre>
