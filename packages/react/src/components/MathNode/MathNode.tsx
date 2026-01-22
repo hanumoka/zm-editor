@@ -35,9 +35,18 @@ export function MathNode({ node, updateAttributes, selected }: MathNodeProps) {
   const locale = useLocale();
   const { latex = '', displayMode = true } = node.attrs;
 
-  // 편집 상태
-  const [isEditing, setIsEditing] = useState(!latex);
+  // 편집 상태 (hydration 불일치 방지를 위해 초기값 false)
+  const [isEditing, setIsEditing] = useState(false);
   const [latexValue, setLatexValue] = useState(latex);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // 클라이언트 마운트 후 초기 편집 상태 설정
+  useEffect(() => {
+    setIsMounted(true);
+    if (!latex) {
+      setIsEditing(true);
+    }
+  }, []);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // LaTeX 렌더링 결과

@@ -16,9 +16,18 @@ export function EmbedNode({ node, updateAttributes, selected }: EmbedNodeProps) 
   const [captionValue, setCaptionValue] = useState(caption);
   const captionInputRef = useRef<HTMLInputElement>(null);
 
-  // URL 입력 상태 (초기 상태)
-  const [isEditingUrl, setIsEditingUrl] = useState(!src);
+  // URL 입력 상태 (hydration 불일치 방지를 위해 초기값 false)
+  const [isEditingUrl, setIsEditingUrl] = useState(false);
   const [urlValue, setUrlValue] = useState(src || '');
+  const [isMounted, setIsMounted] = useState(false);
+
+  // 클라이언트 마운트 후 초기 편집 상태 설정
+  useEffect(() => {
+    setIsMounted(true);
+    if (!src) {
+      setIsEditingUrl(true);
+    }
+  }, []);
   const urlInputRef = useRef<HTMLInputElement>(null);
 
   // caption 속성이 변경되면 로컬 상태 동기화

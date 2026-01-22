@@ -339,6 +339,12 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
     },
     ref
   ) => {
+    // 클라이언트 마운트 체크 (hydration 불일치 방지)
+    const [isMounted, setIsMounted] = useState(false);
+    useEffect(() => {
+      setIsMounted(true);
+    }, []);
+
     // 이미지 설정 병합
     const mergedImageConfig = useMemo<Required<ImageUploadConfig>>(
       () => ({ ...DEFAULT_IMAGE_CONFIG, ...imageConfig }),
@@ -650,7 +656,8 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
       [processImageFile]
     );
 
-    if (!editor) {
+    // 서버/클라이언트 hydration 일관성을 위해 마운트 전에는 로딩 상태 표시
+    if (!isMounted || !editor) {
       return (
         <div className="zm-editor">
           <div className="zm-editor-content" style={{ minHeight: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9ca3af' }}>
