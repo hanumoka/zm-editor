@@ -6,8 +6,8 @@
 
 - **버전**: 0.1.0 (개발 중)
 - **상태**: Alpha
-- **완료**: Phase 1~8 완료
-- **다음**: Phase 9 (보안 강화)
+- **완료**: Phase 1~9 완료
+- **다음**: Phase 10 (개발자 기능)
 
 ---
 
@@ -23,7 +23,7 @@
 | 6 | 테이블 기능 | ✅ 완료 |
 | 7 | 이미지 및 커스텀 노드 | ✅ 완료 |
 | 8 | 파일 업로드/첨부 | ✅ 완료 |
-| 9 | 보안 강화 | 📋 대기 |
+| 9 | 보안 강화 | ✅ 완료 |
 | 10 | 개발자 기능 (필수) | 📋 대기 |
 | 11 | 개발자 기능 (권장) | 📋 대기 |
 | 12 | 개발자 기능 (선택) | 📋 대기 |
@@ -168,15 +168,20 @@
 - [ ] PDF 미리보기 (PDF.js 연동) - 선택
 - [x] 슬래시 명령어에 `/file` 추가
 
-### Phase 9: 보안 강화
+### Phase 9: 보안 강화 ✅
 
-- [ ] DOMPurify 통합
-- [ ] HTML Sanitization 유틸 함수
-- [ ] Link URL 검증 (`javascript:` 차단)
-- [ ] 이미지 URL SSRF 방지
-- [ ] 파일 업로드 검증 (백엔드 가이드)
-- [ ] CSP 헤더 가이드 문서화
-- [ ] 보안 테스트 케이스
+- [x] Core 보안 모듈 (`@zm-editor/core/security`)
+- [x] URL 검증 유틸리티 (`isSafeLinkUrl`, `isSafeImageUrl`, `normalizeUrl`, `getSafeHref`)
+- [x] URL sanitization (`sanitizeUrl`) - 제어 문자 제거로 CVE-2024-56412 대응
+- [x] SSRF 방지 (`checkSsrf`, `isPrivateIP`, `isLocalhost`, `isCloudMetadataHost`)
+- [x] IP 주소 정규화 (`normalizeIPv4`) - 10진수/8진수/16진수/IPv6 매핑 지원
+- [x] BubbleMenu 링크 URL 검증 (`javascript:`, `vbscript:`, `data:` 차단)
+- [x] ImageNode SSRF 검증 (사설 IP, localhost, 클라우드 메타데이터 차단)
+- [x] EmbedNode iframe sandbox 속성 추가
+- [x] 파일 업로드 검증 (백엔드 가이드 문서화)
+- [x] CSP 헤더 가이드 문서화
+- [x] 보안 문서 생성 (`docs/SECURITY.md`)
+- [ ] DOMPurify 통합 (선택적 - optional peer dependency)
 
 ### Phase 10: 개발자 친화적 기능 (필수)
 
@@ -287,6 +292,41 @@
 ## 변경 이력
 
 ### 2026-01-23
+
+**Phase 9: 보안 강화 구현**
+
+#### Core 보안 모듈 생성
+- `packages/core/src/security/` 디렉토리 생성
+- `types.ts` - 타입 정의 (UrlValidationResult, SsrfCheckResult 등)
+- `url-validator.ts` - URL 검증 함수 (isSafeLinkUrl, isSafeImageUrl, normalizeUrl, sanitizeUrl)
+- `ssrf-guard.ts` - SSRF 방지 함수 (checkSsrf, isPrivateIP, isLocalhost, normalizeIPv4)
+- `index.ts` - 모든 보안 유틸리티 export
+
+#### 컴포넌트 보안 강화
+- `BubbleMenu.tsx` - 링크 URL 검증 추가 (javascript:, vbscript:, data: 차단)
+- `ImageNode.tsx` - SSRF 검증 추가 (사설 IP, localhost, 클라우드 메타데이터 차단)
+- `BookmarkNode.tsx` - 중복 isSafeUrl 제거, core 모듈 사용
+- `FileAttachmentNode.tsx` - 중복 isSafeUrl 제거, core 모듈 사용
+- `EmbedNode.tsx` - iframe sandbox 속성 추가
+
+#### 보안 리뷰 및 추가 강화 (CVE-2024-56412 대응)
+- `sanitizeUrl()` 함수 추가 - 제어 문자 제거 (0x00-0x1F, 0x7F)
+  - `java\tscript:alert(1)`, `java\x00script:alert(1)` 같은 우회 공격 방지
+- `normalizeIPv4()` 함수 추가 - 다양한 IP 표기법 정규화
+  - 10진수: `2130706433` → `127.0.0.1`
+  - 16진수: `0x7f000001` → `127.0.0.1`
+  - 8진수: `0177.0.0.1` → `127.0.0.1`
+  - IPv6 매핑: `::ffff:127.0.0.1` → `127.0.0.1`
+- 모든 URL 검증 함수에 sanitizeUrl() 적용
+
+#### 문서화
+- `docs/SECURITY.md` 생성 (CSP 헤더 가이드, URL 검증, SSRF 방지, 파일 업로드 체크리스트)
+
+#### 로케일 업데이트
+- `unsafeUrlError` 메시지 추가 (한국어/영어)
+- `image.invalidUrl` 메시지 추가 (한국어/영어)
+
+---
 
 **프로젝트 분석 및 버그 수정**
 

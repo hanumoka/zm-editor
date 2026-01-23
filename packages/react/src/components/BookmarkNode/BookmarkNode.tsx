@@ -1,6 +1,7 @@
 import { NodeViewWrapper, NodeViewProps } from '@tiptap/react';
 import { useCallback, useState, useRef, useEffect } from 'react';
 import { useLocale } from '../../context';
+import { isSafeLinkUrl, getSafeHref, normalizeUrl } from '@zm-editor/core';
 
 export type BookmarkNodeProps = NodeViewProps;
 
@@ -26,28 +27,6 @@ function getDefaultFavicon(url: string): string {
   } catch {
     return '';
   }
-}
-
-/**
- * URL이 안전한 프로토콜(http/https)을 사용하는지 검증
- * javascript:, data:, vbscript: 등 위험한 프로토콜 차단
- */
-function isSafeUrl(url: string): boolean {
-  if (!url) return false;
-  try {
-    const urlObj = new URL(url);
-    return urlObj.protocol === 'http:' || urlObj.protocol === 'https:';
-  } catch {
-    return false;
-  }
-}
-
-/**
- * 안전한 href 값 반환 (XSS 방지)
- * 위험한 URL인 경우 빈 문자열 반환
- */
-function getSafeHref(url: string): string {
-  return isSafeUrl(url) ? url : '';
 }
 
 /**
@@ -108,22 +87,19 @@ export function BookmarkNode({ node, updateAttributes, selected }: BookmarkNodeP
     }
 
     // URL 정규화 (http/https 없으면 추가)
-    let normalizedUrl = trimmedUrl;
-    if (!/^https?:\/\//i.test(normalizedUrl)) {
-      normalizedUrl = `https://${normalizedUrl}`;
-    }
+    const normalizedUrlValue = normalizeUrl(trimmedUrl);
 
     // 안전한 URL인지 검증 (javascript:, data: 등 차단)
-    if (!isSafeUrl(normalizedUrl)) {
+    if (!isSafeLinkUrl(normalizedUrlValue)) {
       // 위험한 URL은 저장하지 않음
       return;
     }
 
     updateAttributes({
-      url: normalizedUrl,
+      url: normalizedUrlValue,
       // 기본값 설정
-      title: title || extractDomain(normalizedUrl),
-      favicon: favicon || getDefaultFavicon(normalizedUrl),
+      title: title || extractDomain(normalizedUrlValue),
+      favicon: favicon || getDefaultFavicon(normalizedUrlValue),
     });
     setIsEditing(false);
   }, [urlValue, title, favicon, updateAttributes]);

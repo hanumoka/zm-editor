@@ -111,6 +111,7 @@ export const enLocale: ZmEditorLocale = {
   },
   dialogs: {
     linkUrlPrompt: 'URL',
+    unsafeUrlError: 'This URL is not safe. Only http, https, mailto, and tel links are allowed.',
   },
   nodes: {
     bookmark: {
@@ -138,6 +139,9 @@ export const enLocale: ZmEditorLocale = {
       download: 'Download',
       addCaption: 'Add a caption...',
       uploadingFile: 'Uploading file...',
+    },
+    image: {
+      invalidUrl: 'Invalid image URL',
     },
   },
 };

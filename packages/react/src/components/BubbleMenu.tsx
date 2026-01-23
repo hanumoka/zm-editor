@@ -2,6 +2,7 @@ import { BubbleMenu as TiptapBubbleMenu, Editor } from '@tiptap/react';
 import { useCallback } from 'react';
 import type { BubbleMenuLocale, DialogLocale } from '../locales';
 import { enLocale } from '../locales';
+import { isSafeLinkUrl, normalizeUrl } from '@zm-editor/core';
 
 interface BubbleMenuProps {
   editor: Editor;
@@ -45,19 +46,28 @@ export function BubbleMenu({
 
   const setLink = useCallback(() => {
     const previousUrl = editor.getAttributes('link').href;
-    const url = window.prompt(dialogLocale.linkUrlPrompt, previousUrl);
+    const rawUrl = window.prompt(dialogLocale.linkUrlPrompt, previousUrl);
 
-    if (url === null) {
+    if (rawUrl === null) {
       return;
     }
 
-    if (url === '') {
+    if (rawUrl === '') {
       editor.chain().focus().extendMarkRange('link').unsetLink().run();
       return;
     }
 
-    editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
-  }, [editor, dialogLocale.linkUrlPrompt]);
+    // Normalize URL (add https:// if no protocol)
+    const normalizedUrl = normalizeUrl(rawUrl);
+
+    // Validate URL for safety (blocks javascript:, vbscript:, etc.)
+    if (!isSafeLinkUrl(normalizedUrl)) {
+      alert(dialogLocale.unsafeUrlError);
+      return;
+    }
+
+    editor.chain().focus().extendMarkRange('link').setLink({ href: normalizedUrl }).run();
+  }, [editor, dialogLocale.linkUrlPrompt, dialogLocale.unsafeUrlError]);
 
   // 버블 메뉴 표시 조건
   const shouldShow = useCallback(() => {

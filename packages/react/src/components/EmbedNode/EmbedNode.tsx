@@ -225,6 +225,8 @@ export function EmbedNode({ node, updateAttributes, selected }: EmbedNodeProps) 
               src={embedUrl}
               className="zm-embed-iframe"
               frameBorder="0"
+              sandbox="allow-scripts allow-same-origin allow-popups allow-presentation"
+              referrerPolicy="no-referrer-when-downgrade"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
               title={`${embedType} embed`}

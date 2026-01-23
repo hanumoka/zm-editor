@@ -10,9 +10,9 @@
 
 | 항목 | 상태 |
 |------|------|
-| **현재 Phase** | Phase 8 완료, Phase 9 대기 |
+| **현재 Phase** | Phase 9 완료, Phase 10 대기 |
 | **빌드 상태** | 성공 ✅ |
-| **Git 상태** | 최신 (main) - 커밋 `1864014` |
+| **Git 상태** | 최신 (main) |
 | **개발 서버** | 포트 3100 (FE), 포트 4000 (API) |
 | **문서화** | 전체 요구사항 정의 완료 ✅ |
 
@@ -48,6 +48,18 @@
 - `/file` 슬래시 명령어
 - 파일 다운로드 버튼, 캡션 지원
 
+### Phase 9: 보안 강화 ✅
+
+- Core 보안 모듈 (`@zm-editor/core/security`)
+- URL 검증 (javascript:, vbscript:, data: 차단)
+- URL 제어 문자 sanitization (CVE-2024-56412 대응)
+- SSRF 방지 (사설 IP, localhost, 클라우드 메타데이터 차단)
+- 다양한 IP 표기법 지원 (10진수, 8진수, 16진수, IPv6 매핑)
+- BubbleMenu 링크 URL 검증
+- ImageNode SSRF 검증
+- EmbedNode iframe sandbox 속성 추가
+- 보안 문서화 (`docs/SECURITY.md`)
+
 ### 데모 앱 개선 ✅
 
 - 사용 가이드 사이드바 (슬래시 명령어, 단축키, 마크다운)
@@ -69,11 +81,8 @@
 - [ ] Alt 텍스트 편집 UI 개선
 - [ ] PDF 미리보기 (PDF.js)
 
-### Phase 9: 보안 강화
-- [ ] DOMPurify 통합
-- [ ] HTML Sanitization 유틸 함수
-- [ ] SSRF 방지
-- [ ] CSP 헤더 가이드 문서화
+### Phase 9 잔여 (선택)
+- [ ] DOMPurify 통합 (HTML sanitization)
 
 ### Phase 10: 개발자 기능 (필수)
 - [ ] 코드블록 라인 넘버 + 복사 버튼
@@ -91,7 +100,7 @@
 | 6 | 테이블 기능 | ✅ 완료 |
 | 7 | 이미지/커스텀 노드 | ✅ 완료 |
 | 8 | 파일 업로드/첨부 | ✅ 완료 |
-| 9 | 보안 강화 | 📋 대기 |
+| 9 | 보안 강화 | ✅ 완료 |
 | 10 | 개발자 기능 (필수) | 📋 대기 |
 | 11 | 개발자 기능 (권장) | 📋 대기 |
 | 12 | 개발자 기능 (선택) | 📋 대기 |
@@ -164,20 +173,20 @@
 
 ```bash
 # 1. 개발 서버 시작
-cd C:/Users/amagr/projects/zm-editor && pnpm dev
+cd C:/Users/amagr/project/zm-editor && pnpm dev
 
 # 2. 빌드 확인
-cd C:/Users/amagr/projects/zm-editor && pnpm build
+cd C:/Users/amagr/project/zm-editor && pnpm build
 
 # 3. Git 상태 확인
-cd C:/Users/amagr/projects/zm-editor && git status
+cd C:/Users/amagr/project/zm-editor && git status
 ```
 
 ---
 
 ## 프로젝트 정보
 
-- **경로**: `C:/Users/amagr/projects/zm-editor/`
+- **경로**: `C:/Users/amagr/project/zm-editor/`
 - **GitHub**: `git@github-personal:hanumoka/zm-editor.git`
 - **라이센스**: MIT
 - **데모 서버**: http://localhost:3100

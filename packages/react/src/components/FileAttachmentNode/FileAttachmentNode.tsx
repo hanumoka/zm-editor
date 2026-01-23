@@ -4,20 +4,20 @@ import { NodeViewWrapper, NodeViewProps } from '@tiptap/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { getFileIcon, formatFileSize, DownloadIcon } from './file-icons';
 import { useLocale } from '../../context/LocaleContext';
+import { isSafeImageUrl } from '@zm-editor/core';
 
 export type FileAttachmentNodeProps = NodeViewProps;
 
 /**
- * 안전한 URL 검증
+ * 안전한 파일 URL 검증 (http, https, blob 허용)
  */
-function isSafeUrl(url: string): boolean {
+function isSafeFileUrl(url: string): boolean {
   if (!url) return false;
-  try {
-    const urlObj = new URL(url);
-    return urlObj.protocol === 'http:' || urlObj.protocol === 'https:' || urlObj.protocol === 'blob:';
-  } catch {
-    return false;
-  }
+  // blob: URLs are always allowed for file attachments
+  if (url.startsWith('blob:')) return true;
+  // Use core security for http/https validation
+  const result = isSafeImageUrl(url, { allowDataUrls: false, allowBlobUrls: true, blockPrivateIPs: false });
+  return result.isValid;
 }
 
 /**
@@ -41,7 +41,7 @@ export function FileAttachmentNode({ node, updateAttributes, selected }: FileAtt
 
   // 다운로드 핸들러
   const handleDownload = useCallback(() => {
-    if (!isSafeUrl(url)) {
+    if (!isSafeFileUrl(url)) {
       console.warn('[FileAttachment] Invalid URL:', url);
       return;
     }
@@ -115,7 +115,7 @@ export function FileAttachmentNode({ node, updateAttributes, selected }: FileAtt
         </div>
 
         {/* 다운로드 버튼 */}
-        {url && isSafeUrl(url) && (
+        {url && isSafeFileUrl(url) && (
           <button
             type="button"
             className="zm-file-attachment-download"

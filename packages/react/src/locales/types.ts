@@ -64,6 +64,7 @@ export interface EditorLocale {
  */
 export interface DialogLocale {
   linkUrlPrompt: string;
+  unsafeUrlError: string;
 }
 
 /**
@@ -127,6 +128,13 @@ export interface FileAttachmentNodeLocale {
 }
 
 /**
+ * 이미지 노드 번역
+ */
+export interface ImageNodeLocale {
+  invalidUrl: string;
+}
+
+/**
  * NodeView 컴포넌트 번역
  */
 export interface NodesLocale {
@@ -134,6 +142,7 @@ export interface NodesLocale {
   embed: EmbedNodeLocale;
   math: MathNodeLocale;
   fileAttachment: FileAttachmentNodeLocale;
+  image: ImageNodeLocale;
 }
 
 /**

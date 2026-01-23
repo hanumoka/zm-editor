@@ -1,5 +1,6 @@
 import { NodeViewWrapper, NodeViewProps } from '@tiptap/react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { isSafeImageUrl } from '@zm-editor/core';
 
 export type ImageNodeProps = NodeViewProps;
 
@@ -18,6 +19,12 @@ export function ImageNode({ node, updateAttributes, selected }: ImageNodeProps) 
   const resizeStartRef = useRef<{ startX: number; startWidth: number } | null>(null);
 
   const { src, alt, title, width, alignment = 'center', caption = '' } = node.attrs;
+
+  // SSRF/URL 검증
+  const urlValidation = useMemo(
+    () => isSafeImageUrl(src, { allowDataUrls: true, allowBlobUrls: true, blockPrivateIPs: true }),
+    [src]
+  );
 
   // 캡션 편집 상태
   const [isEditingCaption, setIsEditingCaption] = useState(false);
@@ -154,6 +161,26 @@ export function ImageNode({ node, updateAttributes, selected }: ImageNodeProps) 
     justifyContent:
       alignment === 'left' ? 'flex-start' : alignment === 'right' ? 'flex-end' : 'center',
   };
+
+  // URL 검증 실패 시 오류 표시
+  if (!urlValidation.isValid && src) {
+    return (
+      <NodeViewWrapper className="zm-image-node-wrapper" style={alignmentStyle}>
+        <div
+          ref={containerRef}
+          className={`zm-image-node zm-image-node-error ${selected ? 'is-selected' : ''}`}
+          data-drag-handle
+        >
+          <div className="zm-image-error-content">
+            <InvalidImageIcon />
+            <span className="zm-image-error-message">
+              {urlValidation.errorMessage || 'Invalid image URL'}
+            </span>
+          </div>
+        </div>
+      </NodeViewWrapper>
+    );
+  }
 
   return (
     <NodeViewWrapper className="zm-image-node-wrapper" style={alignmentStyle}>
@@ -295,6 +322,17 @@ function AltTextIcon() {
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
       <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
       <text x="12" y="15" fontSize="8" textAnchor="middle" fill="currentColor" stroke="none">Alt</text>
+    </svg>
+  );
+}
+
+function InvalidImageIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+      <line x1="3" y1="3" x2="21" y2="21" />
+      <circle cx="8.5" cy="8.5" r="1.5" />
+      <polyline points="21 15 16 10 5 21" />
     </svg>
   );
 }

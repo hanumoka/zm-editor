@@ -111,6 +111,7 @@ export const koLocale: ZmEditorLocale = {
   },
   dialogs: {
     linkUrlPrompt: 'URL을 입력하세요',
+    unsafeUrlError: '안전하지 않은 URL입니다. http, https, mailto, tel 링크만 허용됩니다.',
   },
   nodes: {
     bookmark: {
@@ -138,6 +139,9 @@ export const koLocale: ZmEditorLocale = {
       download: '다운로드',
       addCaption: '캡션 추가...',
       uploadingFile: '파일 업로드 중...',
+    },
+    image: {
+      invalidUrl: '유효하지 않은 이미지 URL입니다',
     },
   },
 };
