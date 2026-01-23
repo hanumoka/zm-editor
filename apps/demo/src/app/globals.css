@@ -471,6 +471,91 @@ body {
   border-top-right-radius: 0;
 }
 
+/* Code Area (for line highlighting) */
+.zm-code-block-code-area {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Line Highlight Layer */
+.zm-code-block-highlight-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  padding: 1rem 0;
+}
+
+.zm-code-block-highlight-line {
+  height: 1.5rem;
+  width: 100%;
+}
+
+.zm-code-block-highlight-line.highlighted {
+  background-color: rgba(56, 139, 253, 0.15);
+}
+
+/* Highlighted Line Number */
+.zm-code-block-line-number.highlighted {
+  color: #58a6ff;
+  background-color: rgba(56, 139, 253, 0.15);
+}
+
+/* Highlight Button */
+.zm-code-block-highlight-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #6e7681;
+  transition: all 0.15s ease;
+}
+
+.zm-code-block-highlight-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #e5e7eb;
+}
+
+.zm-code-block-highlight-btn.has-highlight {
+  color: #58a6ff;
+}
+
+.zm-code-block-highlight-badge {
+  font-size: 0.75rem;
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  background-color: rgba(56, 139, 253, 0.2);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* Highlight Input */
+.zm-code-block-highlight-input {
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  background: #21262d;
+  border: 1px solid #30363d;
+  border-radius: 4px;
+  color: #c9d1d9;
+  width: 80px;
+}
+
+.zm-code-block-highlight-input::placeholder {
+  color: #6e7681;
+}
+
+.zm-code-block-highlight-input:focus {
+  outline: none;
+  border-color: #58a6ff;
+  box-shadow: 0 0 0 2px rgba(56, 139, 253, 0.3);
+}
+
 /* Link */
 .zm-link {
   color: #2563eb;
@@ -3892,4 +3977,490 @@ kbd {
 
 [data-theme="dark"] .zm-editor-upload-indicator-text {
   color: #93c5fd;
+}
+
+/* ========================================
+   Changelog Node
+   ======================================== */
+
+.zm-changelog-wrapper {
+  margin: 1rem 0;
+}
+
+.zm-changelog {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.zm-changelog.is-selected {
+  outline: 2px solid #3b82f6;
+  outline-offset: -1px;
+}
+
+/* Editing Mode */
+.zm-changelog-editing {
+  padding: 1rem;
+}
+
+.zm-changelog-header-edit {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  flex-wrap: wrap;
+}
+
+.zm-changelog-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.zm-changelog-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.zm-changelog-version-input,
+.zm-changelog-date-input {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9375rem;
+  color: #111827;
+  background-color: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.zm-changelog-version-input {
+  width: 120px;
+  font-weight: 600;
+}
+
+.zm-changelog-date-input {
+  width: 140px;
+}
+
+.zm-changelog-version-input:focus,
+.zm-changelog-date-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.zm-changelog-version-input::placeholder,
+.zm-changelog-date-input::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+.zm-changelog-save-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #ffffff;
+  background-color: #3b82f6;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.zm-changelog-save-btn:hover {
+  background-color: #2563eb;
+}
+
+/* Add Entry Row */
+.zm-changelog-add-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.zm-changelog-type-select {
+  padding: 0.5rem 2rem 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  background-color: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  min-width: 100px;
+}
+
+.zm-changelog-type-select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.zm-changelog-entry-input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: #111827;
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.zm-changelog-entry-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.zm-changelog-entry-input::placeholder {
+  color: #9ca3af;
+}
+
+.zm-changelog-add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  color: #ffffff;
+  background-color: #22c55e;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.zm-changelog-add-btn:hover:not(:disabled) {
+  background-color: #16a34a;
+}
+
+.zm-changelog-add-btn:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Entries List */
+.zm-changelog-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.zm-changelog-entry {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background-color: #f9fafb;
+  border-radius: 6px;
+}
+
+.zm-changelog-entry-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.zm-changelog-entry-text {
+  flex: 1;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.zm-changelog-entry-delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  color: #9ca3af;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.zm-changelog-entry-delete:hover {
+  background-color: #fee2e2;
+  color: #ef4444;
+}
+
+.zm-changelog-empty {
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #9ca3af;
+}
+
+.zm-changelog-hint {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  text-align: right;
+}
+
+/* Display Mode */
+.zm-changelog-display {
+  cursor: pointer;
+}
+
+.zm-changelog-display:hover {
+  background-color: #f9fafb;
+}
+
+.zm-changelog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background-color: #f3f4f6;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.zm-changelog-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.zm-changelog-icon {
+  font-size: 1.125rem;
+}
+
+.zm-changelog-version {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.zm-changelog-date {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.zm-changelog-content {
+  padding: 1rem;
+}
+
+.zm-changelog-group {
+  margin-bottom: 1rem;
+}
+
+.zm-changelog-group:last-child {
+  margin-bottom: 0;
+}
+
+.zm-changelog-group-title {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.zm-changelog-group-list {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin: 0;
+}
+
+.zm-changelog-group-item {
+  font-size: 0.875rem;
+  color: #374151;
+  line-height: 1.6;
+  margin-bottom: 0.25rem;
+}
+
+.zm-changelog-group-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Dark Mode - data-theme */
+[data-theme="dark"] .zm-changelog {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+[data-theme="dark"] .zm-changelog-header-edit {
+  border-bottom-color: #374151;
+}
+
+[data-theme="dark"] .zm-changelog-label {
+  color: #9ca3af;
+}
+
+[data-theme="dark"] .zm-changelog-version-input,
+[data-theme="dark"] .zm-changelog-date-input {
+  color: #f3f4f6;
+  background-color: #111827;
+  border-color: #4b5563;
+}
+
+[data-theme="dark"] .zm-changelog-version-input::placeholder,
+[data-theme="dark"] .zm-changelog-date-input::placeholder {
+  color: #6b7280;
+}
+
+[data-theme="dark"] .zm-changelog-type-select {
+  color: #e5e7eb;
+  background-color: #111827;
+  border-color: #4b5563;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+[data-theme="dark"] .zm-changelog-entry-input {
+  color: #f3f4f6;
+  background-color: #111827;
+  border-color: #4b5563;
+}
+
+[data-theme="dark"] .zm-changelog-entry-input::placeholder {
+  color: #6b7280;
+}
+
+[data-theme="dark"] .zm-changelog-entry {
+  background-color: #111827;
+}
+
+[data-theme="dark"] .zm-changelog-entry-text {
+  color: #d1d5db;
+}
+
+[data-theme="dark"] .zm-changelog-entry-delete:hover {
+  background-color: #7f1d1d;
+  color: #fca5a5;
+}
+
+[data-theme="dark"] .zm-changelog-empty {
+  color: #6b7280;
+}
+
+[data-theme="dark"] .zm-changelog-hint {
+  color: #6b7280;
+}
+
+[data-theme="dark"] .zm-changelog-display:hover {
+  background-color: #374151;
+}
+
+[data-theme="dark"] .zm-changelog-header {
+  background-color: #111827;
+  border-bottom-color: #374151;
+}
+
+[data-theme="dark"] .zm-changelog-version {
+  color: #f3f4f6;
+}
+
+[data-theme="dark"] .zm-changelog-date {
+  color: #9ca3af;
+}
+
+[data-theme="dark"] .zm-changelog-group-item {
+  color: #d1d5db;
+}
+
+/* Dark Mode - Badge Colors */
+[data-theme="dark"] .zm-changelog-entry-badge {
+  opacity: 0.9;
+}
+
+/* Dark Mode - prefers-color-scheme */
+@media (prefers-color-scheme: dark) {
+  .zm-changelog {
+    background-color: #1f2937;
+    border-color: #374151;
+  }
+
+  .zm-changelog-header-edit {
+    border-bottom-color: #374151;
+  }
+
+  .zm-changelog-label {
+    color: #9ca3af;
+  }
+
+  .zm-changelog-version-input,
+  .zm-changelog-date-input {
+    color: #f3f4f6;
+    background-color: #111827;
+    border-color: #4b5563;
+  }
+
+  .zm-changelog-version-input::placeholder,
+  .zm-changelog-date-input::placeholder {
+    color: #6b7280;
+  }
+
+  .zm-changelog-type-select {
+    color: #e5e7eb;
+    background-color: #111827;
+    border-color: #4b5563;
+  }
+
+  .zm-changelog-entry-input {
+    color: #f3f4f6;
+    background-color: #111827;
+    border-color: #4b5563;
+  }
+
+  .zm-changelog-entry {
+    background-color: #111827;
+  }
+
+  .zm-changelog-entry-text {
+    color: #d1d5db;
+  }
+
+  .zm-changelog-entry-delete:hover {
+    background-color: #7f1d1d;
+    color: #fca5a5;
+  }
+
+  .zm-changelog-display:hover {
+    background-color: #374151;
+  }
+
+  .zm-changelog-header {
+    background-color: #111827;
+    border-bottom-color: #374151;
+  }
+
+  .zm-changelog-version {
+    color: #f3f4f6;
+  }
+
+  .zm-changelog-date {
+    color: #9ca3af;
+  }
+
+  .zm-changelog-group-item {
+    color: #d1d5db;
+  }
 }

@@ -24,6 +24,14 @@ const FileIcon = () => (
   </svg>
 );
 
+const HighlightIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M12 2L2 7l10 5 10-5-10-5z" />
+    <path d="M2 17l10 5 10-5" />
+    <path d="M2 12l10 5 10-5" />
+  </svg>
+);
+
 // 지원 언어 목록
 const LANGUAGES = [
   { value: '', label: 'Plain text' },
@@ -55,16 +63,59 @@ const LANGUAGES = [
 ];
 
 /**
- * CodeBlock - 라인 넘버, 파일명, 복사 기능이 있는 코드 블록 컴포넌트
+ * 하이라이트 라인 문자열을 파싱하여 라인 번호 Set 반환
+ * 지원 형식: "1", "1,3,5", "1-5", "1,3-5,7-10"
+ */
+function parseHighlightedLines(input: string): Set<number> {
+  const result = new Set<number>();
+  if (!input || !input.trim()) return result;
+
+  const parts = input.split(',').map((s) => s.trim());
+
+  for (const part of parts) {
+    if (part.includes('-')) {
+      // 범위 (예: "3-5")
+      const [startStr, endStr] = part.split('-').map((s) => s.trim());
+      const start = parseInt(startStr, 10);
+      const end = parseInt(endStr, 10);
+      if (!isNaN(start) && !isNaN(end) && start <= end) {
+        for (let i = start; i <= end; i++) {
+          result.add(i);
+        }
+      }
+    } else {
+      // 단일 라인 (예: "1")
+      const num = parseInt(part, 10);
+      if (!isNaN(num) && num > 0) {
+        result.add(num);
+      }
+    }
+  }
+
+  return result;
+}
+
+/**
+ * CodeBlock - 라인 넘버, 파일명, 복사, 라인 하이라이트 기능이 있는 코드 블록 컴포넌트
  */
 export function CodeBlock({ node, updateAttributes }: NodeViewProps) {
   const [copied, setCopied] = useState(false);
   const [isEditingFilename, setIsEditingFilename] = useState(false);
+  const [isEditingHighlight, setIsEditingHighlight] = useState(false);
   const [filenameInput, setFilenameInput] = useState('');
+  const [highlightInput, setHighlightInput] = useState('');
   const copyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const filenameInputRef = useRef<HTMLInputElement>(null);
+  const highlightInputRef = useRef<HTMLInputElement>(null);
   const currentLanguage = node.attrs.language || '';
   const filename = node.attrs.filename || '';
+  const highlightedLines = node.attrs.highlightedLines || '';
+
+  // 하이라이트 라인 파싱
+  const highlightedLineSet = useMemo(
+    () => parseHighlightedLines(highlightedLines),
+    [highlightedLines]
+  );
 
   // cleanup timeout on unmount
   useEffect(() => {
@@ -82,6 +133,14 @@ export function CodeBlock({ node, updateAttributes }: NodeViewProps) {
       filenameInputRef.current.select();
     }
   }, [isEditingFilename]);
+
+  // 하이라이트 편집 시작 시 포커스
+  useEffect(() => {
+    if (isEditingHighlight && highlightInputRef.current) {
+      highlightInputRef.current.focus();
+      highlightInputRef.current.select();
+    }
+  }, [isEditingHighlight]);
 
   // 파일명 편집 시작
   const startEditFilename = useCallback(() => {
@@ -105,6 +164,30 @@ export function CodeBlock({ node, updateAttributes }: NodeViewProps) {
       }
     },
     [saveFilename]
+  );
+
+  // 하이라이트 편집 시작
+  const startEditHighlight = useCallback(() => {
+    setHighlightInput(highlightedLines);
+    setIsEditingHighlight(true);
+  }, [highlightedLines]);
+
+  // 하이라이트 저장
+  const saveHighlight = useCallback(() => {
+    updateAttributes({ highlightedLines: highlightInput.trim() });
+    setIsEditingHighlight(false);
+  }, [highlightInput, updateAttributes]);
+
+  // 하이라이트 입력 키 핸들러
+  const handleHighlightKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+        saveHighlight();
+      } else if (e.key === 'Escape') {
+        setIsEditingHighlight(false);
+      }
+    },
+    [saveHighlight]
   );
 
   // 코드 복사 핸들러
@@ -180,6 +263,31 @@ export function CodeBlock({ node, updateAttributes }: NodeViewProps) {
 
         {/* 언어 선택 및 복사 버튼 */}
         <div className="zm-code-block-actions" contentEditable={false}>
+          {/* 하이라이트 라인 */}
+          {isEditingHighlight ? (
+            <input
+              ref={highlightInputRef}
+              type="text"
+              className="zm-code-block-highlight-input"
+              value={highlightInput}
+              onChange={(e) => setHighlightInput(e.target.value)}
+              onKeyDown={handleHighlightKeyDown}
+              onBlur={saveHighlight}
+              placeholder="1,3-5,7"
+              spellCheck={false}
+            />
+          ) : (
+            <button
+              type="button"
+              className={`zm-code-block-highlight-btn ${highlightedLines ? 'has-highlight' : ''}`}
+              onClick={startEditHighlight}
+              title={highlightedLines ? `Highlighted: ${highlightedLines}` : 'Highlight lines (e.g. 1,3-5)'}
+            >
+              <HighlightIcon />
+              {highlightedLines && <span className="zm-code-block-highlight-badge">{highlightedLines}</span>}
+            </button>
+          )}
+
           <select
             className="zm-code-block-language-select"
             value={currentLanguage}
@@ -206,14 +314,30 @@ export function CodeBlock({ node, updateAttributes }: NodeViewProps) {
       <div className="zm-code-block-container">
         <div className="zm-code-block-line-numbers" contentEditable={false}>
           {lineNumbers.map((num) => (
-            <span key={num} className="zm-code-block-line-number">
+            <span
+              key={num}
+              className={`zm-code-block-line-number ${highlightedLineSet.has(num) ? 'highlighted' : ''}`}
+            >
               {num}
             </span>
           ))}
         </div>
-        <pre className="zm-code-block">
-          <NodeViewContent as="code" />
-        </pre>
+        <div className="zm-code-block-code-area">
+          {/* 하이라이트 배경 레이어 */}
+          {highlightedLineSet.size > 0 && (
+            <div className="zm-code-block-highlight-layer" contentEditable={false}>
+              {lineNumbers.map((num) => (
+                <div
+                  key={num}
+                  className={`zm-code-block-highlight-line ${highlightedLineSet.has(num) ? 'highlighted' : ''}`}
+                />
+              ))}
+            </div>
+          )}
+          <pre className="zm-code-block">
+            <NodeViewContent as="code" />
+          </pre>
+        </div>
       </div>
     </NodeViewWrapper>
   );
