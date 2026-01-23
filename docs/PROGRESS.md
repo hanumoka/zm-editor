@@ -201,6 +201,7 @@
 - [x] 접이식 블록 (`<details>`) - Phase 7에서 구현 (ToggleNode)
 - [x] `<kbd>` 태그 (키보드 단축키) - Keyboard extension + BubbleMenu 버튼
 - [x] 코드블록 파일명 표시 - CodeBlock filename 편집 기능
+- [x] 라이트/다크 모드 전환 - 데모 앱 테마 토글 버튼
 - [ ] 코드블록 라인 하이라이트
 - [ ] GitHub Gist 임베드
 - [ ] CodeSandbox 임베드

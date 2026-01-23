@@ -10,7 +10,7 @@
 
 | 항목 | 상태 |
 |------|------|
-| **현재 Phase** | Phase 9 완료, Phase 10 대기 |
+| **현재 Phase** | Phase 10 완료, Phase 11 진행 중 |
 | **빌드 상태** | 성공 ✅ |
 | **Git 상태** | 최신 (main) |
 | **개발 서버** | 포트 3100 (FE), 포트 4000 (API) |
@@ -24,7 +24,7 @@
 
 - 모노레포 구조 (pnpm workspaces + Turbo)
 - Tiptap 기반 에디터 컴포넌트
-- 슬래시 명령어 (18개), 버블 메뉴
+- 슬래시 명령어 (20개+), 버블 메뉴
 - 코드블록 + 언어 선택 UI + 신택스 하이라이팅 (26개 언어)
 - 다국어 지원 (한국어/영어)
 - 테이블 (생성, 행/열 추가삭제, 셀 병합/분할, 헤더 토글)
@@ -60,10 +60,26 @@
 - EmbedNode iframe sandbox 속성 추가
 - 보안 문서화 (`docs/SECURITY.md`)
 
+### Phase 10: 개발자 기능 (필수) ✅
+
+- 코드블록 라인 넘버 + 복사 버튼
+- 마크다운 Export/Import
+- 목차 (TOC) 자동 생성
+- 터미널/CLI 블록
+- API Request/Response 블록
+
+### Phase 11: 개발자 기능 (권장) - 진행 중
+
+- [x] `<kbd>` 태그 (키보드 단축키)
+- [x] 코드블록 파일명 표시
+- [x] Mermaid 다이어그램 지원
+- [x] 라이트/다크 모드 전환 (데모 앱)
+
 ### 데모 앱 개선 ✅
 
 - 사용 가이드 사이드바 (슬래시 명령어, 단축키, 마크다운)
 - 언어 토글 (한국어/영어)
+- 라이트/다크/시스템 테마 토글
 - JSON/Markdown 출력 뷰어
 - Hydration 오류 수정 (dynamic import)
 - TaskList 체크박스 정렬 수정
@@ -76,18 +92,21 @@
 
 ## 다음 작업
 
-### Phase 7-8 잔여 (선택)
-- [ ] 이미지 플레이스홀더 (업로드 중 스켈레톤)
-- [ ] Alt 텍스트 편집 UI 개선
-- [ ] PDF 미리보기 (PDF.js)
+### Phase 11 잔여 (선택)
+- [ ] 코드블록 라인 하이라이트
+- [ ] GitHub Gist 임베드
+- [ ] 환경 변수 블록 (민감 정보 마스킹)
+- [ ] Changelog 블록
+- [ ] 각주 (Footnotes)
+- [ ] 코드 Diff 블록
+- [ ] OS별 명령어 탭 (macOS/Linux/Windows)
 
-### Phase 9 잔여 (선택)
-- [ ] DOMPurify 통합 (HTML sanitization)
-
-### Phase 10: 개발자 기능 (필수)
-- [ ] 코드블록 라인 넘버 + 복사 버튼
-- [ ] 마크다운 Export/Import
-- [ ] 목차 (TOC) 자동 생성
+### Phase 12: 개발자 기능 (선택)
+- [ ] StackBlitz/Replit 임베드
+- [ ] OpenAPI/Swagger 임베드
+- [ ] GraphQL 쿼리 블록
+- [ ] 내부 링크/앵커
+- [ ] 용어 정의 (Glossary)
 
 ---
 
@@ -101,8 +120,8 @@
 | 7 | 이미지/커스텀 노드 | ✅ 완료 |
 | 8 | 파일 업로드/첨부 | ✅ 완료 |
 | 9 | 보안 강화 | ✅ 완료 |
-| 10 | 개발자 기능 (필수) | 📋 대기 |
-| 11 | 개발자 기능 (권장) | 📋 대기 |
+| 10 | 개발자 기능 (필수) | ✅ 완료 |
+| 11 | 개발자 기능 (권장) | 🔄 진행 중 |
 | 12 | 개발자 기능 (선택) | 📋 대기 |
 | 13 | 안정화 및 최적화 | 📋 대기 |
 | 14 | npm 배포 준비 | 📋 대기 |
@@ -111,7 +130,7 @@
 
 ---
 
-## 구현된 슬래시 명령어 (18개)
+## 구현된 슬래시 명령어 (20개+)
 
 | 명령어 | 기능 |
 |--------|------|
@@ -131,6 +150,10 @@
 | `/toggle` | 토글 (접기/펼치기) |
 | `/bookmark` | 북마크 (링크 미리보기) |
 | `/math` | 수학 수식 (LaTeX) |
+| `/toc` | 목차 (Table of Contents) |
+| `/terminal` | 터미널 블록 |
+| `/api` | API 블록 |
+| `/mermaid` | Mermaid 다이어그램 |
 
 ---
 
@@ -147,7 +170,7 @@
 | `packages/react/src/components/BubbleMenu.tsx` | 버블 메뉴 |
 | `packages/react/src/components/TableBubbleMenu.tsx` | 테이블 버블 메뉴 |
 
-### 커스텀 노드 (7개)
+### 커스텀 노드 (10개+)
 
 | 파일 | 설명 |
 |------|------|
@@ -158,14 +181,19 @@
 | `packages/react/src/components/BookmarkNode/` | 링크 미리보기 |
 | `packages/react/src/components/MathNode/` | KaTeX 수식 |
 | `packages/react/src/components/FileAttachmentNode/` | 파일 첨부 |
+| `packages/react/src/components/TocNode/` | 목차 |
+| `packages/react/src/components/TerminalNode/` | 터미널 블록 |
+| `packages/react/src/components/ApiBlockNode/` | API 블록 |
+| `packages/react/src/components/MermaidNode/` | Mermaid 다이어그램 |
 
 ### 데모 앱
 
 | 파일 | 설명 |
 |------|------|
-| `apps/demo/src/app/page.tsx` | 데모 페이지 |
+| `apps/demo/src/app/page.tsx` | 데모 페이지 (테마 토글 포함) |
 | `apps/demo/src/app/EditorWrapper.tsx` | SSR 비활성화 래퍼 |
-| `apps/demo/src/app/globals.css` | 스타일 + 신택스 하이라이팅 |
+| `apps/demo/src/app/globals.css` | 스타일 + 다크모드 |
+| `apps/demo/tailwind.config.js` | Tailwind 설정 (다크모드) |
 
 ---
 
