@@ -25,7 +25,7 @@
 | 8 | 파일 업로드/첨부 | ✅ 완료 |
 | 9 | 보안 강화 | ✅ 완료 |
 | 10 | 개발자 기능 (필수) | ✅ 완료 |
-| 11 | 개발자 기능 (권장) | 📋 대기 |
+| 11 | 개발자 기능 (권장) | 🔄 진행 중 |
 | 12 | 개발자 기능 (선택) | 📋 대기 |
 | 13 | 안정화 및 최적화 | 📋 대기 |
 | 14 | npm 배포 준비 | 📋 대기 |
@@ -202,14 +202,14 @@
 - [x] `<kbd>` 태그 (키보드 단축키) - Keyboard extension + BubbleMenu 버튼
 - [x] 코드블록 파일명 표시 - CodeBlock filename 편집 기능
 - [x] 라이트/다크 모드 전환 - 데모 앱 테마 토글 버튼
+- [x] 에러 메시지 블록 (ErrorMessageNode) - error/warning/info/success 타입
 - [ ] 코드블록 라인 하이라이트
 - [ ] GitHub Gist 임베드
-- [ ] CodeSandbox 임베드
+- [ ] CodeSandbox 임베드 (EmbedNode에 이미 포함)
 - [ ] 환경 변수 블록 (민감 정보 마스킹)
 - [ ] Changelog 블록
 - [ ] 각주 (Footnotes)
 - [ ] 코드 Diff 블록
-- [ ] 에러 메시지 블록
 - [ ] OS별 명령어 탭 (macOS/Linux/Windows)
 
 ### Phase 12: 개발자 친화적 기능 (선택)
@@ -292,7 +292,52 @@
 
 ## 변경 이력
 
-### 2026-01-23
+### 2026-01-23 (오후)
+
+**Phase 11: ErrorMessageNode 구현**
+
+#### ErrorMessageNode 신규 생성
+- `packages/react/src/components/ErrorMessageNode/` 디렉토리 생성
+- `ErrorMessageNode.tsx` - React 컴포넌트 (편집/표시 모드)
+- `error-message-extension.ts` - Tiptap Node 확장
+- `index.ts` - exports
+
+#### 기능
+- 4가지 메시지 타입: Error, Warning, Info, Success
+- 편집 모드: 제목(선택), 메시지 입력
+- 표시 모드: 아이콘, 제목, 메시지 표시
+- 선택 시 타입 변경 툴바
+- 슬래시 명령어: `/error`, `/warning`, `/alert`, `/경고` 등으로 검색
+- 라이트/다크 모드 지원
+
+#### 파일 수정
+- `packages/react/src/components/index.ts` - ErrorMessageNode export 추가
+- `packages/react/src/components/Editor.tsx` - 슬래시 명령어 및 확장 설정
+- `packages/react/src/locales/types.ts` - ErrorMessageNodeLocale 타입 추가
+- `packages/react/src/locales/en.ts` - 영어 로케일
+- `packages/react/src/locales/ko.ts` - 한국어 로케일
+- `apps/demo/src/app/globals.css` - 스타일 (라이트/다크 모드)
+
+#### 버그 수정 (코드 리뷰)
+- `hint` 로케일 문자열 수정: "Click to edit" → "Ctrl+Enter to confirm, Escape to cancel"
+- `data-type` 속성 충돌 수정: 메시지 타입을 `data-message-type`으로 변경
+
+---
+
+**라이트/다크 모드 테마 토글 구현** (이전 세션)
+
+#### 데모 앱 테마 기능
+- `apps/demo/src/app/page.tsx` - 테마 상태, localStorage 저장, 시스템 설정 감지
+- `apps/demo/tailwind.config.js` - `darkMode: ['selector', '[data-theme="dark"]']` 설정
+- `apps/demo/src/app/globals.css` - 500+ 라인 다크모드 CSS 스타일
+
+#### 커밋
+- `c7808ea`, `0081e24` - 테마 토글 구현
+- `e51f1a5` - EditorWrapper 로딩 상태 다크모드 수정
+
+---
+
+### 2026-01-23 (오전)
 
 **Phase 9: 보안 강화 구현**
 

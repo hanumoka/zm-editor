@@ -74,6 +74,7 @@
 - [x] 코드블록 파일명 표시
 - [x] Mermaid 다이어그램 지원
 - [x] 라이트/다크 모드 전환 (데모 앱)
+- [x] 에러 메시지 블록 (error/warning/info/success)
 
 ### 데모 앱 개선 ✅
 
@@ -93,13 +94,13 @@
 ## 다음 작업
 
 ### Phase 11 잔여 (선택)
-- [ ] 코드블록 라인 하이라이트
-- [ ] GitHub Gist 임베드
-- [ ] 환경 변수 블록 (민감 정보 마스킹)
-- [ ] Changelog 블록
-- [ ] 각주 (Footnotes)
-- [ ] 코드 Diff 블록
 - [ ] OS별 명령어 탭 (macOS/Linux/Windows)
+- [ ] Changelog 블록
+- [ ] 환경 변수 블록 (민감 정보 마스킹)
+- [ ] GitHub Gist 임베드
+- [ ] 코드 Diff 블록
+- [ ] 코드블록 라인 하이라이트
+- [ ] 각주 (Footnotes)
 
 ### Phase 12: 개발자 기능 (선택)
 - [ ] StackBlitz/Replit 임베드
@@ -130,7 +131,7 @@
 
 ---
 
-## 구현된 슬래시 명령어 (20개+)
+## 구현된 슬래시 명령어 (21개+)
 
 | 명령어 | 기능 |
 |--------|------|
@@ -154,6 +155,7 @@
 | `/terminal` | 터미널 블록 |
 | `/api` | API 블록 |
 | `/mermaid` | Mermaid 다이어그램 |
+| `/error` | 에러/경고/정보 메시지 |
 
 ---
 
@@ -170,7 +172,7 @@
 | `packages/react/src/components/BubbleMenu.tsx` | 버블 메뉴 |
 | `packages/react/src/components/TableBubbleMenu.tsx` | 테이블 버블 메뉴 |
 
-### 커스텀 노드 (10개+)
+### 커스텀 노드 (12개)
 
 | 파일 | 설명 |
 |------|------|
@@ -185,6 +187,7 @@
 | `packages/react/src/components/TerminalNode/` | 터미널 블록 |
 | `packages/react/src/components/ApiBlockNode/` | API 블록 |
 | `packages/react/src/components/MermaidNode/` | Mermaid 다이어그램 |
+| `packages/react/src/components/ErrorMessageNode/` | 에러/경고 메시지 |
 
 ### 데모 앱
 
