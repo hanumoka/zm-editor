@@ -92,6 +92,10 @@ export const enLocale: ZmEditorLocale = {
         title: 'Terminal',
         description: 'Command line with output',
       },
+      apiBlock: {
+        title: 'API',
+        description: 'HTTP request and response',
+      },
     },
   },
   bubbleMenu: {
@@ -160,6 +164,15 @@ export const enLocale: ZmEditorLocale = {
       copyOutput: 'Copy output',
       copied: 'Copied!',
       clickToEdit: 'Click to edit',
+    },
+    apiBlock: {
+      urlPlaceholder: '/api/endpoint',
+      requestBody: 'Request Body',
+      responseBody: 'Response',
+      requestPlaceholder: '{\n  "key": "value"\n}',
+      responsePlaceholder: '{\n  "data": []\n}',
+      copy: 'Copy',
+      copied: 'Copied!',
     },
   },
 };

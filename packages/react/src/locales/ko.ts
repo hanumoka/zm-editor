@@ -92,6 +92,10 @@ export const koLocale: ZmEditorLocale = {
         title: '터미널',
         description: '명령어와 출력이 있는 CLI 블록',
       },
+      apiBlock: {
+        title: 'API',
+        description: 'HTTP 요청 및 응답 블록',
+      },
     },
   },
   bubbleMenu: {
@@ -160,6 +164,15 @@ export const koLocale: ZmEditorLocale = {
       copyOutput: '출력 복사',
       copied: '복사됨!',
       clickToEdit: '클릭하여 수정',
+    },
+    apiBlock: {
+      urlPlaceholder: '/api/endpoint',
+      requestBody: '요청 본문',
+      responseBody: '응답',
+      requestPlaceholder: '{\n  "key": "value"\n}',
+      responsePlaceholder: '{\n  "data": []\n}',
+      copy: '복사',
+      copied: '복사됨!',
     },
   },
 };

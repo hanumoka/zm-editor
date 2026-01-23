@@ -2214,3 +2214,230 @@ body {
 .zm-terminal-node:hover {
   box-shadow: 0 0 0 1px #30363d;
 }
+
+/* ========================================
+   API Block Styles
+   ======================================== */
+
+.zm-api-block-node-wrapper {
+  margin: 1rem 0;
+}
+
+.zm-api-block-node {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+}
+
+.zm-api-block-node.is-selected {
+  outline: 2px solid #3b82f6;
+  outline-offset: -2px;
+}
+
+/* API 헤더 (메서드 + URL) */
+.zm-api-block-header {
+  padding: 0.75rem;
+  background-color: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.zm-api-block-method-url {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.zm-api-block-method-select {
+  padding: 0.25rem 0.5rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.25rem center;
+  padding-right: 1.25rem;
+}
+
+.zm-api-block-url-input {
+  flex: 1;
+  padding: 0.375rem 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-family: inherit;
+  color: #374151;
+  background-color: #ffffff;
+}
+
+.zm-api-block-url-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.zm-api-block-url-input::placeholder {
+  color: #9ca3af;
+}
+
+/* 섹션 (요청/응답) */
+.zm-api-block-section {
+  border-top: 1px solid #e5e7eb;
+}
+
+.zm-api-block-section:first-of-type {
+  border-top: none;
+}
+
+.zm-api-block-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  background-color: #f9fafb;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6b7280;
+  text-align: left;
+  transition: background-color 0.15s;
+}
+
+.zm-api-block-section-header:hover {
+  background-color: #f3f4f6;
+}
+
+.zm-api-block-section-header > span {
+  flex: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.zm-api-block-section-content {
+  padding: 0.75rem;
+  background-color: #fafafa;
+}
+
+/* 복사 버튼 */
+.zm-api-block-copy-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #9ca3af;
+  transition: all 0.15s;
+}
+
+.zm-api-block-copy-btn:hover {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+.zm-api-block-copy-btn.copied {
+  color: #10b981;
+}
+
+/* 상태 코드 입력 */
+.zm-api-block-status {
+  margin-left: auto;
+}
+
+.zm-api-block-status-input {
+  width: 3.5rem;
+  padding: 0.125rem 0.25rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: inherit;
+  text-align: center;
+  cursor: text;
+}
+
+.zm-api-block-status-input:focus {
+  outline: none;
+}
+
+/* 텍스트 영역 */
+.zm-api-block-textarea {
+  width: 100%;
+  min-height: 4rem;
+  padding: 0.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  font-size: 0.8125rem;
+  font-family: inherit;
+  color: #374151;
+  background-color: #ffffff;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.zm-api-block-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.zm-api-block-textarea::placeholder {
+  color: #9ca3af;
+}
+
+/* 다크 모드 지원 */
+@media (prefers-color-scheme: dark) {
+  .zm-api-block-node {
+    background-color: #1f2937;
+    border-color: #374151;
+  }
+
+  .zm-api-block-header {
+    background-color: #111827;
+    border-color: #374151;
+  }
+
+  .zm-api-block-url-input {
+    background-color: #1f2937;
+    border-color: #4b5563;
+    color: #e5e7eb;
+  }
+
+  .zm-api-block-section {
+    border-color: #374151;
+  }
+
+  .zm-api-block-section-header {
+    background-color: #111827;
+    color: #9ca3af;
+  }
+
+  .zm-api-block-section-header:hover {
+    background-color: #1f2937;
+  }
+
+  .zm-api-block-section-content {
+    background-color: #0d1117;
+  }
+
+  .zm-api-block-textarea {
+    background-color: #1f2937;
+    border-color: #4b5563;
+    color: #e5e7eb;
+  }
+
+  .zm-api-block-copy-btn:hover {
+    background-color: #374151;
+    color: #e5e7eb;
+  }
+}

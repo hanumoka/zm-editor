@@ -33,3 +33,5 @@ export { TocNode, Toc } from './TocNode';
 export type { TocNodeProps, TocNodeOptions } from './TocNode';
 export { TerminalNode, Terminal } from './TerminalNode';
 export type { TerminalNodeProps, TerminalOptions } from './TerminalNode';
+export { ApiBlockNode, ApiBlock } from './ApiBlockNode';
+export type { ApiBlockNodeProps, ApiBlockOptions, HttpMethod } from './ApiBlockNode';

@@ -36,6 +36,7 @@ export interface SlashMenuLocale {
     math: SlashCommandLocale;
     toc: SlashCommandLocale;
     terminal: SlashCommandLocale;
+    apiBlock: SlashCommandLocale;
   };
 }
 
@@ -151,6 +152,19 @@ export interface TerminalNodeLocale {
 }
 
 /**
+ * API 블록 노드 번역
+ */
+export interface ApiBlockNodeLocale {
+  urlPlaceholder: string;
+  requestBody: string;
+  responseBody: string;
+  requestPlaceholder: string;
+  responsePlaceholder: string;
+  copy: string;
+  copied: string;
+}
+
+/**
  * NodeView 컴포넌트 번역
  */
 export interface NodesLocale {
@@ -160,6 +174,7 @@ export interface NodesLocale {
   fileAttachment: FileAttachmentNodeLocale;
   image: ImageNodeLocale;
   terminal: TerminalNodeLocale;
+  apiBlock: ApiBlockNodeLocale;
 }
 
 /**

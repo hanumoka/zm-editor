@@ -24,7 +24,7 @@
 | 7 | 이미지 및 커스텀 노드 | ✅ 완료 |
 | 8 | 파일 업로드/첨부 | ✅ 완료 |
 | 9 | 보안 강화 | ✅ 완료 |
-| 10 | 개발자 기능 (필수) | 📋 대기 |
+| 10 | 개발자 기능 (필수) | ✅ 완료 |
 | 11 | 개발자 기능 (권장) | 📋 대기 |
 | 12 | 개발자 기능 (선택) | 📋 대기 |
 | 13 | 안정화 및 최적화 | 📋 대기 |
@@ -183,7 +183,7 @@
 - [x] 보안 문서 생성 (`docs/SECURITY.md`)
 - [ ] DOMPurify 통합 (선택적 - optional peer dependency)
 
-### Phase 10: 개발자 친화적 기능 (필수)
+### Phase 10: 개발자 친화적 기능 (필수) ✅
 
 - [x] 코드블록 라인 넘버
 - [x] 코드블록 복사 버튼
@@ -191,8 +191,8 @@
 - [x] 마크다운 Import (`setContent` with markdown)
 - [x] Callout/Admonition 블록 (note, tip, warning, danger) - Phase 7에서 구현 (CalloutNode)
 - [x] 목차 (TOC) 자동 생성
-- [ ] 터미널/CLI 블록 (명령어 + 출력 + 복사 버튼)
-- [ ] API Request/Response 블록
+- [x] 터미널/CLI 블록 (명령어 + 출력 + 복사 버튼)
+- [x] API Request/Response 블록
 
 ### Phase 11: 개발자 친화적 기능 (권장)
 

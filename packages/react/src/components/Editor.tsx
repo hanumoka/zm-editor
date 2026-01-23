@@ -28,6 +28,7 @@ import { MathExtension } from './MathNode';
 import { FileAttachment } from './FileAttachmentNode';
 import { Toc } from './TocNode';
 import { Terminal } from './TerminalNode';
+import { ApiBlock } from './ApiBlockNode';
 import type { ZmEditorLocale } from '../locales';
 import { enLocale } from '../locales';
 import { LocaleProvider } from '../context';
@@ -459,6 +460,14 @@ function createLocalizedSlashCommands(locale: ZmEditorLocale): SlashCommandItem[
         editor.chain().focus().deleteRange(range).setTerminal().run();
       },
     },
+    {
+      title: commands.apiBlock.title,
+      description: commands.apiBlock.description,
+      searchTerms: ['api', 'http', 'request', 'response', 'rest', 'endpoint', 'fetch', 'get', 'post'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setApiBlock().run();
+      },
+    },
   ];
 }
 
@@ -667,6 +676,13 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         },
       });
 
+      // ApiBlock 확장 (API 요청/응답 블록)
+      const apiBlockExtension = ApiBlock.configure({
+        HTMLAttributes: {
+          class: 'zm-api-block',
+        },
+      });
+
       return [
         ...baseExtensions,
         codeBlockExtension,
@@ -679,6 +695,7 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         fileAttachmentExtension,
         tocExtension,
         terminalExtension,
+        apiBlockExtension,
         ...(slashCommandExtension ? [slashCommandExtension] : []),
         ...customExtensions,
       ];
