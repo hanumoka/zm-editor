@@ -8,6 +8,8 @@ import {
   SlashCommand,
   CodeBlockLowlight,
   lowlight,
+  htmlToMarkdown,
+  markdownToHtml,
   type SlashCommandItem,
   type ZmStarterKitOptions,
 } from '@zm-editor/core';
@@ -261,8 +263,12 @@ export interface ZmEditorRef {
   getHTML: () => string | undefined;
   /** 텍스트 콘텐츠 가져오기 */
   getText: () => string | undefined;
-  /** 콘텐츠 설정 */
+  /** 마크다운 콘텐츠 가져오기 */
+  getMarkdown: () => string | undefined;
+  /** 콘텐츠 설정 (JSON 또는 HTML) */
   setContent: (content: JSONContent | string) => void;
+  /** 마크다운 콘텐츠 설정 */
+  setMarkdownContent: (markdown: string) => void;
   /** 에디터 포커스 */
   focus: () => void;
   /** 에디터 초기화 */
@@ -671,7 +677,15 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
       getJSON: () => editor?.getJSON(),
       getHTML: () => editor?.getHTML(),
       getText: () => editor?.getText(),
+      getMarkdown: () => {
+        const html = editor?.getHTML();
+        return html ? htmlToMarkdown(html) : undefined;
+      },
       setContent: (content) => editor?.commands.setContent(content),
+      setMarkdownContent: (markdown: string) => {
+        const html = markdownToHtml(markdown);
+        editor?.commands.setContent(html);
+      },
       focus: () => editor?.commands.focus(),
       clear: () => editor?.commands.clearContent(),
     }));

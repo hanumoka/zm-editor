@@ -1,6 +1,9 @@
 import type { Editor } from '@tiptap/core';
 import type { JSONContent } from '@tiptap/core';
 
+// 마크다운 변환 유틸리티
+export { htmlToMarkdown, markdownToHtml } from './markdown';
+
 /**
  * 에디터 콘텐츠를 JSON으로 내보내기
  */
