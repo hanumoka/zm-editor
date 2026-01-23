@@ -49,6 +49,7 @@ export interface BubbleMenuLocale {
   underline: string;
   strikethrough: string;
   code: string;
+  keyboard: string;
   highlight: string;
   link: string;
 }

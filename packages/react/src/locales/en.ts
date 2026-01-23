@@ -104,6 +104,7 @@ export const enLocale: ZmEditorLocale = {
     underline: 'Underline',
     strikethrough: 'Strikethrough',
     code: 'Code',
+    keyboard: 'Keyboard',
     highlight: 'Highlight',
     link: 'Link',
   },

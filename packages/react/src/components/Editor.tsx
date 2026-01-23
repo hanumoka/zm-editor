@@ -11,6 +11,7 @@ import {
   htmlToMarkdown,
   markdownToHtml,
   extractTableOfContents,
+  Keyboard,
   type SlashCommandItem,
   type ZmStarterKitOptions,
   type TocItem,
@@ -545,6 +546,19 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
       // 커스텀 CodeBlock (언어 선택 UI 포함)
       const codeBlockExtension = CodeBlockLowlight
         .extend({
+          addAttributes() {
+            return {
+              ...this.parent?.(),
+              filename: {
+                default: '',
+                parseHTML: element => element.getAttribute('data-filename') || '',
+                renderHTML: attributes => {
+                  if (!attributes.filename) return {};
+                  return { 'data-filename': attributes.filename };
+                },
+              },
+            };
+          },
           addNodeView() {
             return ReactNodeViewRenderer(CodeBlock);
           },
@@ -683,6 +697,13 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         },
       });
 
+      // Keyboard 확장 (kbd 태그)
+      const keyboardExtension = Keyboard.configure({
+        HTMLAttributes: {
+          class: 'zm-kbd',
+        },
+      });
+
       return [
         ...baseExtensions,
         codeBlockExtension,
@@ -696,6 +717,7 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         tocExtension,
         terminalExtension,
         apiBlockExtension,
+        keyboardExtension,
         ...(slashCommandExtension ? [slashCommandExtension] : []),
         ...customExtensions,
       ];

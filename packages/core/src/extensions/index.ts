@@ -30,3 +30,6 @@ export {
   type SlashCommandItem,
   type SlashCommandOptions,
 } from './slash-command';
+
+// Keyboard (kbd tag)
+export { Keyboard, type KeyboardOptions } from './keyboard';

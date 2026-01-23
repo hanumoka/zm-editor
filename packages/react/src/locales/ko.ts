@@ -104,6 +104,7 @@ export const koLocale: ZmEditorLocale = {
     underline: '밑줄',
     strikethrough: '취소선',
     code: '코드',
+    keyboard: '키보드',
     highlight: '강조',
     link: '링크',
   },

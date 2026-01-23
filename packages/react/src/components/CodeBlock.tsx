@@ -3,7 +3,7 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { NodeViewContent, NodeViewWrapper, NodeViewProps } from '@tiptap/react';
 
-// 복사 아이콘
+// 아이콘 컴포넌트들
 const CopyIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
@@ -11,10 +11,16 @@ const CopyIcon = () => (
   </svg>
 );
 
-// 체크 아이콘 (복사 성공)
 const CheckIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <polyline points="20 6 9 17 4 12" />
+  </svg>
+);
+
+const FileIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
+    <polyline points="13 2 13 9 20 9" />
   </svg>
 );
 
@@ -49,12 +55,16 @@ const LANGUAGES = [
 ];
 
 /**
- * CodeBlock - 라인 넘버와 복사 기능이 있는 코드 블록 컴포넌트
+ * CodeBlock - 라인 넘버, 파일명, 복사 기능이 있는 코드 블록 컴포넌트
  */
 export function CodeBlock({ node, updateAttributes }: NodeViewProps) {
   const [copied, setCopied] = useState(false);
+  const [isEditingFilename, setIsEditingFilename] = useState(false);
+  const [filenameInput, setFilenameInput] = useState('');
   const copyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const filenameInputRef = useRef<HTMLInputElement>(null);
   const currentLanguage = node.attrs.language || '';
+  const filename = node.attrs.filename || '';
 
   // cleanup timeout on unmount
   useEffect(() => {
@@ -64,6 +74,38 @@ export function CodeBlock({ node, updateAttributes }: NodeViewProps) {
       }
     };
   }, []);
+
+  // 파일명 편집 시작 시 포커스
+  useEffect(() => {
+    if (isEditingFilename && filenameInputRef.current) {
+      filenameInputRef.current.focus();
+      filenameInputRef.current.select();
+    }
+  }, [isEditingFilename]);
+
+  // 파일명 편집 시작
+  const startEditFilename = useCallback(() => {
+    setFilenameInput(filename);
+    setIsEditingFilename(true);
+  }, [filename]);
+
+  // 파일명 저장
+  const saveFilename = useCallback(() => {
+    updateAttributes({ filename: filenameInput.trim() });
+    setIsEditingFilename(false);
+  }, [filenameInput, updateAttributes]);
+
+  // 파일명 입력 키 핸들러
+  const handleFilenameKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+        saveFilename();
+      } else if (e.key === 'Escape') {
+        setIsEditingFilename(false);
+      }
+    },
+    [saveFilename]
+  );
 
   // 코드 복사 핸들러
   const handleCopy = useCallback(async () => {
@@ -99,28 +141,66 @@ export function CodeBlock({ node, updateAttributes }: NodeViewProps) {
   return (
     <NodeViewWrapper className="zm-code-block-wrapper">
       <div className="zm-code-block-header">
-        <select
-          className="zm-code-block-language-select"
-          value={currentLanguage}
-          onChange={handleLanguageChange}
-          contentEditable={false}
-        >
-          {LANGUAGES.map((lang) => (
-            <option key={lang.value} value={lang.value}>
-              {lang.label}
-            </option>
-          ))}
-        </select>
+        {/* 파일명 영역 */}
+        <div className="zm-code-block-filename-area" contentEditable={false}>
+          {isEditingFilename ? (
+            <input
+              ref={filenameInputRef}
+              type="text"
+              className="zm-code-block-filename-input"
+              value={filenameInput}
+              onChange={(e) => setFilenameInput(e.target.value)}
+              onKeyDown={handleFilenameKeyDown}
+              onBlur={saveFilename}
+              placeholder="filename.ext"
+              spellCheck={false}
+            />
+          ) : filename ? (
+            <button
+              type="button"
+              className="zm-code-block-filename"
+              onClick={startEditFilename}
+              title="Click to edit filename"
+            >
+              <FileIcon />
+              <span>{filename}</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="zm-code-block-add-filename"
+              onClick={startEditFilename}
+              title="Add filename"
+            >
+              <FileIcon />
+              <span>Add filename</span>
+            </button>
+          )}
+        </div>
 
-        <button
-          type="button"
-          className={`zm-code-block-copy-button ${copied ? 'copied' : ''}`}
-          onClick={handleCopy}
-          contentEditable={false}
-          title={copied ? 'Copied!' : 'Copy code'}
-        >
-          {copied ? <CheckIcon /> : <CopyIcon />}
-        </button>
+        {/* 언어 선택 및 복사 버튼 */}
+        <div className="zm-code-block-actions" contentEditable={false}>
+          <select
+            className="zm-code-block-language-select"
+            value={currentLanguage}
+            onChange={handleLanguageChange}
+          >
+            {LANGUAGES.map((lang) => (
+              <option key={lang.value} value={lang.value}>
+                {lang.label}
+              </option>
+            ))}
+          </select>
+
+          <button
+            type="button"
+            className={`zm-code-block-copy-button ${copied ? 'copied' : ''}`}
+            onClick={handleCopy}
+            title={copied ? 'Copied!' : 'Copy code'}
+          >
+            {copied ? <CheckIcon /> : <CopyIcon />}
+          </button>
+        </div>
       </div>
 
       <div className="zm-code-block-container">
