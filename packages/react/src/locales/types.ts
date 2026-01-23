@@ -34,6 +34,7 @@ export interface SlashMenuLocale {
     toggle: SlashCommandLocale;
     bookmark: SlashCommandLocale;
     math: SlashCommandLocale;
+    toc: SlashCommandLocale;
   };
 }
 

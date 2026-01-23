@@ -4,6 +4,15 @@ import type { JSONContent } from '@tiptap/core';
 // 마크다운 변환 유틸리티
 export { htmlToMarkdown, markdownToHtml } from './markdown';
 
+// 목차(TOC) 유틸리티
+export {
+  extractTableOfContents,
+  tocToMarkdown,
+  tocToHtml,
+  type TocItem,
+  type TocOptions,
+} from './toc';
+
 /**
  * 에디터 콘텐츠를 JSON으로 내보내기
  */

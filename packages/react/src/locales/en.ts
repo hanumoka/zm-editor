@@ -84,6 +84,10 @@ export const enLocale: ZmEditorLocale = {
         title: 'Math',
         description: 'LaTeX equation block',
       },
+      toc: {
+        title: 'Table of Contents',
+        description: 'Auto-generated heading list',
+      },
     },
   },
   bubbleMenu: {

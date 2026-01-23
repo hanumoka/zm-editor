@@ -84,6 +84,10 @@ export const koLocale: ZmEditorLocale = {
         title: '수식',
         description: 'LaTeX 수학 수식 블록',
       },
+      toc: {
+        title: '목차',
+        description: '자동 생성 제목 목록',
+      },
     },
   },
   bubbleMenu: {

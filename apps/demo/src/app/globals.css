@@ -1927,3 +1927,104 @@ body {
     color: #6b7280;
   }
 }
+
+/* ===== Table of Contents (TOC) Node ===== */
+.zm-toc-node-wrapper {
+  margin: 1rem 0;
+}
+
+.zm-toc-node {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.zm-toc-node:hover {
+  border-color: #d1d5db;
+}
+
+.zm-toc-node.is-selected {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.zm-toc-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.zm-toc-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+}
+
+.zm-toc-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.zm-toc-empty {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  text-align: center;
+  padding: 16px 0;
+}
+
+.zm-toc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.zm-toc-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.875rem;
+  color: #374151;
+  transition: background-color 0.15s;
+  width: 100%;
+}
+
+.zm-toc-item:hover {
+  background-color: #f3f4f6;
+}
+
+.zm-toc-item-bullet {
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+.zm-toc-item-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.zm-toc-item-level-1 {
+  font-weight: 600;
+}
+
+.zm-toc-item-level-2 {
+  font-weight: 500;
+}
+
+.zm-toc-item-level-3 {
+  font-weight: 400;
+  color: #6b7280;
+}

@@ -10,8 +10,11 @@ import {
   lowlight,
   htmlToMarkdown,
   markdownToHtml,
+  extractTableOfContents,
   type SlashCommandItem,
   type ZmStarterKitOptions,
+  type TocItem,
+  type TocOptions,
 } from '@zm-editor/core';
 import { BubbleMenu } from './BubbleMenu';
 import { TableBubbleMenu } from './TableBubbleMenu';
@@ -23,6 +26,7 @@ import { Toggle } from './ToggleNode';
 import { Bookmark } from './BookmarkNode';
 import { MathExtension } from './MathNode';
 import { FileAttachment } from './FileAttachmentNode';
+import { Toc } from './TocNode';
 import type { ZmEditorLocale } from '../locales';
 import { enLocale } from '../locales';
 import { LocaleProvider } from '../context';
@@ -265,6 +269,8 @@ export interface ZmEditorRef {
   getText: () => string | undefined;
   /** 마크다운 콘텐츠 가져오기 */
   getMarkdown: () => string | undefined;
+  /** 목차(TOC) 가져오기 */
+  getTableOfContents: (options?: TocOptions) => TocItem[];
   /** 콘텐츠 설정 (JSON 또는 HTML) */
   setContent: (content: JSONContent | string) => void;
   /** 마크다운 콘텐츠 설정 */
@@ -434,6 +440,14 @@ function createLocalizedSlashCommands(locale: ZmEditorLocale): SlashCommandItem[
       searchTerms: ['math', 'latex', 'equation', 'formula', 'katex', 'tex'],
       command: ({ editor, range }) => {
         editor.chain().focus().deleteRange(range).setMath().run();
+      },
+    },
+    {
+      title: commands.toc.title,
+      description: commands.toc.description,
+      searchTerms: ['toc', 'table of contents', 'contents', 'outline', 'heading', 'index', '목차'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setToc().run();
       },
     },
   ];
@@ -630,6 +644,13 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         },
       });
 
+      // Toc 확장 (목차)
+      const tocExtension = Toc.configure({
+        HTMLAttributes: {
+          class: 'zm-toc',
+        },
+      });
+
       return [
         ...baseExtensions,
         codeBlockExtension,
@@ -640,6 +661,7 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         bookmarkExtension,
         mathExtension,
         fileAttachmentExtension,
+        tocExtension,
         ...(slashCommandExtension ? [slashCommandExtension] : []),
         ...customExtensions,
       ];
@@ -680,6 +702,10 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
       getMarkdown: () => {
         const html = editor?.getHTML();
         return html ? htmlToMarkdown(html) : undefined;
+      },
+      getTableOfContents: (options?: TocOptions) => {
+        const json = editor?.getJSON();
+        return json ? extractTableOfContents(json, options) : [];
       },
       setContent: (content) => editor?.commands.setContent(content),
       setMarkdownContent: (markdown: string) => {

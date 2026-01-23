@@ -29,3 +29,5 @@ export { MathNode, MathExtension } from './MathNode';
 export type { MathNodeProps, MathOptions } from './MathNode';
 export { FileAttachmentNode, FileAttachment, getFileIcon, formatFileSize } from './FileAttachmentNode';
 export type { FileAttachmentNodeProps, FileAttachmentOptions, FileAttachmentAttributes } from './FileAttachmentNode';
+export { TocNode, Toc } from './TocNode';
+export type { TocNodeProps, TocNodeOptions } from './TocNode';
