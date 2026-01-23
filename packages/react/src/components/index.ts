@@ -39,3 +39,5 @@ export { MermaidNode, MermaidExtension } from './MermaidNode';
 export type { MermaidNodeProps, MermaidOptions } from './MermaidNode';
 export { ErrorMessageNode, ErrorMessage } from './ErrorMessageNode';
 export type { ErrorMessageNodeProps, ErrorMessageOptions } from './ErrorMessageNode';
+export { OsCommandNode, OsCommand } from './OsCommandNode';
+export type { OsCommandNodeProps, OsCommandOptions } from './OsCommandNode';

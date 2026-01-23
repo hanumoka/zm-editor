@@ -104,6 +104,10 @@ export const koLocale: ZmEditorLocale = {
         title: '에러 메시지',
         description: '에러, 경고, 정보 메시지 표시',
       },
+      osCommand: {
+        title: 'OS 명령어',
+        description: 'OS별 명령어 탭 (macOS/Linux/Windows)',
+      },
     },
   },
   bubbleMenu: {
@@ -194,6 +198,15 @@ export const koLocale: ZmEditorLocale = {
       messagePlaceholder: '메시지 입력...',
       hint: 'Ctrl+Enter로 확인, Escape로 취소',
       edit: '메시지 수정',
+    },
+    osCommand: {
+      macos: 'macOS',
+      linux: 'Linux',
+      windows: 'Windows',
+      commandPlaceholder: '명령어 입력...',
+      copyCommand: '명령어 복사',
+      copied: '복사됨!',
+      clickToEdit: '클릭하여 수정',
     },
   },
 };

@@ -210,7 +210,7 @@
 - [ ] Changelog 블록
 - [ ] 각주 (Footnotes)
 - [ ] 코드 Diff 블록
-- [ ] OS별 명령어 탭 (macOS/Linux/Windows)
+- [x] OS별 명령어 탭 (macOS/Linux/Windows) - OsCommandNode
 
 ### Phase 12: 개발자 친화적 기능 (선택)
 
@@ -291,6 +291,55 @@
 ---
 
 ## 변경 이력
+
+### 2026-01-23 (오후 2)
+
+**Phase 11: OsCommandNode 구현**
+
+#### OsCommandNode 신규 생성
+- `packages/react/src/components/OsCommandNode/` 디렉토리 생성
+- `OsCommandNode.tsx` - React 컴포넌트 (탭 기반 OS별 명령어)
+- `os-command-extension.ts` - Tiptap Node 확장
+- `index.ts` - exports
+
+#### 기능
+- 3개의 OS 탭: macOS, Linux, Windows
+- 각 탭별 명령어 입력/표시
+- 탭 클릭으로 OS 전환
+- 현재 선택된 탭의 복사 버튼
+- 편집/표시 모드 전환 (클릭하여 편집)
+- OS별 아이콘 (Apple, Linux, Windows)
+- OS별 프롬프트 문자 ($ / >)
+- 라이트/다크 모드 지원
+- 슬래시 명령어: `/os`, `/command`, `/oscommand` 등으로 검색
+- 키보드 단축키: Ctrl+1/2/3으로 탭 전환
+
+#### 파일 수정
+- `packages/react/src/components/index.ts` - OsCommandNode export 추가
+- `packages/react/src/components/Editor.tsx` - 슬래시 명령어 및 확장 설정
+- `packages/react/src/locales/types.ts` - OsCommandNodeLocale 타입 추가
+- `packages/react/src/locales/en.ts` - 영어 로케일
+- `packages/react/src/locales/ko.ts` - 한국어 로케일
+- `apps/demo/src/app/globals.css` - 스타일 (라이트/다크 모드, 190+ 라인)
+
+#### 코드 리뷰 및 버그 수정
+1. **useEffect 의존성 경고**
+   - ESLint 주석 추가로 의도적 빈 배열임을 명시
+   - `// eslint-disable-next-line react-hooks/exhaustive-deps`
+
+2. **중복 조건문 수정**
+   - Before: `if (e.key === 'Enter' || (e.key === 'Enter' && (e.ctrlKey || e.metaKey)))`
+   - After: `if (e.key === 'Enter')`
+
+3. **handleBlur 메모리 누수 수정**
+   - `blurTimeoutRef` 추가
+   - cleanup useEffect에서 타이머 정리 추가
+   - 기존 타이머 정리 후 새로 설정하도록 수정
+
+4. **Linux 아이콘 교체**
+   - GitHub 스타일 아이콘에서 더 적절한 아이콘으로 변경
+
+---
 
 ### 2026-01-23 (오후)
 

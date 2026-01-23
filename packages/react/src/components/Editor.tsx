@@ -32,6 +32,7 @@ import { Terminal } from './TerminalNode';
 import { ApiBlock } from './ApiBlockNode';
 import { MermaidExtension } from './MermaidNode';
 import { ErrorMessage } from './ErrorMessageNode';
+import { OsCommand } from './OsCommandNode';
 import type { ZmEditorLocale } from '../locales';
 import { enLocale } from '../locales';
 import { LocaleProvider } from '../context';
@@ -487,6 +488,14 @@ function createLocalizedSlashCommands(locale: ZmEditorLocale): SlashCommandItem[
         editor.chain().focus().deleteRange(range).setErrorMessage().run();
       },
     },
+    {
+      title: commands.osCommand?.title || 'OS Command',
+      description: commands.osCommand?.description || 'OS-specific command tabs',
+      searchTerms: ['oscommand', 'os', 'command', 'macos', 'linux', 'windows', 'tab', '운영체제', '명령어', 'mac', 'win'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setOsCommand().run();
+      },
+    },
   ];
 }
 
@@ -736,6 +745,13 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         },
       });
 
+      // OsCommand 확장 (OS별 명령어 탭 블록)
+      const osCommandExtension = OsCommand.configure({
+        HTMLAttributes: {
+          class: 'zm-os-command',
+        },
+      });
+
       return [
         ...baseExtensions,
         codeBlockExtension,
@@ -752,6 +768,7 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         keyboardExtension,
         mermaidExtension,
         errorMessageExtension,
+        osCommandExtension,
         ...(slashCommandExtension ? [slashCommandExtension] : []),
         ...customExtensions,
       ];

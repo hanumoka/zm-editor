@@ -104,6 +104,10 @@ export const enLocale: ZmEditorLocale = {
         title: 'Error Message',
         description: 'Display error, warning, or info message',
       },
+      osCommand: {
+        title: 'OS Command',
+        description: 'OS-specific command tabs (macOS/Linux/Windows)',
+      },
     },
   },
   bubbleMenu: {
@@ -194,6 +198,15 @@ export const enLocale: ZmEditorLocale = {
       messagePlaceholder: 'Enter message...',
       hint: 'Ctrl+Enter to confirm, Escape to cancel',
       edit: 'Edit message',
+    },
+    osCommand: {
+      macos: 'macOS',
+      linux: 'Linux',
+      windows: 'Windows',
+      commandPlaceholder: 'Enter command...',
+      copyCommand: 'Copy command',
+      copied: 'Copied!',
+      clickToEdit: 'Click to edit',
     },
   },
 };

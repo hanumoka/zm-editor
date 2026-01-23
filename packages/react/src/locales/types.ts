@@ -39,6 +39,7 @@ export interface SlashMenuLocale {
     apiBlock: SlashCommandLocale;
     mermaid: SlashCommandLocale;
     errorMessage: SlashCommandLocale;
+    osCommand: SlashCommandLocale;
   };
 }
 
@@ -188,6 +189,19 @@ export interface ErrorMessageNodeLocale {
 }
 
 /**
+ * OS 명령어 노드 번역
+ */
+export interface OsCommandNodeLocale {
+  macos: string;
+  linux: string;
+  windows: string;
+  commandPlaceholder: string;
+  copyCommand: string;
+  copied: string;
+  clickToEdit: string;
+}
+
+/**
  * NodeView 컴포넌트 번역
  */
 export interface NodesLocale {
@@ -200,6 +214,7 @@ export interface NodesLocale {
   apiBlock: ApiBlockNodeLocale;
   mermaid: MermaidNodeLocale;
   errorMessage: ErrorMessageNodeLocale;
+  osCommand: OsCommandNodeLocale;
 }
 
 /**
