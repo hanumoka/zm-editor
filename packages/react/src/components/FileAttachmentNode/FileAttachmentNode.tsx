@@ -3,7 +3,7 @@
 import { NodeViewWrapper, NodeViewProps } from '@tiptap/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { getFileIcon, formatFileSize, DownloadIcon } from './file-icons';
-import { useLocale } from '../../contexts/LocaleContext';
+import { useLocale } from '../../context/LocaleContext';
 
 export type FileAttachmentNodeProps = NodeViewProps;
 

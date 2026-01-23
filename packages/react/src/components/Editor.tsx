@@ -961,11 +961,13 @@ class SlashMenuComponent {
   private selectedIndex = 0;
   private clickHandlers: Array<{ element: Element; handler: () => void }> = [];
   private keydownHandler: ((event: KeyboardEvent) => void) | null = null;
+  private scrollHandler: ((event: Event) => void) | null = null;
 
   constructor(props: SlashMenuRenderProps) {
     this.props = props;
     this.render();
     this.addGlobalKeydownListener();
+    this.addScrollListener();
   }
 
   // 전역 keydown 리스너 추가 (테이블 셀에서 화살표 키 충돌 방지)
@@ -991,6 +993,38 @@ class SlashMenuComponent {
     if (this.keydownHandler) {
       document.removeEventListener('keydown', this.keydownHandler, true);
       this.keydownHandler = null;
+    }
+  }
+
+  // 스크롤/휠 리스너 추가 (스크롤 시 메뉴 닫기)
+  private addScrollListener() {
+    this.scrollHandler = (event: Event) => {
+      // 메뉴 내부 스크롤은 무시 (아이템이 많을 때 스크롤 가능)
+      if (this.element && this.element.contains(event.target as Node)) {
+        return;
+      }
+      // 외부 스크롤 발생 시 메뉴 닫기
+      this.destroy();
+    };
+
+    // 다양한 스크롤 감지 방법 (브라우저/환경에 따라 다름)
+    // 1. window scroll 이벤트 (capture phase)
+    window.addEventListener('scroll', this.scrollHandler as EventListener, true);
+    // 2. document scroll 이벤트
+    document.addEventListener('scroll', this.scrollHandler as EventListener, true);
+    // 3. wheel 이벤트 (마우스 휠 스크롤 감지)
+    document.addEventListener('wheel', this.scrollHandler as EventListener, { passive: true, capture: true });
+    // 4. touchmove 이벤트 (모바일 터치 스크롤 감지)
+    document.addEventListener('touchmove', this.scrollHandler as EventListener, { passive: true, capture: true });
+  }
+
+  private removeScrollListener() {
+    if (this.scrollHandler) {
+      window.removeEventListener('scroll', this.scrollHandler as EventListener, true);
+      document.removeEventListener('scroll', this.scrollHandler as EventListener, true);
+      document.removeEventListener('wheel', this.scrollHandler as EventListener, true);
+      document.removeEventListener('touchmove', this.scrollHandler as EventListener, true);
+      this.scrollHandler = null;
     }
   }
 
@@ -1047,6 +1081,8 @@ class SlashMenuComponent {
 
     const rect = this.props.clientRect?.();
     if (rect) {
+      // position: fixed + viewport 기준 좌표 사용
+      // 스크롤 시 scrollHandler에서 위치 업데이트
       this.element.style.position = 'fixed';
       this.element.style.left = `${rect.left}px`;
       this.element.style.top = `${rect.bottom + 8}px`;
@@ -1113,6 +1149,7 @@ class SlashMenuComponent {
 
   destroy() {
     this.removeGlobalKeydownListener();
+    this.removeScrollListener();
     this.removeEventListeners();
     this.element?.remove();
     this.element = null;

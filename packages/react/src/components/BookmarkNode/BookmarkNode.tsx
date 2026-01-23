@@ -60,11 +60,9 @@ export function BookmarkNode({ node, updateAttributes, selected }: BookmarkNodeP
   // URL 입력 상태 (hydration 불일치 방지를 위해 초기값 false)
   const [isEditing, setIsEditing] = useState(false);
   const [urlValue, setUrlValue] = useState(url || '');
-  const [isMounted, setIsMounted] = useState(false);
 
   // 클라이언트 마운트 후 초기 편집 상태 설정
   useEffect(() => {
-    setIsMounted(true);
     if (!url) {
       setIsEditing(true);
     }

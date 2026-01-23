@@ -19,11 +19,9 @@ export function EmbedNode({ node, updateAttributes, selected }: EmbedNodeProps) 
   // URL 입력 상태 (hydration 불일치 방지를 위해 초기값 false)
   const [isEditingUrl, setIsEditingUrl] = useState(false);
   const [urlValue, setUrlValue] = useState(src || '');
-  const [isMounted, setIsMounted] = useState(false);
 
   // 클라이언트 마운트 후 초기 편집 상태 설정
   useEffect(() => {
-    setIsMounted(true);
     if (!src) {
       setIsEditingUrl(true);
     }
