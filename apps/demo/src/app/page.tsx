@@ -8,8 +8,8 @@ import { koLocale, enLocale, type ZmEditorRef, type JSONContent, type ImageUploa
 const EditorWrapper = dynamic(() => import('./EditorWrapper'), {
   ssr: false,
   loading: () => (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 flex items-center justify-center min-h-[300px]">
-      <div className="text-gray-400">Loading editor...</div>
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 flex items-center justify-center min-h-[300px] transition-colors">
+      <div className="text-gray-400 dark:text-gray-500">Loading editor...</div>
     </div>
   ),
 });
