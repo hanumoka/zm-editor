@@ -41,3 +41,5 @@ export { ErrorMessageNode, ErrorMessage } from './ErrorMessageNode';
 export type { ErrorMessageNodeProps, ErrorMessageOptions } from './ErrorMessageNode';
 export { OsCommandNode, OsCommand } from './OsCommandNode';
 export type { OsCommandNodeProps, OsCommandOptions } from './OsCommandNode';
+export { ChangelogNode, Changelog } from './ChangelogNode';
+export type { ChangelogNodeProps, ChangelogOptions, ChangeEntry, ChangeType } from './ChangelogNode';

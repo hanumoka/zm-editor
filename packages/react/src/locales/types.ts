@@ -40,6 +40,7 @@ export interface SlashMenuLocale {
     mermaid: SlashCommandLocale;
     errorMessage: SlashCommandLocale;
     osCommand: SlashCommandLocale;
+    changelog: SlashCommandLocale;
   };
 }
 
@@ -202,6 +203,28 @@ export interface OsCommandNodeLocale {
 }
 
 /**
+ * Changelog 노드 번역
+ */
+export interface ChangelogNodeLocale {
+  version: string;
+  date: string;
+  versionPlaceholder: string;
+  datePlaceholder: string;
+  added: string;
+  changed: string;
+  fixed: string;
+  removed: string;
+  addEntry: string;
+  removeEntry: string;
+  save: string;
+  cancel: string;
+  clickToEdit: string;
+  entryPlaceholder: string;
+  noChanges: string;
+  hint: string;
+}
+
+/**
  * NodeView 컴포넌트 번역
  */
 export interface NodesLocale {
@@ -215,6 +238,7 @@ export interface NodesLocale {
   mermaid: MermaidNodeLocale;
   errorMessage: ErrorMessageNodeLocale;
   osCommand: OsCommandNodeLocale;
+  changelog: ChangelogNodeLocale;
 }
 
 /**

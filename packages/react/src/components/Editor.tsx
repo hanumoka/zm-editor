@@ -33,6 +33,7 @@ import { ApiBlock } from './ApiBlockNode';
 import { MermaidExtension } from './MermaidNode';
 import { ErrorMessage } from './ErrorMessageNode';
 import { OsCommand } from './OsCommandNode';
+import { Changelog } from './ChangelogNode';
 import type { ZmEditorLocale } from '../locales';
 import { enLocale } from '../locales';
 import { LocaleProvider } from '../context';
@@ -496,6 +497,14 @@ function createLocalizedSlashCommands(locale: ZmEditorLocale): SlashCommandItem[
         editor.chain().focus().deleteRange(range).setOsCommand().run();
       },
     },
+    {
+      title: commands.changelog?.title || 'Changelog',
+      description: commands.changelog?.description || 'Version changelog entry',
+      searchTerms: ['changelog', 'version', 'release', 'history', '변경', '버전', '릴리스', '이력', 'changes'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setChangelog().run();
+      },
+    },
   ];
 }
 
@@ -582,6 +591,14 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
                 renderHTML: attributes => {
                   if (!attributes.filename) return {};
                   return { 'data-filename': attributes.filename };
+                },
+              },
+              highlightedLines: {
+                default: '',
+                parseHTML: element => element.getAttribute('data-highlighted-lines') || '',
+                renderHTML: attributes => {
+                  if (!attributes.highlightedLines) return {};
+                  return { 'data-highlighted-lines': attributes.highlightedLines };
                 },
               },
             };
@@ -752,6 +769,13 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         },
       });
 
+      // Changelog 확장 (버전 변경 이력 블록)
+      const changelogExtension = Changelog.configure({
+        HTMLAttributes: {
+          class: 'zm-changelog',
+        },
+      });
+
       return [
         ...baseExtensions,
         codeBlockExtension,
@@ -769,6 +793,7 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         mermaidExtension,
         errorMessageExtension,
         osCommandExtension,
+        changelogExtension,
         ...(slashCommandExtension ? [slashCommandExtension] : []),
         ...customExtensions,
       ];
