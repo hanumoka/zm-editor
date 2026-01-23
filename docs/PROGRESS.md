@@ -185,12 +185,12 @@
 
 ### Phase 10: 개발자 친화적 기능 (필수)
 
-- [ ] 코드블록 라인 넘버
-- [ ] 코드블록 복사 버튼
-- [ ] 마크다운 Export (`editor.getMarkdown()`)
-- [ ] 마크다운 Import (`setContent` with markdown)
+- [x] 코드블록 라인 넘버
+- [x] 코드블록 복사 버튼
+- [x] 마크다운 Export (`editor.getMarkdown()`)
+- [x] 마크다운 Import (`setContent` with markdown)
 - [x] Callout/Admonition 블록 (note, tip, warning, danger) - Phase 7에서 구현 (CalloutNode)
-- [ ] 목차 (TOC) 자동 생성
+- [x] 목차 (TOC) 자동 생성
 - [ ] 터미널/CLI 블록 (명령어 + 출력 + 복사 버튼)
 - [ ] API Request/Response 블록
 

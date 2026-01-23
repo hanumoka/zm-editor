@@ -35,6 +35,7 @@ export interface SlashMenuLocale {
     bookmark: SlashCommandLocale;
     math: SlashCommandLocale;
     toc: SlashCommandLocale;
+    terminal: SlashCommandLocale;
   };
 }
 
@@ -136,6 +137,20 @@ export interface ImageNodeLocale {
 }
 
 /**
+ * 터미널 노드 번역
+ */
+export interface TerminalNodeLocale {
+  title: string;
+  commandPlaceholder: string;
+  output: string;
+  outputPlaceholder: string;
+  copyCommand: string;
+  copyOutput: string;
+  copied: string;
+  clickToEdit: string;
+}
+
+/**
  * NodeView 컴포넌트 번역
  */
 export interface NodesLocale {
@@ -144,6 +159,7 @@ export interface NodesLocale {
   math: MathNodeLocale;
   fileAttachment: FileAttachmentNodeLocale;
   image: ImageNodeLocale;
+  terminal: TerminalNodeLocale;
 }
 
 /**

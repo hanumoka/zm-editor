@@ -31,3 +31,5 @@ export { FileAttachmentNode, FileAttachment, getFileIcon, formatFileSize } from 
 export type { FileAttachmentNodeProps, FileAttachmentOptions, FileAttachmentAttributes } from './FileAttachmentNode';
 export { TocNode, Toc } from './TocNode';
 export type { TocNodeProps, TocNodeOptions } from './TocNode';
+export { TerminalNode, Terminal } from './TerminalNode';
+export type { TerminalNodeProps, TerminalOptions } from './TerminalNode';

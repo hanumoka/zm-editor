@@ -88,6 +88,10 @@ export const koLocale: ZmEditorLocale = {
         title: '목차',
         description: '자동 생성 제목 목록',
       },
+      terminal: {
+        title: '터미널',
+        description: '명령어와 출력이 있는 CLI 블록',
+      },
     },
   },
   bubbleMenu: {
@@ -146,6 +150,16 @@ export const koLocale: ZmEditorLocale = {
     },
     image: {
       invalidUrl: '유효하지 않은 이미지 URL입니다',
+    },
+    terminal: {
+      title: '터미널',
+      commandPlaceholder: '명령어 입력...',
+      output: '출력',
+      outputPlaceholder: '명령어 출력 (선택)...',
+      copyCommand: '명령어 복사',
+      copyOutput: '출력 복사',
+      copied: '복사됨!',
+      clickToEdit: '클릭하여 수정',
     },
   },
 };

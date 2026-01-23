@@ -88,6 +88,10 @@ export const enLocale: ZmEditorLocale = {
         title: 'Table of Contents',
         description: 'Auto-generated heading list',
       },
+      terminal: {
+        title: 'Terminal',
+        description: 'Command line with output',
+      },
     },
   },
   bubbleMenu: {
@@ -146,6 +150,16 @@ export const enLocale: ZmEditorLocale = {
     },
     image: {
       invalidUrl: 'Invalid image URL',
+    },
+    terminal: {
+      title: 'Terminal',
+      commandPlaceholder: 'Enter command...',
+      output: 'Output',
+      outputPlaceholder: 'Command output (optional)...',
+      copyCommand: 'Copy command',
+      copyOutput: 'Copy output',
+      copied: 'Copied!',
+      clickToEdit: 'Click to edit',
     },
   },
 };

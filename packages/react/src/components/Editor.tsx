@@ -27,6 +27,7 @@ import { Bookmark } from './BookmarkNode';
 import { MathExtension } from './MathNode';
 import { FileAttachment } from './FileAttachmentNode';
 import { Toc } from './TocNode';
+import { Terminal } from './TerminalNode';
 import type { ZmEditorLocale } from '../locales';
 import { enLocale } from '../locales';
 import { LocaleProvider } from '../context';
@@ -450,6 +451,14 @@ function createLocalizedSlashCommands(locale: ZmEditorLocale): SlashCommandItem[
         editor.chain().focus().deleteRange(range).setToc().run();
       },
     },
+    {
+      title: commands.terminal.title,
+      description: commands.terminal.description,
+      searchTerms: ['terminal', 'cli', 'command', 'shell', 'bash', 'console', '터미널', '명령어'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setTerminal().run();
+      },
+    },
   ];
 }
 
@@ -651,6 +660,13 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         },
       });
 
+      // Terminal 확장 (터미널/CLI 블록)
+      const terminalExtension = Terminal.configure({
+        HTMLAttributes: {
+          class: 'zm-terminal',
+        },
+      });
+
       return [
         ...baseExtensions,
         codeBlockExtension,
@@ -662,6 +678,7 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         mathExtension,
         fileAttachmentExtension,
         tocExtension,
+        terminalExtension,
         ...(slashCommandExtension ? [slashCommandExtension] : []),
         ...customExtensions,
       ];
