@@ -96,6 +96,10 @@ export const koLocale: ZmEditorLocale = {
         title: 'API',
         description: 'HTTP 요청 및 응답 블록',
       },
+      mermaid: {
+        title: 'Mermaid',
+        description: '플로우차트, 시퀀스 등 다이어그램',
+      },
     },
   },
   bubbleMenu: {
@@ -174,6 +178,12 @@ export const koLocale: ZmEditorLocale = {
       responsePlaceholder: '{\n  "data": []\n}',
       copy: '복사',
       copied: '복사됨!',
+    },
+    mermaid: {
+      label: 'Mermaid 다이어그램',
+      placeholder: 'Mermaid 다이어그램 코드 입력...\n\n예시:\ngraph TD\n    A[시작] --> B{결정}\n    B -->|예| C[확인]\n    B -->|아니오| D[취소]',
+      hint: 'Ctrl+Enter로 확인, Escape로 취소',
+      edit: '다이어그램 수정',
     },
   },
 };

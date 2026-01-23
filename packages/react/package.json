@@ -28,7 +28,8 @@
     "@tiptap/extension-image": "^2.11.0",
     "@tiptap/react": "^2.11.0",
     "@zm-editor/core": "workspace:*",
-    "katex": "^0.16.27"
+    "katex": "^0.16.27",
+    "mermaid": "^11.12.2"
   },
   "devDependencies": {
     "@types/katex": "^0.16.8",

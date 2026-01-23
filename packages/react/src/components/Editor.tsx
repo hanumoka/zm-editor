@@ -30,6 +30,7 @@ import { FileAttachment } from './FileAttachmentNode';
 import { Toc } from './TocNode';
 import { Terminal } from './TerminalNode';
 import { ApiBlock } from './ApiBlockNode';
+import { MermaidExtension } from './MermaidNode';
 import type { ZmEditorLocale } from '../locales';
 import { enLocale } from '../locales';
 import { LocaleProvider } from '../context';
@@ -469,6 +470,14 @@ function createLocalizedSlashCommands(locale: ZmEditorLocale): SlashCommandItem[
         editor.chain().focus().deleteRange(range).setApiBlock().run();
       },
     },
+    {
+      title: commands.mermaid.title,
+      description: commands.mermaid.description,
+      searchTerms: ['mermaid', 'diagram', 'flowchart', 'sequence', 'class', 'graph', 'chart', '다이어그램', '플로우차트'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setMermaid().run();
+      },
+    },
   ];
 }
 
@@ -704,6 +713,13 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         },
       });
 
+      // Mermaid 확장 (다이어그램)
+      const mermaidExtension = MermaidExtension.configure({
+        HTMLAttributes: {
+          class: 'zm-mermaid',
+        },
+      });
+
       return [
         ...baseExtensions,
         codeBlockExtension,
@@ -718,6 +734,7 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         terminalExtension,
         apiBlockExtension,
         keyboardExtension,
+        mermaidExtension,
         ...(slashCommandExtension ? [slashCommandExtension] : []),
         ...customExtensions,
       ];

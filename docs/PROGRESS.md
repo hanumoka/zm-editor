@@ -197,10 +197,10 @@
 ### Phase 11: 개발자 친화적 기능 (권장)
 
 - [x] 수학 공식 (KaTeX) - Phase 7에서 구현 (MathNode)
-- [ ] 다이어그램 (Mermaid) - 커스텀 노드뷰
+- [x] 다이어그램 (Mermaid) - MermaidNode 커스텀 노드뷰
 - [x] 접이식 블록 (`<details>`) - Phase 7에서 구현 (ToggleNode)
-- [ ] `<kbd>` 태그 (키보드 단축키)
-- [ ] 코드블록 파일명 표시
+- [x] `<kbd>` 태그 (키보드 단축키) - Keyboard extension + BubbleMenu 버튼
+- [x] 코드블록 파일명 표시 - CodeBlock filename 편집 기능
 - [ ] 코드블록 라인 하이라이트
 - [ ] GitHub Gist 임베드
 - [ ] CodeSandbox 임베드

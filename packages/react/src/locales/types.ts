@@ -37,6 +37,7 @@ export interface SlashMenuLocale {
     toc: SlashCommandLocale;
     terminal: SlashCommandLocale;
     apiBlock: SlashCommandLocale;
+    mermaid: SlashCommandLocale;
   };
 }
 
@@ -166,6 +167,16 @@ export interface ApiBlockNodeLocale {
 }
 
 /**
+ * Mermaid 다이어그램 노드 번역
+ */
+export interface MermaidNodeLocale {
+  label: string;
+  placeholder: string;
+  hint: string;
+  edit: string;
+}
+
+/**
  * NodeView 컴포넌트 번역
  */
 export interface NodesLocale {
@@ -176,6 +187,7 @@ export interface NodesLocale {
   image: ImageNodeLocale;
   terminal: TerminalNodeLocale;
   apiBlock: ApiBlockNodeLocale;
+  mermaid: MermaidNodeLocale;
 }
 
 /**

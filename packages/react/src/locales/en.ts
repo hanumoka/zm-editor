@@ -96,6 +96,10 @@ export const enLocale: ZmEditorLocale = {
         title: 'API',
         description: 'HTTP request and response',
       },
+      mermaid: {
+        title: 'Mermaid',
+        description: 'Flowchart, sequence, and other diagrams',
+      },
     },
   },
   bubbleMenu: {
@@ -174,6 +178,12 @@ export const enLocale: ZmEditorLocale = {
       responsePlaceholder: '{\n  "data": []\n}',
       copy: 'Copy',
       copied: 'Copied!',
+    },
+    mermaid: {
+      label: 'Mermaid Diagram',
+      placeholder: 'Enter Mermaid diagram code...\n\nExample:\ngraph TD\n    A[Start] --> B{Decision}\n    B -->|Yes| C[OK]\n    B -->|No| D[Cancel]',
+      hint: 'Press Ctrl+Enter to confirm, Escape to cancel',
+      edit: 'Edit diagram',
     },
   },
 };

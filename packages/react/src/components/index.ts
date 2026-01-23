@@ -35,3 +35,5 @@ export { TerminalNode, Terminal } from './TerminalNode';
 export type { TerminalNodeProps, TerminalOptions } from './TerminalNode';
 export { ApiBlockNode, ApiBlock } from './ApiBlockNode';
 export type { ApiBlockNodeProps, ApiBlockOptions, HttpMethod } from './ApiBlockNode';
+export { MermaidNode, MermaidExtension } from './MermaidNode';
+export type { MermaidNodeProps, MermaidOptions } from './MermaidNode';
