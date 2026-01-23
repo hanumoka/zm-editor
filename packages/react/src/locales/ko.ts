@@ -100,6 +100,10 @@ export const koLocale: ZmEditorLocale = {
         title: 'Mermaid',
         description: '플로우차트, 시퀀스 등 다이어그램',
       },
+      errorMessage: {
+        title: '에러 메시지',
+        description: '에러, 경고, 정보 메시지 표시',
+      },
     },
   },
   bubbleMenu: {
@@ -184,6 +188,12 @@ export const koLocale: ZmEditorLocale = {
       placeholder: 'Mermaid 다이어그램 코드 입력...\n\n예시:\ngraph TD\n    A[시작] --> B{결정}\n    B -->|예| C[확인]\n    B -->|아니오| D[취소]',
       hint: 'Ctrl+Enter로 확인, Escape로 취소',
       edit: '다이어그램 수정',
+    },
+    errorMessage: {
+      titlePlaceholder: '제목 (선택)',
+      messagePlaceholder: '메시지 입력...',
+      hint: 'Ctrl+Enter로 확인, Escape로 취소',
+      edit: '메시지 수정',
     },
   },
 };

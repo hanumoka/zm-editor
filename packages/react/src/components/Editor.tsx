@@ -31,6 +31,7 @@ import { Toc } from './TocNode';
 import { Terminal } from './TerminalNode';
 import { ApiBlock } from './ApiBlockNode';
 import { MermaidExtension } from './MermaidNode';
+import { ErrorMessage } from './ErrorMessageNode';
 import type { ZmEditorLocale } from '../locales';
 import { enLocale } from '../locales';
 import { LocaleProvider } from '../context';
@@ -478,6 +479,14 @@ function createLocalizedSlashCommands(locale: ZmEditorLocale): SlashCommandItem[
         editor.chain().focus().deleteRange(range).setMermaid().run();
       },
     },
+    {
+      title: commands.errorMessage?.title || 'Error Message',
+      description: commands.errorMessage?.description || 'Display error or warning message',
+      searchTerms: ['error', 'warning', 'alert', 'message', 'exception', 'fail', '에러', '경고', '오류'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setErrorMessage().run();
+      },
+    },
   ];
 }
 
@@ -720,6 +729,13 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         },
       });
 
+      // ErrorMessage 확장 (에러/경고 메시지 블록)
+      const errorMessageExtension = ErrorMessage.configure({
+        HTMLAttributes: {
+          class: 'zm-error-msg',
+        },
+      });
+
       return [
         ...baseExtensions,
         codeBlockExtension,
@@ -735,6 +751,7 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         apiBlockExtension,
         keyboardExtension,
         mermaidExtension,
+        errorMessageExtension,
         ...(slashCommandExtension ? [slashCommandExtension] : []),
         ...customExtensions,
       ];

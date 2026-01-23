@@ -37,3 +37,5 @@ export { ApiBlockNode, ApiBlock } from './ApiBlockNode';
 export type { ApiBlockNodeProps, ApiBlockOptions, HttpMethod } from './ApiBlockNode';
 export { MermaidNode, MermaidExtension } from './MermaidNode';
 export type { MermaidNodeProps, MermaidOptions } from './MermaidNode';
+export { ErrorMessageNode, ErrorMessage } from './ErrorMessageNode';
+export type { ErrorMessageNodeProps, ErrorMessageOptions } from './ErrorMessageNode';

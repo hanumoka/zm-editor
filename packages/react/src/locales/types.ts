@@ -38,6 +38,7 @@ export interface SlashMenuLocale {
     terminal: SlashCommandLocale;
     apiBlock: SlashCommandLocale;
     mermaid: SlashCommandLocale;
+    errorMessage: SlashCommandLocale;
   };
 }
 
@@ -177,6 +178,16 @@ export interface MermaidNodeLocale {
 }
 
 /**
+ * 에러 메시지 노드 번역
+ */
+export interface ErrorMessageNodeLocale {
+  titlePlaceholder: string;
+  messagePlaceholder: string;
+  hint: string;
+  edit: string;
+}
+
+/**
  * NodeView 컴포넌트 번역
  */
 export interface NodesLocale {
@@ -188,6 +199,7 @@ export interface NodesLocale {
   terminal: TerminalNodeLocale;
   apiBlock: ApiBlockNodeLocale;
   mermaid: MermaidNodeLocale;
+  errorMessage: ErrorMessageNodeLocale;
 }
 
 /**

@@ -100,6 +100,10 @@ export const enLocale: ZmEditorLocale = {
         title: 'Mermaid',
         description: 'Flowchart, sequence, and other diagrams',
       },
+      errorMessage: {
+        title: 'Error Message',
+        description: 'Display error, warning, or info message',
+      },
     },
   },
   bubbleMenu: {
@@ -184,6 +188,12 @@ export const enLocale: ZmEditorLocale = {
       placeholder: 'Enter Mermaid diagram code...\n\nExample:\ngraph TD\n    A[Start] --> B{Decision}\n    B -->|Yes| C[OK]\n    B -->|No| D[Cancel]',
       hint: 'Press Ctrl+Enter to confirm, Escape to cancel',
       edit: 'Edit diagram',
+    },
+    errorMessage: {
+      titlePlaceholder: 'Title (optional)',
+      messagePlaceholder: 'Enter message...',
+      hint: 'Ctrl+Enter to confirm, Escape to cancel',
+      edit: 'Edit message',
     },
   },
 };
