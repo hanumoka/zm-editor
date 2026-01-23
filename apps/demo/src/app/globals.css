@@ -240,7 +240,8 @@ body {
 .zm-code-block-header {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
+  gap: 0.5rem;
   padding: 0.5rem 0.75rem;
   background-color: #374151;
   border-top-left-radius: 8px;
@@ -270,6 +271,76 @@ body {
 .zm-code-block-language-select:focus {
   border-color: #3b82f6;
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+/* Copy Button */
+.zm-code-block-copy-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #9ca3af;
+  transition: all 0.15s ease;
+}
+
+.zm-code-block-copy-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #e5e7eb;
+}
+
+.zm-code-block-copy-button.copied {
+  color: #34d399;
+}
+
+/* Code Container (line numbers + code) */
+.zm-code-block-container {
+  display: flex;
+  overflow: auto;
+  background-color: #0d1117;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+/* Line Numbers */
+.zm-code-block-line-numbers {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  padding: 1rem 0;
+  background-color: #0d1117;
+  border-right: 1px solid #30363d;
+  user-select: none;
+  text-align: right;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
+.zm-code-block-line-number {
+  padding: 0 0.75rem;
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  color: #6e7681;
+}
+
+/* Code Block in Container */
+.zm-code-block-container .zm-code-block {
+  flex: 1;
+  margin: 0;
+  border-radius: 0;
+  min-width: 0;
+}
+
+.zm-code-block-container .zm-code-block code {
+  display: block;
+  line-height: 1.5rem;
 }
 
 .zm-code-block-wrapper .zm-code-block {
