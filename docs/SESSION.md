@@ -2,7 +2,7 @@
 
 > **이 파일은 Claude 세션 시작 시 자동으로 읽어야 합니다.**
 >
-> 최종 업데이트: 2026-01-22
+> 최종 업데이트: 2026-01-23
 
 ---
 
@@ -10,10 +10,10 @@
 
 | 항목 | 상태 |
 |------|------|
-| **현재 Phase** | Phase 7 대부분 완료, Phase 8 대기 |
+| **현재 Phase** | Phase 8 완료, Phase 9 대기 |
 | **빌드 상태** | 성공 ✅ |
-| **Git 상태** | 최신 (main) |
-| **개발 서버** | 포트 3100 |
+| **Git 상태** | 최신 (main) - 커밋 `1864014` |
+| **개발 서버** | 포트 3100 (FE), 포트 4000 (API) |
 | **문서화** | 전체 요구사항 정의 완료 ✅ |
 
 ---
@@ -24,12 +24,12 @@
 
 - 모노레포 구조 (pnpm workspaces + Turbo)
 - Tiptap 기반 에디터 컴포넌트
-- 슬래시 명령어 (17개), 버블 메뉴
+- 슬래시 명령어 (18개), 버블 메뉴
 - 코드블록 + 언어 선택 UI + 신택스 하이라이팅 (26개 언어)
 - 다국어 지원 (한국어/영어)
 - 테이블 (생성, 행/열 추가삭제, 셀 병합/분할, 헤더 토글)
 
-### Phase 7: 이미지 및 커스텀 노드 ✅ (대부분 완료)
+### Phase 7: 이미지 및 커스텀 노드 ✅
 
 - ImageNode (리사이즈, 정렬, 캡션)
 - 이미지 업로드 (드래그앤드롭, 붙여넣기, 파일 선택)
@@ -41,6 +41,13 @@
 - BookmarkNode (링크 미리보기 카드)
 - MathNode (KaTeX LaTeX 수식)
 
+### Phase 8: 파일 업로드/첨부 ✅
+
+- FileAttachmentNode (파일 첨부 노드)
+- 파일 타입별 아이콘 (PDF, Word, Excel, PowerPoint, Archive, Text, Image, Video, Audio)
+- `/file` 슬래시 명령어
+- 파일 다운로드 버튼, 캡션 지원
+
 ### 데모 앱 개선 ✅
 
 - 사용 가이드 사이드바 (슬래시 명령어, 단축키, 마크다운)
@@ -49,23 +56,29 @@
 - Hydration 오류 수정 (dynamic import)
 - TaskList 체크박스 정렬 수정
 
+### UX 개선 ✅
+
+- 슬래시 메뉴 스크롤 시 자동 닫힘 (scroll/wheel/touchmove 이벤트 감지)
+
 ---
 
 ## 다음 작업
 
-### Phase 7 잔여 (선택)
+### Phase 7-8 잔여 (선택)
 - [ ] 이미지 플레이스홀더 (업로드 중 스켈레톤)
 - [ ] Alt 텍스트 편집 UI 개선
-
-### Phase 8: 파일 업로드/첨부
-- [ ] `FileAttachment` 커스텀 노드
-- [ ] 파일 타입별 아이콘
 - [ ] PDF 미리보기 (PDF.js)
-- [ ] `/file` 슬래시 명령어
 
 ### Phase 9: 보안 강화
 - [ ] DOMPurify 통합
+- [ ] HTML Sanitization 유틸 함수
 - [ ] SSRF 방지
+- [ ] CSP 헤더 가이드 문서화
+
+### Phase 10: 개발자 기능 (필수)
+- [ ] 코드블록 라인 넘버 + 복사 버튼
+- [ ] 마크다운 Export/Import
+- [ ] 목차 (TOC) 자동 생성
 
 ---
 
@@ -76,8 +89,8 @@
 | 1~4 | 핵심 에디터 기능 | ✅ 완료 |
 | 5 | 다국어 지원 (i18n) | ✅ 완료 |
 | 6 | 테이블 기능 | ✅ 완료 |
-| 7 | 이미지/커스텀 노드 | ✅ 대부분 완료 |
-| 8 | 파일 업로드/첨부 | 📋 대기 |
+| 7 | 이미지/커스텀 노드 | ✅ 완료 |
+| 8 | 파일 업로드/첨부 | ✅ 완료 |
 | 9 | 보안 강화 | 📋 대기 |
 | 10 | 개발자 기능 (필수) | 📋 대기 |
 | 11 | 개발자 기능 (권장) | 📋 대기 |
@@ -89,7 +102,7 @@
 
 ---
 
-## 구현된 슬래시 명령어
+## 구현된 슬래시 명령어 (18개)
 
 | 명령어 | 기능 |
 |--------|------|
@@ -103,6 +116,7 @@
 | `/divider` | 구분선 |
 | `/table` | 테이블 (3x3) |
 | `/image` | 이미지 |
+| `/file` | 파일 첨부 |
 | `/embed` | 임베드 (YouTube 등) |
 | `/callout` | 콜아웃 박스 |
 | `/toggle` | 토글 (접기/펼치기) |
@@ -124,7 +138,7 @@
 | `packages/react/src/components/BubbleMenu.tsx` | 버블 메뉴 |
 | `packages/react/src/components/TableBubbleMenu.tsx` | 테이블 버블 메뉴 |
 
-### 커스텀 노드
+### 커스텀 노드 (7개)
 
 | 파일 | 설명 |
 |------|------|
@@ -134,6 +148,7 @@
 | `packages/react/src/components/ToggleNode/` | 토글 블록 |
 | `packages/react/src/components/BookmarkNode/` | 링크 미리보기 |
 | `packages/react/src/components/MathNode/` | KaTeX 수식 |
+| `packages/react/src/components/FileAttachmentNode/` | 파일 첨부 |
 
 ### 데모 앱
 

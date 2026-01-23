@@ -1,13 +1,13 @@
 # zm-editor 진행상황
 
-> 최종 업데이트: 2026-01-22
+> 최종 업데이트: 2026-01-23
 
 ## 현재 버전
 
 - **버전**: 0.1.0 (개발 중)
 - **상태**: Alpha
-- **완료**: Phase 1~6, Phase 7 대부분 완료
-- **다음**: Phase 8 (파일 업로드/첨부)
+- **완료**: Phase 1~8 완료
+- **다음**: Phase 9 (보안 강화)
 
 ---
 
@@ -21,8 +21,8 @@
 | 4 | 코드블록 고급 기능 | ✅ 완료 |
 | 5 | 다국어 지원 (i18n) | ✅ 완료 |
 | 6 | 테이블 기능 | ✅ 완료 |
-| 7 | 이미지 및 커스텀 노드 | ✅ 대부분 완료 |
-| 8 | 파일 업로드/첨부 | 📋 대기 |
+| 7 | 이미지 및 커스텀 노드 | ✅ 완료 |
+| 8 | 파일 업로드/첨부 | ✅ 완료 |
 | 9 | 보안 강화 | 📋 대기 |
 | 10 | 개발자 기능 (필수) | 📋 대기 |
 | 11 | 개발자 기능 (권장) | 📋 대기 |
@@ -158,15 +158,15 @@
 - [x] Hydration 오류 수정 (dynamic import with ssr: false)
 - [x] TaskList 체크박스 정렬 수정
 
-### Phase 8: 파일 업로드/첨부
+### Phase 8: 파일 업로드/첨부 ✅
 
-- [ ] `FileAttachment` 커스텀 노드 생성
-- [ ] 파일 타입별 아이콘 세트
-- [ ] 파일 드래그 앤 드롭
-- [ ] 파일 정보 표시 (파일명, 크기, 타입)
-- [ ] 파일 다운로드 버튼
-- [ ] PDF 미리보기 (PDF.js 연동)
-- [ ] 슬래시 명령어에 "File" 추가
+- [x] `FileAttachment` 커스텀 노드 생성
+- [x] 파일 타입별 아이콘 세트 (PDF, Word, Excel, PowerPoint, Archive, Text, Image, Video, Audio)
+- [x] 파일 드래그 앤 드롭
+- [x] 파일 정보 표시 (파일명, 크기, 타입)
+- [x] 파일 다운로드 버튼
+- [ ] PDF 미리보기 (PDF.js 연동) - 선택
+- [x] 슬래시 명령어에 `/file` 추가
 
 ### Phase 9: 보안 강화
 
@@ -285,6 +285,27 @@
 ---
 
 ## 변경 이력
+
+### 2026-01-23
+
+**프로젝트 분석 및 버그 수정**
+
+#### 빌드 에러 수정
+- `FileAttachmentNode.tsx` import 경로 수정 (`contexts` → `context`)
+- `FileAttachmentNodeProps` 타입 export 추가
+- `BookmarkNode`, `EmbedNode`, `MathNode`의 미사용 `isMounted` 변수 제거
+
+#### UX 개선
+- 슬래시 메뉴 스크롤 시 자동 닫힘 기능 추가
+- scroll, wheel, touchmove 이벤트 감지로 외부 스크롤 시 메뉴 닫힘
+- 메뉴 내부 스크롤(아이템 목록)은 유지
+- 커밋: `1864014` fix(react): Close slash menu on scroll and fix build errors
+
+#### Phase 8 완료 확인
+- FileAttachmentNode 이미 구현되어 있음 확인
+- 파일 타입별 아이콘, 다운로드 버튼, 캡션 지원
+
+---
 
 ### 2026-01-22
 
