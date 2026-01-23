@@ -10,7 +10,7 @@
 
 | 항목 | 상태 |
 |------|------|
-| **현재 Phase** | Phase 11 진행 중 (대부분 완료) |
+| **현재 Phase** | Phase 11 진행 중 (8/12 완료) |
 | **빌드 상태** | 성공 ✅ |
 | **타입 체크** | 성공 ✅ |
 | **Git 상태** | 변경사항 있음 (커밋 필요) |
@@ -76,6 +76,8 @@
 - [x] 라이트/다크 모드 전환 (데모 앱)
 - [x] 에러 메시지 블록 (error/warning/info/success) - ErrorMessageNode
 - [x] OS별 명령어 탭 (macOS/Linux/Windows) - OsCommandNode
+- [x] Changelog 블록 (ChangelogNode) - Keep a Changelog 형식 지원
+- [x] 코드블록 라인 하이라이트 - 범위 지원 (1,3-5,7)
 
 ### 데모 앱 개선 ✅
 
@@ -95,11 +97,9 @@
 ## 다음 작업
 
 ### Phase 11 잔여 (선택)
-- [ ] Changelog 블록
 - [ ] 환경 변수 블록 (민감 정보 마스킹)
 - [ ] GitHub Gist 임베드
 - [ ] 코드 Diff 블록
-- [ ] 코드블록 라인 하이라이트
 - [ ] 각주 (Footnotes)
 
 ### Phase 12: 개발자 기능 (선택)
@@ -122,7 +122,7 @@
 | 8 | 파일 업로드/첨부 | ✅ 완료 |
 | 9 | 보안 강화 | ✅ 완료 |
 | 10 | 개발자 기능 (필수) | ✅ 완료 |
-| 11 | 개발자 기능 (권장) | 🔄 진행 중 (6/12 완료) |
+| 11 | 개발자 기능 (권장) | 🔄 진행 중 (8/12 완료) |
 | 12 | 개발자 기능 (선택) | 📋 대기 |
 | 13 | 안정화 및 최적화 | 📋 대기 |
 | 14 | npm 배포 준비 | 📋 대기 |
@@ -131,7 +131,7 @@
 
 ---
 
-## 구현된 슬래시 명령어 (22개)
+## 구현된 슬래시 명령어 (23개)
 
 | 명령어 | 기능 |
 |--------|------|
@@ -157,6 +157,7 @@
 | `/mermaid` | Mermaid 다이어그램 |
 | `/error` | 에러/경고/정보 메시지 |
 | `/os` | OS별 명령어 탭 (macOS/Linux/Windows) |
+| `/changelog` | 버전 변경 이력 (Keep a Changelog 형식) |
 
 ---
 
@@ -173,7 +174,7 @@
 | `packages/react/src/components/BubbleMenu.tsx` | 버블 메뉴 |
 | `packages/react/src/components/TableBubbleMenu.tsx` | 테이블 버블 메뉴 |
 
-### 커스텀 노드 (13개)
+### 커스텀 노드 (14개)
 
 | 파일 | 설명 |
 |------|------|
@@ -190,6 +191,7 @@
 | `packages/react/src/components/MermaidNode/` | Mermaid 다이어그램 |
 | `packages/react/src/components/ErrorMessageNode/` | 에러/경고 메시지 |
 | `packages/react/src/components/OsCommandNode/` | OS별 명령어 탭 |
+| `packages/react/src/components/ChangelogNode/` | 버전 변경 이력 |
 
 ### 데모 앱
 

@@ -203,11 +203,11 @@
 - [x] 코드블록 파일명 표시 - CodeBlock filename 편집 기능
 - [x] 라이트/다크 모드 전환 - 데모 앱 테마 토글 버튼
 - [x] 에러 메시지 블록 (ErrorMessageNode) - error/warning/info/success 타입
-- [ ] 코드블록 라인 하이라이트
+- [x] 코드블록 라인 하이라이트 - 하이라이트 라인 입력 (예: 1,3-5,7)
 - [ ] GitHub Gist 임베드
 - [ ] CodeSandbox 임베드 (EmbedNode에 이미 포함)
 - [ ] 환경 변수 블록 (민감 정보 마스킹)
-- [ ] Changelog 블록
+- [x] Changelog 블록 (ChangelogNode) - Keep a Changelog 형식 지원
 - [ ] 각주 (Footnotes)
 - [ ] 코드 Diff 블록
 - [x] OS별 명령어 탭 (macOS/Linux/Windows) - OsCommandNode
@@ -291,6 +291,57 @@
 ---
 
 ## 변경 이력
+
+### 2026-01-23 (오후 4)
+
+**Phase 11: 코드블록 라인 하이라이트 구현**
+
+#### 기능
+- 라인 하이라이트 기능 추가 (예: 1,3-5,7 형식)
+- 범위 지원 (3-5 → 3, 4, 5)
+- 하이라이트 버튼 및 입력 필드
+- 하이라이트된 라인에 배경색 표시
+- 하이라이트된 라인 번호 강조
+- 키보드 지원 (Enter로 확인, Escape로 취소)
+
+#### 파일 수정
+- `packages/react/src/components/Editor.tsx` - `highlightedLines` attribute 추가
+- `packages/react/src/components/CodeBlock.tsx` - 하이라이트 UI 및 로직 전체 재작성
+- `apps/demo/src/app/globals.css` - 하이라이트 관련 CSS 스타일 추가
+
+---
+
+### 2026-01-23 (오후 3)
+
+**Phase 11: ChangelogNode 구현**
+
+#### ChangelogNode 신규 생성
+- `packages/react/src/components/ChangelogNode/` 디렉토리 생성
+- `ChangelogNode.tsx` - React 컴포넌트 (편집/표시 모드)
+- `changelog-extension.ts` - Tiptap Node 확장
+- `index.ts` - exports
+
+#### 기능
+- Keep a Changelog 형식 지원
+- 버전 번호, 릴리스 날짜 입력
+- 4가지 변경 타입: Added, Changed, Fixed, Removed
+- 타입별 색상 배지 및 아이콘
+- 변경 항목 추가/삭제 기능
+- 편집/표시 모드 전환 (클릭하여 편집)
+- 표시 모드에서 타입별 그룹화
+- Enter로 항목 추가, Ctrl+Enter로 저장, Escape로 취소
+- 라이트/다크 모드 지원
+- 슬래시 명령어: `/changelog`, `/version`, `/release` 등으로 검색
+
+#### 파일 수정
+- `packages/react/src/components/index.ts` - ChangelogNode export 추가
+- `packages/react/src/components/Editor.tsx` - 슬래시 명령어 및 확장 설정
+- `packages/react/src/locales/types.ts` - ChangelogNodeLocale 타입 추가
+- `packages/react/src/locales/en.ts` - 영어 로케일
+- `packages/react/src/locales/ko.ts` - 한국어 로케일
+- `apps/demo/src/app/globals.css` - 스타일 (라이트/다크 모드, 480+ 라인)
+
+---
 
 ### 2026-01-23 (오후 2)
 
