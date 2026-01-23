@@ -25,7 +25,7 @@
 | 8 | 파일 업로드/첨부 | ✅ 완료 |
 | 9 | 보안 강화 | ✅ 완료 |
 | 10 | 개발자 기능 (필수) | ✅ 완료 |
-| 11 | 개발자 기능 (권장) | 🔄 진행 중 |
+| 11 | 개발자 기능 (권장) | ✅ 완료 |
 | 12 | 개발자 기능 (선택) | 📋 대기 |
 | 13 | 안정화 및 최적화 | 📋 대기 |
 | 14 | npm 배포 준비 | 📋 대기 |
@@ -193,7 +193,7 @@
 - [x] 터미널/CLI 블록 (명령어 + 출력 + 복사 버튼)
 - [x] API Request/Response 블록
 
-### Phase 11: 개발자 친화적 기능 (권장)
+### Phase 11: 개발자 친화적 기능 (권장) ✅
 
 - [x] 수학 공식 (KaTeX) - Phase 7에서 구현 (MathNode)
 - [x] 다이어그램 (Mermaid) - MermaidNode 커스텀 노드뷰
@@ -203,12 +203,12 @@
 - [x] 라이트/다크 모드 전환 - 데모 앱 테마 토글 버튼
 - [x] 에러 메시지 블록 (ErrorMessageNode) - error/warning/info/success 타입
 - [x] 코드블록 라인 하이라이트 - 하이라이트 라인 입력 (예: 1,3-5,7)
-- [ ] GitHub Gist 임베드
-- [ ] CodeSandbox 임베드 (EmbedNode에 이미 포함)
-- [ ] 환경 변수 블록 (민감 정보 마스킹)
+- [x] GitHub Gist 임베드 - GistNode (URL 입력, iframe 렌더링)
+- [x] CodeSandbox 임베드 (EmbedNode에 포함)
+- [x] 환경 변수 블록 (EnvBlockNode) - 민감 정보 마스킹, 값 표시/숨김 토글
 - [x] Changelog 블록 (ChangelogNode) - Keep a Changelog 형식 지원
-- [ ] 각주 (Footnotes)
-- [ ] 코드 Diff 블록
+- [x] 각주 (FootnoteNode) - 번호 자동 매김, 추가/삭제
+- [x] 코드 Diff 블록 (DiffBlockNode) - 추가/삭제 라인 색상, 통계 표시
 - [x] OS별 명령어 탭 (macOS/Linux/Windows) - OsCommandNode
 
 ### Phase 12: 개발자 친화적 기능 (선택)
@@ -261,6 +261,53 @@
 ---
 
 ## 변경 이력
+
+### 2026-01-23 (오후 5)
+
+**Phase 11 완료: 4개 노드 추가**
+
+#### EnvBlockNode (환경 변수 블록)
+- `packages/react/src/components/EnvBlockNode/` 디렉토리 생성
+- 환경 변수 키-값 쌍 관리
+- 값 마스킹/표시 토글 (눈 아이콘)
+- 변수 추가/삭제 기능
+- 복사 버튼 (`.env` 형식)
+- 라이트/다크 모드 지원
+- 슬래시 명령어: `/env`, `/environment`, `/variable` 등
+
+#### GistNode (GitHub Gist 임베드)
+- `packages/react/src/components/GistNode/` 디렉토리 생성
+- Gist URL 입력 → 파싱 → iframe 렌더링
+- Gist API로 메타데이터 조회 (파일명 등)
+- GitHub에서 열기 버튼
+- URL 수정 기능
+- 슬래시 명령어: `/gist`, `/github` 등
+
+#### DiffBlockNode (코드 Diff 블록)
+- `packages/react/src/components/DiffBlockNode/` 디렉토리 생성
+- diff 형식 파싱 (+/- 라인)
+- 추가/삭제 라인 색상 표시 (초록/빨강)
+- 통계 표시 (추가 X개, 삭제 Y개)
+- 파일명 입력 지원
+- 라인 넘버 표시
+- 슬래시 명령어: `/diff`, `/compare` 등
+
+#### FootnoteNode (각주 블록)
+- `packages/react/src/components/FootnoteNode/` 디렉토리 생성
+- 번호 자동 매김 ([1], [2], ...)
+- 각주 추가/삭제 기능
+- 편집/표시 모드 전환
+- 슬래시 명령어: `/footnote`, `/note` 등
+
+#### 파일 수정
+- `packages/react/src/components/index.ts` - 4개 노드 export 추가
+- `packages/react/src/components/Editor.tsx` - 확장 및 슬래시 명령어 추가
+- `packages/react/src/locales/types.ts` - 4개 locale 타입 추가
+- `packages/react/src/locales/en.ts` - 영어 번역 추가
+- `packages/react/src/locales/ko.ts` - 한국어 번역 추가
+- `apps/demo/src/app/globals.css` - 850+ 라인 CSS 스타일 추가 (라이트/다크)
+
+---
 
 ### 2026-01-23 (오후 4)
 

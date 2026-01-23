@@ -34,6 +34,10 @@ import { MermaidExtension } from './MermaidNode';
 import { ErrorMessage } from './ErrorMessageNode';
 import { OsCommand } from './OsCommandNode';
 import { Changelog } from './ChangelogNode';
+import { EnvBlock } from './EnvBlockNode';
+import { Gist } from './GistNode';
+import { DiffBlock } from './DiffBlockNode';
+import { FootnoteBlock } from './FootnoteNode';
 import type { ZmEditorLocale } from '../locales';
 import { enLocale } from '../locales';
 import { LocaleProvider } from '../context';
@@ -505,6 +509,38 @@ function createLocalizedSlashCommands(locale: ZmEditorLocale): SlashCommandItem[
         editor.chain().focus().deleteRange(range).setChangelog().run();
       },
     },
+    {
+      title: commands.envBlock?.title || 'Environment Variables',
+      description: commands.envBlock?.description || 'Environment variables with masked values',
+      searchTerms: ['env', 'environment', 'variable', 'config', '환경', '변수', '설정', 'secret', 'key', 'value'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setEnvBlock().run();
+      },
+    },
+    {
+      title: commands.gist?.title || 'GitHub Gist',
+      description: commands.gist?.description || 'Embed GitHub Gist snippet',
+      searchTerms: ['gist', 'github', 'snippet', 'code', '깃허브', '코드', 'share', 'embed'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setGist().run();
+      },
+    },
+    {
+      title: commands.diffBlock?.title || 'Diff',
+      description: commands.diffBlock?.description || 'Code diff with additions and deletions',
+      searchTerms: ['diff', 'compare', 'code', 'change', '비교', '변경', 'git', 'patch', 'addition', 'deletion'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setDiffBlock().run();
+      },
+    },
+    {
+      title: commands.footnote?.title || 'Footnotes',
+      description: commands.footnote?.description || 'Numbered footnotes list',
+      searchTerms: ['footnote', 'note', 'reference', 'citation', '각주', '주석', '참조', 'annotation'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setFootnoteBlock().run();
+      },
+    },
   ];
 }
 
@@ -776,6 +812,34 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         },
       });
 
+      // EnvBlock 확장 (환경변수 블록)
+      const envBlockExtension = EnvBlock.configure({
+        HTMLAttributes: {
+          class: 'zm-env-block',
+        },
+      });
+
+      // Gist 확장 (GitHub Gist 임베드)
+      const gistExtension = Gist.configure({
+        HTMLAttributes: {
+          class: 'zm-gist',
+        },
+      });
+
+      // DiffBlock 확장 (코드 비교 블록)
+      const diffBlockExtension = DiffBlock.configure({
+        HTMLAttributes: {
+          class: 'zm-diff-block',
+        },
+      });
+
+      // FootnoteBlock 확장 (각주 블록)
+      const footnoteExtension = FootnoteBlock.configure({
+        HTMLAttributes: {
+          class: 'zm-footnote',
+        },
+      });
+
       return [
         ...baseExtensions,
         codeBlockExtension,
@@ -794,6 +858,10 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         errorMessageExtension,
         osCommandExtension,
         changelogExtension,
+        envBlockExtension,
+        gistExtension,
+        diffBlockExtension,
+        footnoteExtension,
         ...(slashCommandExtension ? [slashCommandExtension] : []),
         ...customExtensions,
       ];

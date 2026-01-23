@@ -41,6 +41,10 @@ export interface SlashMenuLocale {
     errorMessage: SlashCommandLocale;
     osCommand: SlashCommandLocale;
     changelog: SlashCommandLocale;
+    envBlock: SlashCommandLocale;
+    gist: SlashCommandLocale;
+    diffBlock: SlashCommandLocale;
+    footnote: SlashCommandLocale;
   };
 }
 
@@ -225,6 +229,78 @@ export interface ChangelogNodeLocale {
 }
 
 /**
+ * 환경변수 블록 노드 번역
+ */
+export interface EnvBlockNodeLocale {
+  title: string;
+  titlePlaceholder: string;
+  defaultTitle: string;
+  keyPlaceholder: string;
+  valuePlaceholder: string;
+  addVariable: string;
+  removeVariable: string;
+  showValue: string;
+  hideValue: string;
+  showValues: string;
+  hideValues: string;
+  masked: string;
+  visible: string;
+  copy: string;
+  copied: string;
+  save: string;
+  clickToEdit: string;
+  clickToAdd: string;
+  hint: string;
+}
+
+/**
+ * GitHub Gist 노드 번역
+ */
+export interface GistNodeLocale {
+  placeholder: string;
+  hint: string;
+  openInGithub: string;
+  invalidUrl: string;
+  loading: string;
+  notFound: string;
+  embed: string;
+  edit: string;
+  openInNewTab: string;
+}
+
+/**
+ * Diff 블록 노드 번역
+ */
+export interface DiffBlockNodeLocale {
+  title: string;
+  filename: string;
+  filenamePlaceholder: string;
+  languagePlaceholder: string;
+  contentPlaceholder: string;
+  placeholder: string;
+  additions: string;
+  deletions: string;
+  copy: string;
+  copied: string;
+  save: string;
+  clickToEdit: string;
+  hint: string;
+}
+
+/**
+ * Footnote 노드 번역
+ */
+export interface FootnoteNodeLocale {
+  title: string;
+  placeholder: string;
+  add: string;
+  remove: string;
+  save: string;
+  clickToAdd: string;
+  hint: string;
+}
+
+/**
  * NodeView 컴포넌트 번역
  */
 export interface NodesLocale {
@@ -239,6 +315,10 @@ export interface NodesLocale {
   errorMessage: ErrorMessageNodeLocale;
   osCommand: OsCommandNodeLocale;
   changelog: ChangelogNodeLocale;
+  envBlock: EnvBlockNodeLocale;
+  gist: GistNodeLocale;
+  diffBlock: DiffBlockNodeLocale;
+  footnote: FootnoteNodeLocale;
 }
 
 /**

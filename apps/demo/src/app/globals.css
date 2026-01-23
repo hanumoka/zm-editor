@@ -4464,3 +4464,855 @@ kbd {
     color: #d1d5db;
   }
 }
+
+/* ========================================
+   Environment Variables Block
+======================================== */
+.zm-env-block-wrapper {
+  margin: 1rem 0;
+}
+
+.zm-env-block {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f9fafb;
+}
+
+.zm-env-block[data-selected="true"] {
+  box-shadow: 0 0 0 2px #3b82f6;
+}
+
+.zm-env-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background-color: #f3f4f6;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.zm-env-block-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.zm-env-block-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.zm-env-block-save-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  border: none;
+  background-color: #10b981;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.zm-env-block-save-btn:hover {
+  background-color: #059669;
+}
+
+.zm-env-block-list {
+  padding: 8px;
+}
+
+.zm-env-var-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 13px;
+}
+
+.zm-env-var-item.editing {
+  padding: 4px 0;
+}
+
+.zm-env-var-key {
+  min-width: 120px;
+  font-weight: 600;
+  color: #7c3aed;
+}
+
+.zm-env-var-key-input {
+  width: 150px;
+  padding: 4px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 13px;
+  background-color: white;
+}
+
+.zm-env-var-equals {
+  color: #6b7280;
+}
+
+.zm-env-var-value {
+  flex: 1;
+  color: #059669;
+}
+
+.zm-env-var-value.masked {
+  color: #9ca3af;
+  letter-spacing: 2px;
+}
+
+.zm-env-var-value-input {
+  flex: 1;
+  padding: 4px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 13px;
+  background-color: white;
+}
+
+.zm-env-var-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: none;
+  background-color: transparent;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.zm-env-var-toggle-btn:hover {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+.zm-env-var-remove-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: none;
+  background-color: transparent;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.zm-env-var-remove-btn:hover {
+  background-color: #fee2e2;
+  color: #ef4444;
+}
+
+.zm-env-block-add-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  margin: 4px 8px 8px;
+  border: 1px dashed #d1d5db;
+  border-radius: 4px;
+  background-color: transparent;
+  color: #6b7280;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.zm-env-block-add-btn:hover {
+  border-color: #9ca3af;
+  color: #374151;
+  background-color: #f3f4f6;
+}
+
+.zm-env-block-hint {
+  padding: 4px 12px 8px;
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.zm-env-block-empty {
+  padding: 24px;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+/* Dark mode for Environment Variables Block */
+.dark .zm-env-block {
+  border-color: #374151;
+  background-color: #1f2937;
+}
+
+.dark .zm-env-block-header {
+  background-color: #111827;
+  border-bottom-color: #374151;
+}
+
+.dark .zm-env-block-title {
+  color: #f3f4f6;
+}
+
+.dark .zm-env-var-key {
+  color: #a78bfa;
+}
+
+.dark .zm-env-var-key-input,
+.dark .zm-env-var-value-input {
+  color: #f3f4f6;
+  background-color: #111827;
+  border-color: #4b5563;
+}
+
+.dark .zm-env-var-value {
+  color: #34d399;
+}
+
+.dark .zm-env-block-add-btn {
+  border-color: #4b5563;
+  color: #9ca3af;
+}
+
+.dark .zm-env-block-add-btn:hover {
+  border-color: #6b7280;
+  color: #e5e7eb;
+  background-color: #374151;
+}
+
+.dark .zm-env-var-toggle-btn:hover {
+  background-color: #374151;
+  color: #e5e7eb;
+}
+
+.dark .zm-env-var-remove-btn:hover {
+  background-color: #7f1d1d;
+  color: #fca5a5;
+}
+
+/* ========================================
+   GitHub Gist Embed Block
+======================================== */
+.zm-gist-wrapper {
+  margin: 1rem 0;
+}
+
+.zm-gist {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f9fafb;
+}
+
+.zm-gist[data-selected="true"] {
+  box-shadow: 0 0 0 2px #3b82f6;
+}
+
+.zm-gist-input-container {
+  padding: 24px;
+}
+
+.zm-gist-input-wrapper {
+  display: flex;
+  gap: 8px;
+}
+
+.zm-gist-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: white;
+}
+
+.zm-gist-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.zm-gist-load-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  background-color: #3b82f6;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.zm-gist-load-btn:hover {
+  background-color: #2563eb;
+}
+
+.zm-gist-load-btn:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.zm-gist-hint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.zm-gist-error {
+  padding: 12px;
+  background-color: #fef2f2;
+  color: #dc2626;
+  font-size: 13px;
+  text-align: center;
+}
+
+.zm-gist-loading {
+  padding: 32px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.zm-gist-content {
+  position: relative;
+}
+
+.zm-gist-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background-color: #f3f4f6;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.zm-gist-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.zm-gist-icon {
+  color: #6b7280;
+}
+
+.zm-gist-filename {
+  font-weight: 500;
+  color: #374151;
+}
+
+.zm-gist-open-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background-color: white;
+  color: #374151;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.zm-gist-open-btn:hover {
+  background-color: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.zm-gist-iframe {
+  width: 100%;
+  border: none;
+  min-height: 200px;
+}
+
+/* Dark mode for Gist Block */
+.dark .zm-gist {
+  border-color: #374151;
+  background-color: #1f2937;
+}
+
+.dark .zm-gist-input {
+  color: #f3f4f6;
+  background-color: #111827;
+  border-color: #4b5563;
+}
+
+.dark .zm-gist-input::placeholder {
+  color: #6b7280;
+}
+
+.dark .zm-gist-header {
+  background-color: #111827;
+  border-bottom-color: #374151;
+}
+
+.dark .zm-gist-filename {
+  color: #f3f4f6;
+}
+
+.dark .zm-gist-open-btn {
+  background-color: #1f2937;
+  border-color: #4b5563;
+  color: #e5e7eb;
+}
+
+.dark .zm-gist-open-btn:hover {
+  background-color: #374151;
+}
+
+.dark .zm-gist-error {
+  background-color: #7f1d1d;
+  color: #fca5a5;
+}
+
+/* ========================================
+   Diff Block
+======================================== */
+.zm-diff-block-wrapper {
+  margin: 1rem 0;
+}
+
+.zm-diff-block {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f9fafb;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}
+
+.zm-diff-block[data-selected="true"] {
+  box-shadow: 0 0 0 2px #3b82f6;
+}
+
+.zm-diff-block.editing {
+  background-color: white;
+}
+
+.zm-diff-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background-color: #f3f4f6;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.zm-diff-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.zm-diff-filename {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.zm-diff-stats {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+}
+
+.zm-diff-additions {
+  color: #16a34a;
+}
+
+.zm-diff-deletions {
+  color: #dc2626;
+}
+
+.zm-diff-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.zm-diff-save-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  border: none;
+  background-color: #10b981;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.zm-diff-save-btn:hover {
+  background-color: #059669;
+}
+
+.zm-diff-edit-form {
+  padding: 12px;
+}
+
+.zm-diff-filename-input {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 13px;
+  background-color: white;
+}
+
+.zm-diff-content-input {
+  width: 100%;
+  min-height: 150px;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.5;
+  resize: vertical;
+  background-color: white;
+}
+
+.zm-diff-hint {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #9ca3af;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.zm-diff-content {
+  overflow-x: auto;
+}
+
+.zm-diff-line {
+  display: flex;
+  line-height: 1.6;
+  font-size: 13px;
+}
+
+.zm-diff-line.addition {
+  background-color: #dcfce7;
+}
+
+.zm-diff-line.deletion {
+  background-color: #fee2e2;
+}
+
+.zm-diff-line-number {
+  min-width: 40px;
+  padding: 0 8px;
+  text-align: right;
+  color: #9ca3af;
+  user-select: none;
+  border-right: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+}
+
+.zm-diff-line-prefix {
+  width: 20px;
+  padding-left: 8px;
+  color: #6b7280;
+}
+
+.zm-diff-line.addition .zm-diff-line-prefix {
+  color: #16a34a;
+}
+
+.zm-diff-line.deletion .zm-diff-line-prefix {
+  color: #dc2626;
+}
+
+.zm-diff-line-content {
+  flex: 1;
+  padding-right: 12px;
+  white-space: pre;
+}
+
+.zm-diff-empty {
+  padding: 32px;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 13px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Dark mode for Diff Block */
+.dark .zm-diff-block {
+  border-color: #374151;
+  background-color: #1f2937;
+}
+
+.dark .zm-diff-block.editing {
+  background-color: #1f2937;
+}
+
+.dark .zm-diff-header {
+  background-color: #111827;
+  border-bottom-color: #374151;
+}
+
+.dark .zm-diff-title {
+  color: #f3f4f6;
+}
+
+.dark .zm-diff-filename {
+  color: #9ca3af;
+}
+
+.dark .zm-diff-filename-input,
+.dark .zm-diff-content-input {
+  color: #f3f4f6;
+  background-color: #111827;
+  border-color: #4b5563;
+}
+
+.dark .zm-diff-line.addition {
+  background-color: rgba(22, 163, 74, 0.2);
+}
+
+.dark .zm-diff-line.deletion {
+  background-color: rgba(220, 38, 38, 0.2);
+}
+
+.dark .zm-diff-line-number {
+  color: #6b7280;
+  border-right-color: #374151;
+  background-color: #111827;
+}
+
+.dark .zm-diff-line-content {
+  color: #e5e7eb;
+}
+
+/* ========================================
+   Footnotes Block
+======================================== */
+.zm-footnote-wrapper {
+  margin: 1rem 0;
+}
+
+.zm-footnote {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f9fafb;
+  cursor: pointer;
+}
+
+.zm-footnote[data-selected="true"] {
+  box-shadow: 0 0 0 2px #3b82f6;
+}
+
+.zm-footnote.editing {
+  cursor: default;
+  background-color: white;
+}
+
+.zm-footnote-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background-color: #f3f4f6;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.zm-footnote-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.zm-footnote-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.zm-footnote-save-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  border: none;
+  background-color: #10b981;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.zm-footnote-save-btn:hover {
+  background-color: #059669;
+}
+
+.zm-footnote-list {
+  padding: 8px 12px;
+}
+
+.zm-footnote-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.zm-footnote-item.editing {
+  align-items: center;
+}
+
+.zm-footnote-number {
+  flex-shrink: 0;
+  font-weight: 600;
+  color: #3b82f6;
+  font-size: 12px;
+}
+
+.zm-footnote-content {
+  flex: 1;
+  color: #374151;
+}
+
+.zm-footnote-content-input {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 13px;
+  background-color: white;
+}
+
+.zm-footnote-content-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.zm-footnote-remove-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: none;
+  background-color: transparent;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.zm-footnote-remove-btn:hover {
+  background-color: #fee2e2;
+  color: #ef4444;
+}
+
+.zm-footnote-add-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  margin: 4px 12px 8px;
+  border: 1px dashed #d1d5db;
+  border-radius: 4px;
+  background-color: transparent;
+  color: #6b7280;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.zm-footnote-add-btn:hover {
+  border-color: #9ca3af;
+  color: #374151;
+  background-color: #f3f4f6;
+}
+
+.zm-footnote-hint {
+  padding: 4px 12px 8px;
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.zm-footnote-empty {
+  padding: 24px;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+/* Dark mode for Footnotes Block */
+.dark .zm-footnote {
+  border-color: #374151;
+  background-color: #1f2937;
+}
+
+.dark .zm-footnote.editing {
+  background-color: #1f2937;
+}
+
+.dark .zm-footnote-header {
+  background-color: #111827;
+  border-bottom-color: #374151;
+}
+
+.dark .zm-footnote-title {
+  color: #f3f4f6;
+}
+
+.dark .zm-footnote-number {
+  color: #60a5fa;
+}
+
+.dark .zm-footnote-content {
+  color: #d1d5db;
+}
+
+.dark .zm-footnote-content-input {
+  color: #f3f4f6;
+  background-color: #111827;
+  border-color: #4b5563;
+}
+
+.dark .zm-footnote-add-btn {
+  border-color: #4b5563;
+  color: #9ca3af;
+}
+
+.dark .zm-footnote-add-btn:hover {
+  border-color: #6b7280;
+  color: #e5e7eb;
+  background-color: #374151;
+}
+
+.dark .zm-footnote-remove-btn:hover {
+  background-color: #7f1d1d;
+  color: #fca5a5;
+}
+
+.dark .zm-footnote:hover:not(.editing) {
+  background-color: #374151;
+}
