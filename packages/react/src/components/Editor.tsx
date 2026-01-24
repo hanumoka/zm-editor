@@ -937,13 +937,14 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
 
         // placeholder 이미지 노드 삽입 (진행률 표시용)
         const placeholderSrc = `placeholder:${uploadId}`;
-        editor.chain().focus().setImage({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (editor.chain().focus().setImage as any)({
           src: placeholderSrc,
           alt: file.name,
           uploading: true,
           uploadProgress: 0,
           fileName: file.name,
-        } as Record<string, unknown>).run();
+        }).run();
 
         // 진행률 업데이트 함수
         const updateProgress = (percent: number) => {
