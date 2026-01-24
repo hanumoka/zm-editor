@@ -126,167 +126,188 @@ export function TableBubbleMenu({
       }}
       className="zm-table-bubble-menu"
     >
-      {/* Row Controls */}
-      <div className="zm-table-bubble-menu-group">
+      <div role="toolbar" aria-label="Table controls">
+        {/* Row Controls */}
+        <div className="zm-table-bubble-menu-group" role="group" aria-label="Row controls">
+          <button
+            type="button"
+            onClick={addRowBefore}
+            className="zm-table-bubble-menu-button"
+            title={locale.addRowBefore}
+            aria-label={locale.addRowBefore}
+          >
+            <AddRowBeforeIcon />
+          </button>
+          <button
+            type="button"
+            onClick={addRowAfter}
+            className="zm-table-bubble-menu-button"
+            title={locale.addRowAfter}
+            aria-label={locale.addRowAfter}
+          >
+            <AddRowAfterIcon />
+          </button>
+          <button
+            type="button"
+            onClick={deleteRow}
+            className="zm-table-bubble-menu-button zm-table-bubble-menu-button-danger"
+            title={locale.deleteRow}
+            aria-label={locale.deleteRow}
+          >
+            <DeleteRowIcon />
+          </button>
+        </div>
+
+        <div className="zm-table-bubble-menu-divider" role="separator" aria-orientation="vertical" />
+
+        {/* Column Controls */}
+        <div className="zm-table-bubble-menu-group" role="group" aria-label="Column controls">
+          <button
+            type="button"
+            onClick={addColumnBefore}
+            className="zm-table-bubble-menu-button"
+            title={locale.addColumnBefore}
+            aria-label={locale.addColumnBefore}
+          >
+            <AddColumnBeforeIcon />
+          </button>
+          <button
+            type="button"
+            onClick={addColumnAfter}
+            className="zm-table-bubble-menu-button"
+            title={locale.addColumnAfter}
+            aria-label={locale.addColumnAfter}
+          >
+            <AddColumnAfterIcon />
+          </button>
+          <button
+            type="button"
+            onClick={deleteColumn}
+            className="zm-table-bubble-menu-button zm-table-bubble-menu-button-danger"
+            title={locale.deleteColumn}
+            aria-label={locale.deleteColumn}
+          >
+            <DeleteColumnIcon />
+          </button>
+        </div>
+
+        <div className="zm-table-bubble-menu-divider" role="separator" aria-orientation="vertical" />
+
+        {/* Cell Controls */}
+        <div className="zm-table-bubble-menu-group" role="group" aria-label="Cell controls">
+          <button
+            type="button"
+            onClick={mergeCells}
+            className="zm-table-bubble-menu-button"
+            title={locale.mergeCells}
+            aria-label={locale.mergeCells}
+            disabled={!editor.can().mergeCells()}
+            aria-disabled={!editor.can().mergeCells()}
+          >
+            <MergeCellsIcon />
+          </button>
+          <button
+            type="button"
+            onClick={splitCell}
+            className="zm-table-bubble-menu-button"
+            title={locale.splitCell}
+            aria-label={locale.splitCell}
+            disabled={!editor.can().splitCell()}
+            aria-disabled={!editor.can().splitCell()}
+          >
+            <SplitCellIcon />
+          </button>
+        </div>
+
+        <div className="zm-table-bubble-menu-divider" role="separator" aria-orientation="vertical" />
+
+        {/* Header Controls */}
+        <div className="zm-table-bubble-menu-group" role="group" aria-label="Header controls">
+          <button
+            type="button"
+            onClick={toggleHeaderRow}
+            className="zm-table-bubble-menu-button"
+            title={locale.toggleHeaderRow}
+            aria-label={locale.toggleHeaderRow}
+          >
+            <HeaderRowIcon />
+          </button>
+          <button
+            type="button"
+            onClick={toggleHeaderColumn}
+            className="zm-table-bubble-menu-button"
+            title={locale.toggleHeaderColumn}
+            aria-label={locale.toggleHeaderColumn}
+          >
+            <HeaderColumnIcon />
+          </button>
+          <button
+            type="button"
+            onClick={toggleHeaderCell}
+            className="zm-table-bubble-menu-button"
+            title={locale.toggleHeaderCell}
+            aria-label={locale.toggleHeaderCell}
+          >
+            <HeaderCellIcon />
+          </button>
+        </div>
+
+        <div className="zm-table-bubble-menu-divider" role="separator" aria-orientation="vertical" />
+
+        {/* Cell Background Color */}
+        <div className="zm-table-bubble-menu-group zm-table-color-picker-container" ref={colorPickerRef} role="group" aria-label="Cell background">
+          <button
+            type="button"
+            onClick={toggleColorPicker}
+            className={`zm-table-bubble-menu-button ${showColorPicker ? 'is-active' : ''}`}
+            title={locale.cellBackground}
+            aria-label={locale.cellBackground}
+            aria-expanded={showColorPicker}
+            aria-haspopup="true"
+          >
+            <CellBackgroundIcon />
+          </button>
+          {showColorPicker && (
+            <div className="zm-table-color-picker" role="listbox" aria-label="Color options">
+              {CELL_BACKGROUND_COLORS.map((color) => (
+                <button
+                  key={color.name}
+                  type="button"
+                  className="zm-table-color-option"
+                  style={{ backgroundColor: color.value || 'transparent' }}
+                  onClick={() => setCellBackground(color.value)}
+                  title={color.value === null ? (locale.clearBackground || 'Clear') : color.name}
+                  aria-label={color.value === null ? (locale.clearBackground || 'Clear') : color.name}
+                  role="option"
+                >
+                  {color.value === null && <ClearIcon />}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="zm-table-bubble-menu-divider" role="separator" aria-orientation="vertical" />
+
+        {/* Delete Table */}
         <button
           type="button"
-          onClick={addRowBefore}
-          className="zm-table-bubble-menu-button"
-          title={locale.addRowBefore}
-        >
-          <AddRowBeforeIcon />
-        </button>
-        <button
-          type="button"
-          onClick={addRowAfter}
-          className="zm-table-bubble-menu-button"
-          title={locale.addRowAfter}
-        >
-          <AddRowAfterIcon />
-        </button>
-        <button
-          type="button"
-          onClick={deleteRow}
+          onClick={deleteTable}
           className="zm-table-bubble-menu-button zm-table-bubble-menu-button-danger"
-          title={locale.deleteRow}
+          title={locale.deleteTable}
+          aria-label={locale.deleteTable}
         >
-          <DeleteRowIcon />
+          <DeleteTableIcon />
         </button>
       </div>
-
-      <div className="zm-table-bubble-menu-divider" />
-
-      {/* Column Controls */}
-      <div className="zm-table-bubble-menu-group">
-        <button
-          type="button"
-          onClick={addColumnBefore}
-          className="zm-table-bubble-menu-button"
-          title={locale.addColumnBefore}
-        >
-          <AddColumnBeforeIcon />
-        </button>
-        <button
-          type="button"
-          onClick={addColumnAfter}
-          className="zm-table-bubble-menu-button"
-          title={locale.addColumnAfter}
-        >
-          <AddColumnAfterIcon />
-        </button>
-        <button
-          type="button"
-          onClick={deleteColumn}
-          className="zm-table-bubble-menu-button zm-table-bubble-menu-button-danger"
-          title={locale.deleteColumn}
-        >
-          <DeleteColumnIcon />
-        </button>
-      </div>
-
-      <div className="zm-table-bubble-menu-divider" />
-
-      {/* Cell Controls */}
-      <div className="zm-table-bubble-menu-group">
-        <button
-          type="button"
-          onClick={mergeCells}
-          className="zm-table-bubble-menu-button"
-          title={locale.mergeCells}
-          disabled={!editor.can().mergeCells()}
-        >
-          <MergeCellsIcon />
-        </button>
-        <button
-          type="button"
-          onClick={splitCell}
-          className="zm-table-bubble-menu-button"
-          title={locale.splitCell}
-          disabled={!editor.can().splitCell()}
-        >
-          <SplitCellIcon />
-        </button>
-      </div>
-
-      <div className="zm-table-bubble-menu-divider" />
-
-      {/* Header Controls */}
-      <div className="zm-table-bubble-menu-group">
-        <button
-          type="button"
-          onClick={toggleHeaderRow}
-          className="zm-table-bubble-menu-button"
-          title={locale.toggleHeaderRow}
-        >
-          <HeaderRowIcon />
-        </button>
-        <button
-          type="button"
-          onClick={toggleHeaderColumn}
-          className="zm-table-bubble-menu-button"
-          title={locale.toggleHeaderColumn}
-        >
-          <HeaderColumnIcon />
-        </button>
-        <button
-          type="button"
-          onClick={toggleHeaderCell}
-          className="zm-table-bubble-menu-button"
-          title={locale.toggleHeaderCell}
-        >
-          <HeaderCellIcon />
-        </button>
-      </div>
-
-      <div className="zm-table-bubble-menu-divider" />
-
-      {/* Cell Background Color */}
-      <div className="zm-table-bubble-menu-group zm-table-color-picker-container" ref={colorPickerRef}>
-        <button
-          type="button"
-          onClick={toggleColorPicker}
-          className={`zm-table-bubble-menu-button ${showColorPicker ? 'is-active' : ''}`}
-          title={locale.cellBackground}
-        >
-          <CellBackgroundIcon />
-        </button>
-        {showColorPicker && (
-          <div className="zm-table-color-picker">
-            {CELL_BACKGROUND_COLORS.map((color) => (
-              <button
-                key={color.name}
-                type="button"
-                className="zm-table-color-option"
-                style={{ backgroundColor: color.value || 'transparent' }}
-                onClick={() => setCellBackground(color.value)}
-                title={color.value === null ? (locale.clearBackground || 'Clear') : color.name}
-              >
-                {color.value === null && <ClearIcon />}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <div className="zm-table-bubble-menu-divider" />
-
-      {/* Delete Table */}
-      <button
-        type="button"
-        onClick={deleteTable}
-        className="zm-table-bubble-menu-button zm-table-bubble-menu-button-danger"
-        title={locale.deleteTable}
-      >
-        <DeleteTableIcon />
-      </button>
     </TiptapBubbleMenu>
   );
 }
 
-// SVG Icons
+// SVG Icons (aria-hidden for screen readers since parent button has aria-label)
 function AddRowBeforeIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <rect x="3" y="3" width="18" height="18" rx="2" />
       <line x1="3" y1="15" x2="21" y2="15" />
       <line x1="12" y1="6" x2="12" y2="12" />
@@ -297,7 +318,7 @@ function AddRowBeforeIcon() {
 
 function AddRowAfterIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <rect x="3" y="3" width="18" height="18" rx="2" />
       <line x1="3" y1="9" x2="21" y2="9" />
       <line x1="12" y1="12" x2="12" y2="18" />
@@ -308,7 +329,7 @@ function AddRowAfterIcon() {
 
 function DeleteRowIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <rect x="3" y="3" width="18" height="18" rx="2" />
       <line x1="3" y1="12" x2="21" y2="12" />
       <line x1="9" y1="9" x2="15" y2="15" />
@@ -319,7 +340,7 @@ function DeleteRowIcon() {
 
 function AddColumnBeforeIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <rect x="3" y="3" width="18" height="18" rx="2" />
       <line x1="15" y1="3" x2="15" y2="21" />
       <line x1="6" y1="12" x2="12" y2="12" />
@@ -330,7 +351,7 @@ function AddColumnBeforeIcon() {
 
 function AddColumnAfterIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <rect x="3" y="3" width="18" height="18" rx="2" />
       <line x1="9" y1="3" x2="9" y2="21" />
       <line x1="12" y1="12" x2="18" y2="12" />
@@ -341,7 +362,7 @@ function AddColumnAfterIcon() {
 
 function DeleteColumnIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <rect x="3" y="3" width="18" height="18" rx="2" />
       <line x1="12" y1="3" x2="12" y2="21" />
       <line x1="9" y1="9" x2="15" y2="15" />
@@ -352,7 +373,7 @@ function DeleteColumnIcon() {
 
 function MergeCellsIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <rect x="3" y="3" width="18" height="18" rx="2" />
       <line x1="12" y1="3" x2="12" y2="9" />
       <line x1="12" y1="15" x2="12" y2="21" />
@@ -366,7 +387,7 @@ function MergeCellsIcon() {
 
 function SplitCellIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <rect x="3" y="3" width="18" height="18" rx="2" />
       <line x1="12" y1="3" x2="12" y2="9" />
       <line x1="12" y1="15" x2="12" y2="21" />
@@ -380,7 +401,7 @@ function SplitCellIcon() {
 
 function HeaderRowIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <rect x="3" y="3" width="18" height="18" rx="2" />
       <line x1="3" y1="9" x2="21" y2="9" />
       <rect x="4" y="4" width="16" height="4" fill="currentColor" fillOpacity="0.3" />
@@ -390,7 +411,7 @@ function HeaderRowIcon() {
 
 function HeaderColumnIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <rect x="3" y="3" width="18" height="18" rx="2" />
       <line x1="9" y1="3" x2="9" y2="21" />
       <rect x="4" y="4" width="4" height="16" fill="currentColor" fillOpacity="0.3" />
@@ -400,7 +421,7 @@ function HeaderColumnIcon() {
 
 function HeaderCellIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <rect x="3" y="3" width="18" height="18" rx="2" />
       <line x1="9" y1="3" x2="9" y2="21" />
       <line x1="3" y1="9" x2="21" y2="9" />
@@ -411,7 +432,7 @@ function HeaderCellIcon() {
 
 function DeleteTableIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <rect x="3" y="3" width="18" height="18" rx="2" />
       <line x1="9" y1="3" x2="9" y2="21" />
       <line x1="15" y1="3" x2="15" y2="21" />
@@ -424,7 +445,7 @@ function DeleteTableIcon() {
 
 function CellBackgroundIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <rect x="3" y="3" width="18" height="18" rx="2" />
       <rect x="6" y="6" width="12" height="12" fill="currentColor" fillOpacity="0.2" stroke="none" />
       <circle cx="18" cy="18" r="5" fill="#3b82f6" stroke="white" strokeWidth="1.5" />
@@ -434,7 +455,7 @@ function CellBackgroundIcon() {
 
 function ClearIcon() {
   return (
-    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
       <line x1="4" y1="4" x2="20" y2="20" />
       <line x1="20" y1="4" x2="4" y2="20" />
     </svg>

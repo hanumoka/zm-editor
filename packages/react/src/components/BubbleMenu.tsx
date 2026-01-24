@@ -95,79 +95,97 @@ export function BubbleMenu({
       }}
       className="zm-bubble-menu"
     >
-      <button
-        type="button"
-        onClick={toggleBold}
-        className={`zm-bubble-menu-button ${editor.isActive('bold') ? 'is-active' : ''}`}
-        title={locale.bold}
-      >
-        <BoldIcon />
-      </button>
-      <button
-        type="button"
-        onClick={toggleItalic}
-        className={`zm-bubble-menu-button ${editor.isActive('italic') ? 'is-active' : ''}`}
-        title={locale.italic}
-      >
-        <ItalicIcon />
-      </button>
-      <button
-        type="button"
-        onClick={toggleUnderline}
-        className={`zm-bubble-menu-button ${editor.isActive('underline') ? 'is-active' : ''}`}
-        title={locale.underline}
-      >
-        <UnderlineIcon />
-      </button>
-      <button
-        type="button"
-        onClick={toggleStrike}
-        className={`zm-bubble-menu-button ${editor.isActive('strike') ? 'is-active' : ''}`}
-        title={locale.strikethrough}
-      >
-        <StrikeIcon />
-      </button>
-      <div className="zm-bubble-menu-divider" />
-      <button
-        type="button"
-        onClick={toggleCode}
-        className={`zm-bubble-menu-button ${editor.isActive('code') ? 'is-active' : ''}`}
-        title={locale.code}
-      >
-        <CodeIcon />
-      </button>
-      <button
-        type="button"
-        onClick={toggleKeyboard}
-        className={`zm-bubble-menu-button ${editor.isActive('keyboard') ? 'is-active' : ''}`}
-        title={locale.keyboard}
-      >
-        <KeyboardIcon />
-      </button>
-      <button
-        type="button"
-        onClick={toggleHighlight}
-        className={`zm-bubble-menu-button ${editor.isActive('highlight') ? 'is-active' : ''}`}
-        title={locale.highlight}
-      >
-        <HighlightIcon />
-      </button>
-      <button
-        type="button"
-        onClick={setLink}
-        className={`zm-bubble-menu-button ${editor.isActive('link') ? 'is-active' : ''}`}
-        title={locale.link}
-      >
-        <LinkIcon />
-      </button>
+      <div role="toolbar" aria-label="Text formatting">
+        <button
+          type="button"
+          onClick={toggleBold}
+          className={`zm-bubble-menu-button ${editor.isActive('bold') ? 'is-active' : ''}`}
+          title={locale.bold}
+          aria-label={locale.bold}
+          aria-pressed={editor.isActive('bold')}
+        >
+          <BoldIcon />
+        </button>
+        <button
+          type="button"
+          onClick={toggleItalic}
+          className={`zm-bubble-menu-button ${editor.isActive('italic') ? 'is-active' : ''}`}
+          title={locale.italic}
+          aria-label={locale.italic}
+          aria-pressed={editor.isActive('italic')}
+        >
+          <ItalicIcon />
+        </button>
+        <button
+          type="button"
+          onClick={toggleUnderline}
+          className={`zm-bubble-menu-button ${editor.isActive('underline') ? 'is-active' : ''}`}
+          title={locale.underline}
+          aria-label={locale.underline}
+          aria-pressed={editor.isActive('underline')}
+        >
+          <UnderlineIcon />
+        </button>
+        <button
+          type="button"
+          onClick={toggleStrike}
+          className={`zm-bubble-menu-button ${editor.isActive('strike') ? 'is-active' : ''}`}
+          title={locale.strikethrough}
+          aria-label={locale.strikethrough}
+          aria-pressed={editor.isActive('strike')}
+        >
+          <StrikeIcon />
+        </button>
+        <div className="zm-bubble-menu-divider" role="separator" aria-orientation="vertical" />
+        <button
+          type="button"
+          onClick={toggleCode}
+          className={`zm-bubble-menu-button ${editor.isActive('code') ? 'is-active' : ''}`}
+          title={locale.code}
+          aria-label={locale.code}
+          aria-pressed={editor.isActive('code')}
+        >
+          <CodeIcon />
+        </button>
+        <button
+          type="button"
+          onClick={toggleKeyboard}
+          className={`zm-bubble-menu-button ${editor.isActive('keyboard') ? 'is-active' : ''}`}
+          title={locale.keyboard}
+          aria-label={locale.keyboard}
+          aria-pressed={editor.isActive('keyboard')}
+        >
+          <KeyboardIcon />
+        </button>
+        <button
+          type="button"
+          onClick={toggleHighlight}
+          className={`zm-bubble-menu-button ${editor.isActive('highlight') ? 'is-active' : ''}`}
+          title={locale.highlight}
+          aria-label={locale.highlight}
+          aria-pressed={editor.isActive('highlight')}
+        >
+          <HighlightIcon />
+        </button>
+        <button
+          type="button"
+          onClick={setLink}
+          className={`zm-bubble-menu-button ${editor.isActive('link') ? 'is-active' : ''}`}
+          title={locale.link}
+          aria-label={locale.link}
+          aria-pressed={editor.isActive('link')}
+        >
+          <LinkIcon />
+        </button>
+      </div>
     </TiptapBubbleMenu>
   );
 }
 
-// SVG Icons
+// SVG Icons (aria-hidden for screen readers since parent button has aria-label)
 function BoldIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z" />
       <path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z" />
     </svg>
@@ -176,7 +194,7 @@ function BoldIcon() {
 
 function ItalicIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <line x1="19" y1="4" x2="10" y2="4" />
       <line x1="14" y1="20" x2="5" y2="20" />
       <line x1="15" y1="4" x2="9" y2="20" />
@@ -186,7 +204,7 @@ function ItalicIcon() {
 
 function UnderlineIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <path d="M6 3v7a6 6 0 0 0 6 6 6 6 0 0 0 6-6V3" />
       <line x1="4" y1="21" x2="20" y2="21" />
     </svg>
@@ -195,7 +213,7 @@ function UnderlineIcon() {
 
 function StrikeIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <line x1="4" y1="12" x2="20" y2="12" />
       <path d="M17.5 7.5c0-2.5-2-4.5-5.5-4.5-3 0-5.5 1.5-5.5 4.5 0 6 11 6 11 11 0 2.5-2 4.5-5.5 4.5-3.5 0-5.5-2-5.5-4.5" />
     </svg>
@@ -204,7 +222,7 @@ function StrikeIcon() {
 
 function CodeIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <polyline points="16 18 22 12 16 6" />
       <polyline points="8 6 2 12 8 18" />
     </svg>
@@ -213,7 +231,7 @@ function CodeIcon() {
 
 function HighlightIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <path d="M12 2L2 7l10 5 10-5-10-5z" />
       <path d="M2 17l10 5 10-5" />
       <path d="M2 12l10 5 10-5" />
@@ -223,7 +241,7 @@ function HighlightIcon() {
 
 function LinkIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
     </svg>
@@ -232,7 +250,7 @@ function LinkIcon() {
 
 function KeyboardIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <rect x="2" y="4" width="20" height="16" rx="2" ry="2" />
       <line x1="6" y1="8" x2="6" y2="8" />
       <line x1="10" y1="8" x2="10" y2="8" />

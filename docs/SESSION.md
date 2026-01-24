@@ -10,24 +10,22 @@
 
 | 항목 | 상태 |
 |------|------|
-| **현재 Phase** | Phase 12 완료 ✅ |
+| **현재 Phase** | Phase 13 진행중 🔄 |
 | **빌드 상태** | 성공 ✅ |
 | **타입 체크** | 성공 ✅ |
-| **Git 상태** | Modified (Phase 12 구현) |
+| **Git 상태** | Clean |
 | **개발 서버** | 포트 3100 (FE), 포트 4000 (API) |
 
 ### 최근 완료 ✅
 
-- Phase 12: 개발자 기능 (선택) 전체 구현
-  - StackBlitz/Replit 임베드 (EmbedNode 확장)
-  - 버전 배지 / Since 태그 (인라인 마크)
-  - 로그 블록 (debug/info/warn/error 레벨)
-  - 스택 트레이스 블록 (파일 경로/라인 하이라이트)
-  - 메타데이터 블록 (작성자, 난이도, 태그 등)
-  - GraphQL 쿼리 블록 (쿼리/변수/응답 탭)
-  - OpenAPI/Swagger 임베드 (Swagger UI/ReDoc/Minimal 모드)
-  - PlantUML / D2 다이어그램 블록
-  - 용어 정의 (Glossary) 마크
+- Phase 13: 안정화 및 최적화 (진행중)
+  - 접근성(a11y) 개선: BubbleMenu, TableBubbleMenu, Editor 컴포넌트
+    - `aria-label`, `aria-pressed` 버튼 속성 추가
+    - `role="toolbar"`, `role="group"` 추가
+    - SVG 아이콘에 `aria-hidden="true"` 추가
+    - 로딩/업로드 상태에 `aria-live`, `aria-busy` 추가
+
+- Phase 12: 개발자 기능 (선택) 완료 ✅
 
 ---
 
@@ -128,11 +126,11 @@
 
 ## 다음 작업
 
-### Phase 13: 안정화 및 최적화
+### Phase 13: 안정화 및 최적화 (진행중)
 - [ ] 성능 최적화 검증
 - [ ] 메모리 누수 테스트
 - [ ] 다양한 브라우저 호환성 테스트
-- [ ] 접근성(a11y) 개선
+- [x] 접근성(a11y) 개선 - BubbleMenu, TableBubbleMenu, Editor
 - [ ] 번들 크기 최적화
 
 ---
@@ -150,7 +148,7 @@
 | 10 | 개발자 기능 (필수) | ✅ 완료 |
 | 11 | 개발자 기능 (권장) | ✅ 완료 |
 | 12 | 개발자 기능 (선택) | ✅ 완료 |
-| 13 | 안정화 및 최적화 | 📋 대기 |
+| 13 | 안정화 및 최적화 | 🔄 진행중 |
 | 14 | npm 배포 준비 | 📋 대기 |
 | 15 | 추가 기능 (선택) | 📋 대기 |
 

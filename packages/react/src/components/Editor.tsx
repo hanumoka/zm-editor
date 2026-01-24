@@ -1334,8 +1334,14 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
     // 서버/클라이언트 hydration 일관성을 위해 마운트 전에는 로딩 상태 표시
     if (!isMounted || !editor) {
       return (
-        <div className="zm-editor">
-          <div className="zm-editor-content" style={{ minHeight: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9ca3af' }}>
+        <div className="zm-editor" role="application" aria-label="Rich text editor">
+          <div
+            className="zm-editor-content"
+            style={{ minHeight: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9ca3af' }}
+            role="status"
+            aria-live="polite"
+            aria-busy="true"
+          >
             {locale.editor.loading}
           </div>
         </div>
@@ -1344,7 +1350,7 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
 
     return (
       <LocaleProvider locale={locale}>
-        <div className="zm-editor">
+        <div className="zm-editor" role="application" aria-label="Rich text editor">
           {/* 숨겨진 이미지 input (슬래시 명령어에서 사용) */}
           <input
             id="zm-editor-image-upload"
@@ -1353,6 +1359,8 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
             multiple
             style={{ display: 'none' }}
             onChange={handleImageInputChange}
+            aria-label="Upload image"
+            tabIndex={-1}
           />
           {/* 숨겨진 파일 input (슬래시 명령어에서 사용) */}
           <input
@@ -1362,6 +1370,8 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
             multiple
             style={{ display: 'none' }}
             onChange={handleFileInputChange}
+            aria-label="Upload file"
+            tabIndex={-1}
           />
           {enableBubbleMenu && (
             <BubbleMenu
@@ -1379,8 +1389,13 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
           <EditorContent editor={editor} />
           {/* 이미지 업로드 중 인디케이터 */}
           {uploadingCount > 0 && (
-            <div className="zm-editor-upload-indicator">
-              <div className="zm-editor-upload-indicator-spinner" />
+            <div
+              className="zm-editor-upload-indicator"
+              role="status"
+              aria-live="polite"
+              aria-busy="true"
+            >
+              <div className="zm-editor-upload-indicator-spinner" aria-hidden="true" />
               <span className="zm-editor-upload-indicator-text">
                 {locale.editor.uploading ?? 'Uploading image...'}
               </span>

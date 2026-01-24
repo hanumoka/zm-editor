@@ -599,14 +599,17 @@ body {
 
 /* Bubble Menu */
 .zm-bubble-menu {
-  display: flex;
-  align-items: center;
-  gap: 2px;
   padding: 4px;
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.zm-bubble-menu [role="toolbar"] {
+  display: flex;
+  align-items: center;
+  gap: 2px;
 }
 
 .zm-bubble-menu-button {
@@ -753,14 +756,17 @@ body {
 
 /* Table Bubble Menu */
 .zm-table-bubble-menu {
-  display: flex;
-  align-items: center;
-  gap: 2px;
   padding: 4px;
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.zm-table-bubble-menu > [role="toolbar"] {
+  display: flex;
+  align-items: center;
+  gap: 2px;
 }
 
 .zm-table-bubble-menu-group {
