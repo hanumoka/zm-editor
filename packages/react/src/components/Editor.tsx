@@ -932,29 +932,117 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         // 업로드 시작
         setUploadingCount((prev) => prev + 1);
 
+        // 고유 업로드 ID 생성
+        const uploadId = `upload-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+        // placeholder 이미지 노드 삽입 (진행률 표시용)
+        const placeholderSrc = `placeholder:${uploadId}`;
+        editor.chain().focus().setImage({
+          src: placeholderSrc,
+          alt: file.name,
+          uploading: true,
+          uploadProgress: 0,
+          fileName: file.name,
+        } as Record<string, unknown>).run();
+
+        // 진행률 업데이트 함수
+        const updateProgress = (percent: number) => {
+          const { state } = editor.view;
+          let nodePos = -1;
+
+          state.doc.descendants((node, pos) => {
+            if (node.type.name === 'image' && node.attrs.src === placeholderSrc) {
+              nodePos = pos;
+              return false;
+            }
+            return true;
+          });
+
+          if (nodePos >= 0) {
+            editor.view.dispatch(
+              state.tr.setNodeMarkup(nodePos, undefined, {
+                ...editor.view.state.doc.nodeAt(nodePos)?.attrs,
+                uploadProgress: Math.round(percent),
+              })
+            );
+          }
+        };
+
         try {
           let imageUrl: string;
           let alt: string | undefined;
 
           if (onImageUpload) {
-            const result = await onImageUpload({ file });
+            const result = await onImageUpload({ file, onProgress: updateProgress });
             imageUrl = result.url;
             alt = result.alt;
           } else if (mergedImageConfig.fallbackToBase64) {
+            // Base64 변환은 진행률 없이 한 번에 완료
+            updateProgress(50);
             imageUrl = await fileToBase64(file);
             alt = file.name;
+            updateProgress(100);
           } else {
             console.warn('[ZmEditor] Image upload disabled');
+            // placeholder 제거
+            const { state } = editor.view;
+            let nodePos = -1;
+            state.doc.descendants((node, pos) => {
+              if (node.type.name === 'image' && node.attrs.src === placeholderSrc) {
+                nodePos = pos;
+                return false;
+              }
+              return true;
+            });
+            if (nodePos >= 0) {
+              editor.view.dispatch(state.tr.delete(nodePos, nodePos + 1));
+            }
             setUploadingCount((prev) => Math.max(0, prev - 1));
             return;
           }
 
-          // 에디터에 이미지 삽입
-          editor.chain().focus().setImage({ src: imageUrl, alt: alt || file.name }).run();
+          // 업로드 완료: placeholder를 실제 이미지로 교체
+          const { state } = editor.view;
+          let nodePos = -1;
+
+          state.doc.descendants((node, pos) => {
+            if (node.type.name === 'image' && node.attrs.src === placeholderSrc) {
+              nodePos = pos;
+              return false;
+            }
+            return true;
+          });
+
+          if (nodePos >= 0) {
+            const currentNode = editor.view.state.doc.nodeAt(nodePos);
+            editor.view.dispatch(
+              state.tr.setNodeMarkup(nodePos, undefined, {
+                ...currentNode?.attrs,
+                src: imageUrl,
+                alt: alt || file.name,
+                uploading: false,
+                uploadProgress: 100,
+              })
+            );
+          }
         } catch (err) {
           const error = err instanceof Error ? err : new Error('Image upload failed');
           onImageUploadError?.(error, file);
           console.error('[ZmEditor] Image upload failed:', error);
+
+          // 에러 시 placeholder 제거
+          const { state } = editor.view;
+          let nodePos = -1;
+          state.doc.descendants((node, pos) => {
+            if (node.type.name === 'image' && node.attrs.src === placeholderSrc) {
+              nodePos = pos;
+              return false;
+            }
+            return true;
+          });
+          if (nodePos >= 0) {
+            editor.view.dispatch(state.tr.delete(nodePos, nodePos + 1));
+          }
         } finally {
           // 업로드 완료
           setUploadingCount((prev) => Math.max(0, prev - 1));

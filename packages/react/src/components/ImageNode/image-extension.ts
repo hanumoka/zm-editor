@@ -81,6 +81,28 @@ export const ResizableImage = Image.extend<ResizableImageOptions>({
           };
         },
       },
+      uploading: {
+        default: false,
+        parseHTML: () => false,
+        renderHTML: (attributes) => {
+          if (!attributes.uploading) {
+            return {};
+          }
+          return {
+            'data-uploading': 'true',
+          };
+        },
+      },
+      uploadProgress: {
+        default: 0,
+        parseHTML: () => 0,
+        renderHTML: () => ({}),
+      },
+      fileName: {
+        default: '',
+        parseHTML: () => '',
+        renderHTML: () => ({}),
+      },
     };
   },
 

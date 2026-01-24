@@ -20,7 +20,7 @@ export function ImageNode({ node, updateAttributes, selected }: ImageNodeProps) 
   // 리사이즈 시작 시점의 초기값 저장 (중앙/우측 정렬에서 안정적인 리사이즈를 위함)
   const resizeStartRef = useRef<{ startX: number; startWidth: number } | null>(null);
 
-  const { src, alt, title, width, alignment = 'center', caption = '' } = node.attrs;
+  const { src, alt, title, width, alignment = 'center', caption = '', uploading = false, uploadProgress = 0, fileName = '' } = node.attrs;
 
   // Alt 텍스트 편집 상태
   const [isEditingAlt, setIsEditingAlt] = useState(false);
@@ -196,6 +196,35 @@ export function ImageNode({ node, updateAttributes, selected }: ImageNodeProps) 
     justifyContent:
       alignment === 'left' ? 'flex-start' : alignment === 'right' ? 'flex-end' : 'center',
   };
+
+  // 업로드 중 플레이스홀더 표시
+  if (uploading) {
+    return (
+      <NodeViewWrapper className="zm-image-node-wrapper" style={alignmentStyle}>
+        <div
+          ref={containerRef}
+          className={`zm-image-node zm-image-node-uploading ${selected ? 'is-selected' : ''}`}
+          data-drag-handle
+        >
+          <div className="zm-image-upload-placeholder">
+            <div className="zm-image-upload-icon">
+              <UploadingIcon />
+            </div>
+            <div className="zm-image-upload-info">
+              <span className="zm-image-upload-filename">{fileName || 'Uploading...'}</span>
+              <div className="zm-image-upload-progress-bar">
+                <div
+                  className="zm-image-upload-progress-fill"
+                  style={{ width: `${uploadProgress}%` }}
+                />
+              </div>
+              <span className="zm-image-upload-percent">{uploadProgress}%</span>
+            </div>
+          </div>
+        </div>
+      </NodeViewWrapper>
+    );
+  }
 
   // URL 검증 실패 시 오류 표시
   if (!urlValidation.isValid && src) {
@@ -396,6 +425,16 @@ function InvalidImageIcon() {
       <line x1="3" y1="3" x2="21" y2="21" />
       <circle cx="8.5" cy="8.5" r="1.5" />
       <polyline points="21 15 16 10 5 21" />
+    </svg>
+  );
+}
+
+function UploadingIcon() {
+  return (
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="17 8 12 3 7 8" />
+      <line x1="12" y1="3" x2="12" y2="15" />
     </svg>
   );
 }
