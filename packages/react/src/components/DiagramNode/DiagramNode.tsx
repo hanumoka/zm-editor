@@ -12,7 +12,6 @@ export type DiagramType = 'plantuml' | 'd2';
 function encodePlantUML(text: string): string {
   // PlantUML uses a special encoding: deflate + base64 with custom alphabet
   // For simplicity, we'll use the hex encoding method which PlantUML also supports
-  const encoded = encodeURIComponent(text);
   return `~h${stringToHex(text)}`;
 }
 
