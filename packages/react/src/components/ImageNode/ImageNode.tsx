@@ -1,6 +1,7 @@
 import { NodeViewWrapper, NodeViewProps } from '@tiptap/react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { isSafeImageUrl } from '@zm-editor/core';
+import { useLocale } from '../../context/LocaleContext';
 
 export type ImageNodeProps = NodeViewProps;
 
@@ -14,15 +15,31 @@ export function ImageNode({ node, updateAttributes, selected }: ImageNodeProps) 
   const imageRef = useRef<HTMLImageElement>(null);
   const [isResizing, setIsResizing] = useState(false);
   const [resizeDirection, setResizeDirection] = useState<ResizeDirection | null>(null);
+  const locale = useLocale();
 
   // 리사이즈 시작 시점의 초기값 저장 (중앙/우측 정렬에서 안정적인 리사이즈를 위함)
   const resizeStartRef = useRef<{ startX: number; startWidth: number } | null>(null);
 
   const { src, alt, title, width, alignment = 'center', caption = '' } = node.attrs;
 
-  // SSRF/URL 검증
+  // Alt 텍스트 편집 상태
+  const [isEditingAlt, setIsEditingAlt] = useState(false);
+  const [altValue, setAltValue] = useState(alt || '');
+  const altInputRef = useRef<HTMLInputElement>(null);
+
+  // alt 속성이 변경되면 로컬 상태 동기화
+  useEffect(() => {
+    setAltValue(alt || '');
+  }, [alt]);
+
+  // SSRF/URL 검증 (개발 환경에서 localhost 허용)
   const urlValidation = useMemo(
-    () => isSafeImageUrl(src, { allowDataUrls: true, allowBlobUrls: true, blockPrivateIPs: true }),
+    () => isSafeImageUrl(src, {
+      allowDataUrls: true,
+      allowBlobUrls: true,
+      blockPrivateIPs: true,
+      blockLocalhost: false,  // 개발 환경을 위해 localhost 허용
+    }),
     [src]
   );
 
@@ -148,13 +165,31 @@ export function ImageNode({ node, updateAttributes, selected }: ImageNodeProps) 
     setTimeout(() => captionInputRef.current?.focus(), 0);
   }, []);
 
-  // Alt 텍스트 편집
+  // Alt 텍스트 편집 시작
   const handleAltTextEdit = useCallback(() => {
-    const newAlt = window.prompt('Alt text (이미지 설명):', alt || '');
-    if (newAlt !== null) {
-      updateAttributes({ alt: newAlt });
-    }
-  }, [alt, updateAttributes]);
+    setIsEditingAlt(true);
+    setTimeout(() => altInputRef.current?.focus(), 0);
+  }, []);
+
+  // Alt 텍스트 저장
+  const handleAltSave = useCallback(() => {
+    updateAttributes({ alt: altValue });
+    setIsEditingAlt(false);
+  }, [altValue, updateAttributes]);
+
+  // Alt 텍스트 입력 키 핸들러
+  const handleAltKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleAltSave();
+      } else if (e.key === 'Escape') {
+        setAltValue(alt || '');
+        setIsEditingAlt(false);
+      }
+    },
+    [handleAltSave, alt]
+  );
 
   const alignmentStyle: React.CSSProperties = {
     display: 'flex',
@@ -269,14 +304,42 @@ export function ImageNode({ node, updateAttributes, selected }: ImageNodeProps) 
                 onChange={(e) => setCaptionValue(e.target.value)}
                 onBlur={handleCaptionSave}
                 onKeyDown={handleCaptionKeyDown}
-                placeholder="Add a caption..."
+                placeholder={locale?.nodes?.image?.addCaption || 'Add a caption...'}
               />
             ) : (
               <span
                 className="zm-image-caption-text"
                 onClick={handleCaptionClick}
               >
-                {caption || 'Add a caption...'}
+                {caption || (locale?.nodes?.image?.addCaption || 'Add a caption...')}
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Alt 텍스트 (선택 시 표시) */}
+        {selected && (
+          <div className="zm-image-alt-text">
+            {isEditingAlt ? (
+              <input
+                ref={altInputRef}
+                type="text"
+                className="zm-image-alt-input"
+                value={altValue}
+                onChange={(e) => setAltValue(e.target.value)}
+                onBlur={handleAltSave}
+                onKeyDown={handleAltKeyDown}
+                placeholder={locale?.nodes?.image?.altTextPlaceholder || 'Describe this image...'}
+              />
+            ) : (
+              <span
+                className="zm-image-alt-text-content"
+                onClick={handleAltTextEdit}
+              >
+                <AltTextIcon />
+                <span className="zm-image-alt-label">
+                  {alt || (locale?.nodes?.image?.altTextPlaceholder || 'Describe this image...')}
+                </span>
               </span>
             )}
           </div>

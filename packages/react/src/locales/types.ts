@@ -95,6 +95,8 @@ export interface TableBubbleMenuLocale {
   toggleHeaderColumn: string;
   toggleHeaderRow: string;
   toggleHeaderCell: string;
+  cellBackground: string;
+  clearBackground: string;
 }
 
 /**
@@ -144,6 +146,9 @@ export interface FileAttachmentNodeLocale {
  */
 export interface ImageNodeLocale {
   invalidUrl: string;
+  altTextLabel: string;
+  altTextPlaceholder: string;
+  addCaption: string;
 }
 
 /**

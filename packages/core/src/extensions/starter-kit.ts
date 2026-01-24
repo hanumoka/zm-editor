@@ -17,6 +17,48 @@ import TableHeader from '@tiptap/extension-table-header';
 import TableCell from '@tiptap/extension-table-cell';
 import { common, createLowlight } from 'lowlight';
 
+// TableCell 확장에 backgroundColor 속성 추가
+const CustomTableCell = TableCell.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      backgroundColor: {
+        default: null,
+        parseHTML: (element) => element.style.backgroundColor || null,
+        renderHTML: (attributes) => {
+          if (!attributes.backgroundColor) {
+            return {};
+          }
+          return {
+            style: `background-color: ${attributes.backgroundColor}`,
+          };
+        },
+      },
+    };
+  },
+});
+
+// TableHeader도 동일하게 확장 (헤더 셀에도 배경색 지원)
+const CustomTableHeader = TableHeader.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      backgroundColor: {
+        default: null,
+        parseHTML: (element) => element.style.backgroundColor || null,
+        renderHTML: (attributes) => {
+          if (!attributes.backgroundColor) {
+            return {};
+          }
+          return {
+            style: `background-color: ${attributes.backgroundColor}`,
+          };
+        },
+      },
+    };
+  },
+});
+
 // lowlight 인스턴스 생성 (common languages 포함)
 const lowlight = createLowlight(common);
 
@@ -182,12 +224,12 @@ export function createStarterExtensions(options: ZmStarterKitOptions = {}) {
           class: 'zm-table-row',
         },
       }),
-      TableHeader.configure({
+      CustomTableHeader.configure({
         HTMLAttributes: {
           class: 'zm-table-header',
         },
       }),
-      TableCell.configure({
+      CustomTableCell.configure({
         HTMLAttributes: {
           class: 'zm-table-cell',
         },
@@ -214,6 +256,6 @@ export {
   HorizontalRule,
   Table,
   TableRow,
-  TableHeader,
-  TableCell,
+  CustomTableHeader as TableHeader,
+  CustomTableCell as TableCell,
 };

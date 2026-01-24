@@ -153,6 +153,8 @@ export const koLocale: ZmEditorLocale = {
     toggleHeaderColumn: '헤더 열 전환',
     toggleHeaderRow: '헤더 행 전환',
     toggleHeaderCell: '헤더 셀 전환',
+    cellBackground: '셀 배경색',
+    clearBackground: '초기화',
   },
   dialogs: {
     linkUrlPrompt: 'URL을 입력하세요',
@@ -187,6 +189,9 @@ export const koLocale: ZmEditorLocale = {
     },
     image: {
       invalidUrl: '유효하지 않은 이미지 URL입니다',
+      altTextLabel: '대체 텍스트',
+      altTextPlaceholder: '이미지 설명을 입력하세요...',
+      addCaption: '캡션 추가...',
     },
     terminal: {
       title: '터미널',

@@ -1,7 +1,20 @@
 import { BubbleMenu as TiptapBubbleMenu, Editor } from '@tiptap/react';
-import { useCallback } from 'react';
+import { useCallback, useState, useRef, useEffect } from 'react';
 import type { TableBubbleMenuLocale } from '../locales';
 import { enLocale } from '../locales';
+
+// 셀 배경색 프리셋
+const CELL_BACKGROUND_COLORS = [
+  { name: 'Default', value: null },
+  { name: 'Gray', value: '#f3f4f6' },
+  { name: 'Red', value: '#fef2f2' },
+  { name: 'Orange', value: '#fff7ed' },
+  { name: 'Yellow', value: '#fefce8' },
+  { name: 'Green', value: '#f0fdf4' },
+  { name: 'Blue', value: '#eff6ff' },
+  { name: 'Purple', value: '#faf5ff' },
+  { name: 'Pink', value: '#fdf2f8' },
+];
 
 interface TableBubbleMenuProps {
   editor: Editor;
@@ -16,6 +29,26 @@ export function TableBubbleMenu({
   editor,
   locale = enLocale.tableBubbleMenu,
 }: TableBubbleMenuProps) {
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const colorPickerRef = useRef<HTMLDivElement>(null);
+
+  // 외부 클릭 시 색상 선택기 닫기
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (colorPickerRef.current && !colorPickerRef.current.contains(event.target as Node)) {
+        setShowColorPicker(false);
+      }
+    };
+
+    if (showColorPicker) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showColorPicker]);
+
   const addColumnBefore = useCallback(() => {
     editor.chain().focus().addColumnBefore().run();
   }, [editor]);
@@ -63,6 +96,19 @@ export function TableBubbleMenu({
   const toggleHeaderCell = useCallback(() => {
     editor.chain().focus().toggleHeaderCell().run();
   }, [editor]);
+
+  const setCellBackground = useCallback((color: string | null) => {
+    if (color === null) {
+      editor.chain().focus().setCellAttribute('backgroundColor', null).run();
+    } else {
+      editor.chain().focus().setCellAttribute('backgroundColor', color).run();
+    }
+    setShowColorPicker(false);
+  }, [editor]);
+
+  const toggleColorPicker = useCallback(() => {
+    setShowColorPicker((prev) => !prev);
+  }, []);
 
   // 테이블 내부에 있을 때만 표시
   const shouldShow = useCallback(() => {
@@ -190,6 +236,36 @@ export function TableBubbleMenu({
         >
           <HeaderCellIcon />
         </button>
+      </div>
+
+      <div className="zm-table-bubble-menu-divider" />
+
+      {/* Cell Background Color */}
+      <div className="zm-table-bubble-menu-group zm-table-color-picker-container" ref={colorPickerRef}>
+        <button
+          type="button"
+          onClick={toggleColorPicker}
+          className={`zm-table-bubble-menu-button ${showColorPicker ? 'is-active' : ''}`}
+          title={locale.cellBackground}
+        >
+          <CellBackgroundIcon />
+        </button>
+        {showColorPicker && (
+          <div className="zm-table-color-picker">
+            {CELL_BACKGROUND_COLORS.map((color) => (
+              <button
+                key={color.name}
+                type="button"
+                className="zm-table-color-option"
+                style={{ backgroundColor: color.value || 'transparent' }}
+                onClick={() => setCellBackground(color.value)}
+                title={color.value === null ? (locale.clearBackground || 'Clear') : color.name}
+              >
+                {color.value === null && <ClearIcon />}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="zm-table-bubble-menu-divider" />
@@ -342,6 +418,25 @@ function DeleteTableIcon() {
       <line x1="3" y1="9" x2="21" y2="9" />
       <line x1="3" y1="15" x2="21" y2="15" />
       <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" strokeWidth="2" />
+    </svg>
+  );
+}
+
+function CellBackgroundIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <rect x="3" y="3" width="18" height="18" rx="2" />
+      <rect x="6" y="6" width="12" height="12" fill="currentColor" fillOpacity="0.2" stroke="none" />
+      <circle cx="18" cy="18" r="5" fill="#3b82f6" stroke="white" strokeWidth="1.5" />
+    </svg>
+  );
+}
+
+function ClearIcon() {
+  return (
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+      <line x1="4" y1="4" x2="20" y2="20" />
+      <line x1="20" y1="4" x2="4" y2="20" />
     </svg>
   );
 }

@@ -196,6 +196,12 @@ export function isSafeImageUrl(
     return { isValid: true, normalizedUrl: sanitized };
   }
 
+  // Handle relative URLs (e.g., /uploads/image.png)
+  // Relative URLs are safe as they resolve to the current host
+  if (sanitized.startsWith('/') && !sanitized.startsWith('//')) {
+    return { isValid: true, normalizedUrl: sanitized };
+  }
+
   // Parse and validate http/https URLs
   try {
     const parsed = new URL(sanitized);

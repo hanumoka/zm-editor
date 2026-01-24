@@ -153,6 +153,8 @@ export const enLocale: ZmEditorLocale = {
     toggleHeaderColumn: 'Toggle header column',
     toggleHeaderRow: 'Toggle header row',
     toggleHeaderCell: 'Toggle header cell',
+    cellBackground: 'Cell background',
+    clearBackground: 'Clear',
   },
   dialogs: {
     linkUrlPrompt: 'URL',
@@ -187,6 +189,9 @@ export const enLocale: ZmEditorLocale = {
     },
     image: {
       invalidUrl: 'Invalid image URL',
+      altTextLabel: 'Alt text',
+      altTextPlaceholder: 'Describe this image...',
+      addCaption: 'Add a caption...',
     },
     terminal: {
       title: 'Terminal',
