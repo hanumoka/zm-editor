@@ -139,8 +139,11 @@ export function CollaborationProvider({
     const initCollaboration = async () => {
       try {
         // Dynamic import to make yjs and y-websocket optional
-        const Y = await import('yjs');
-        const { WebsocketProvider: WsProvider } = await import('y-websocket');
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const Y = await (Function('return import("yjs")')() as Promise<any>);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const yWebsocket = await (Function('return import("y-websocket")')() as Promise<any>);
+        const WsProvider = yWebsocket.WebsocketProvider;
 
         if (!mounted) return;
 
@@ -155,9 +158,10 @@ export function CollaborationProvider({
         wsProvider.awareness.setLocalStateField('user', configRef.current.user);
 
         // 연결 상태 이벤트
-        wsProvider.on('status', (event: { status: string }) => {
+        wsProvider.on('status', (event: unknown) => {
           if (!mounted) return;
-          const connected = event.status === 'connected';
+          const statusEvent = event as { status: string };
+          const connected = statusEvent.status === 'connected';
           setIsConnected(connected);
           if (connected) {
             configRef.current.onConnect?.();
