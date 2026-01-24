@@ -1764,10 +1764,40 @@ class MentionMenuComponent {
   private element: HTMLElement | null = null;
   private selectedIndex = 0;
   private clickHandlers: Array<{ element: Element; handler: () => void }> = [];
+  private scrollHandler: ((event: Event) => void) | null = null;
 
   constructor(props: MentionRenderProps) {
     this.props = props;
     this.render();
+    this.addScrollListener();
+  }
+
+  // 스크롤/휠 리스너 추가 (스크롤 시 메뉴 닫기)
+  private addScrollListener() {
+    this.scrollHandler = (event: Event) => {
+      // 메뉴 내부 스크롤은 무시
+      if (this.element && this.element.contains(event.target as Node)) {
+        return;
+      }
+      // 외부 스크롤 발생 시 메뉴 닫기
+      this.destroy();
+    };
+
+    // 다양한 스크롤 감지 방법
+    window.addEventListener('scroll', this.scrollHandler as EventListener, true);
+    document.addEventListener('scroll', this.scrollHandler as EventListener, true);
+    document.addEventListener('wheel', this.scrollHandler as EventListener, { passive: true, capture: true });
+    document.addEventListener('touchmove', this.scrollHandler as EventListener, { passive: true, capture: true });
+  }
+
+  private removeScrollListener() {
+    if (this.scrollHandler) {
+      window.removeEventListener('scroll', this.scrollHandler as EventListener, true);
+      document.removeEventListener('scroll', this.scrollHandler as EventListener, true);
+      document.removeEventListener('wheel', this.scrollHandler as EventListener, true);
+      document.removeEventListener('touchmove', this.scrollHandler as EventListener, true);
+      this.scrollHandler = null;
+    }
   }
 
   updateProps(props: MentionRenderProps) {
@@ -1900,6 +1930,7 @@ class MentionMenuComponent {
   }
 
   destroy() {
+    this.removeScrollListener();
     this.removeEventListeners();
     this.element?.remove();
     this.element = null;

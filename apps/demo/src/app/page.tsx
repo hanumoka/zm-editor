@@ -2,7 +2,19 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { koLocale, enLocale, type ZmEditorRef, type JSONContent, type ImageUploadHandler, type FileUploadHandler } from '@zm-editor/react';
+import { koLocale, enLocale, type ZmEditorRef, type JSONContent, type ImageUploadHandler, type FileUploadHandler, type MentionItem } from '@zm-editor/react';
+
+// Mock users for mention feature testing
+const MOCK_USERS: MentionItem[] = [
+  { id: '1', label: 'John Doe', description: 'Engineering Lead', avatar: 'https://i.pravatar.cc/150?u=john' },
+  { id: '2', label: 'Jane Smith', description: 'Product Manager', avatar: 'https://i.pravatar.cc/150?u=jane' },
+  { id: '3', label: 'Bob Johnson', description: 'Senior Developer', avatar: 'https://i.pravatar.cc/150?u=bob' },
+  { id: '4', label: 'Alice Williams', description: 'UX Designer', avatar: 'https://i.pravatar.cc/150?u=alice' },
+  { id: '5', label: 'Charlie Brown', description: 'DevOps Engineer', avatar: 'https://i.pravatar.cc/150?u=charlie' },
+  { id: '6', label: 'Diana Lee', description: 'QA Engineer', avatar: 'https://i.pravatar.cc/150?u=diana' },
+  { id: '7', label: 'Edward Kim', description: 'Backend Developer', avatar: 'https://i.pravatar.cc/150?u=edward' },
+  { id: '8', label: 'Fiona Chen', description: 'Frontend Developer', avatar: 'https://i.pravatar.cc/150?u=fiona' },
+];
 
 // SSR 비활성화하여 hydration 불일치 방지
 const EditorWrapper = dynamic(() => import('./EditorWrapper'), {
@@ -350,6 +362,16 @@ export default function Home() {
     setTimeout(() => setUploadStatus(''), 5000);
   }, []);
 
+  // Mention search handler
+  const handleMentionSearch = useCallback((query: string): MentionItem[] => {
+    const lowerQuery = query.toLowerCase();
+    return MOCK_USERS.filter(
+      (user) =>
+        user.label.toLowerCase().includes(lowerQuery) ||
+        user.description?.toLowerCase().includes(lowerQuery)
+    );
+  }, []);
+
   const handleExportJson = () => {
     const json = editorRef.current?.getJSON();
     if (json) {
@@ -532,6 +554,9 @@ export default function Home() {
                 onImageUploadError={handleImageUploadError}
                 onFileUpload={handleFileUpload}
                 onFileUploadError={handleFileUploadError}
+                enableMention={true}
+                onMentionSearch={handleMentionSearch}
+                enableDragHandle={true}
               />
             </div>
 
@@ -585,7 +610,7 @@ export default function Home() {
               <h3 className="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
                 <span className="text-lg">/</span> Slash Commands
               </h3>
-              <div className="space-y-1 text-xs">
+              <div className="space-y-1 text-xs max-h-80 overflow-y-auto">
                 <div className="grid grid-cols-2 gap-1">
                   {[
                     { cmd: '/text', desc: 'Text' },
@@ -606,6 +631,24 @@ export default function Home() {
                     { cmd: '/toggle', desc: 'Toggle' },
                     { cmd: '/bookmark', desc: 'Bookmark' },
                     { cmd: '/math', desc: 'Math (LaTeX)' },
+                    { cmd: '/toc', desc: 'TOC' },
+                    { cmd: '/terminal', desc: 'Terminal' },
+                    { cmd: '/api', desc: 'API Block' },
+                    { cmd: '/mermaid', desc: 'Mermaid' },
+                    { cmd: '/error', desc: 'Error/Warning' },
+                    { cmd: '/os', desc: 'OS Command' },
+                    { cmd: '/changelog', desc: 'Changelog' },
+                    { cmd: '/env', desc: 'Env Variables' },
+                    { cmd: '/gist', desc: 'GitHub Gist' },
+                    { cmd: '/diff', desc: 'Code Diff' },
+                    { cmd: '/footnote', desc: 'Footnotes' },
+                    { cmd: '/log', desc: 'Log Block' },
+                    { cmd: '/stacktrace', desc: 'Stack Trace' },
+                    { cmd: '/metadata', desc: 'Metadata' },
+                    { cmd: '/graphql', desc: 'GraphQL' },
+                    { cmd: '/openapi', desc: 'OpenAPI' },
+                    { cmd: '/diagram', desc: 'Diagram' },
+                    { cmd: '/emoji', desc: 'Emoji' },
                   ].map(({ cmd, desc }) => (
                     <div key={cmd} className="flex items-center gap-1">
                       <code className="bg-gray-100 dark:bg-gray-700 px-1 rounded text-[10px] font-mono">{cmd}</code>
@@ -666,6 +709,14 @@ export default function Home() {
               <h3 className="font-semibold text-gray-900 dark:text-white mb-3">Feature Test Guide</h3>
               <div className="space-y-2 text-xs text-gray-600 dark:text-gray-400">
                 <div>
+                  <strong className="text-gray-800 dark:text-gray-200">Mention:</strong>
+                  <p>Type @ to mention users. Try @john, @jane.</p>
+                </div>
+                <div>
+                  <strong className="text-gray-800 dark:text-gray-200">Drag Handle:</strong>
+                  <p>Hover on block left to drag and reorder blocks.</p>
+                </div>
+                <div>
                   <strong className="text-gray-800 dark:text-gray-200">Image:</strong>
                   <p>Drag & drop, paste, or /image. Click to resize/align.</p>
                 </div>
@@ -679,7 +730,7 @@ export default function Home() {
                 </div>
                 <div>
                   <strong className="text-gray-800 dark:text-gray-200">Embed:</strong>
-                  <p>YouTube, Vimeo, Twitter, CodePen, CodeSandbox URLs.</p>
+                  <p>YouTube, Vimeo, StackBlitz, Replit, Twitter URLs.</p>
                 </div>
                 <div>
                   <strong className="text-gray-800 dark:text-gray-200">Math:</strong>

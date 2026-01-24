@@ -18,6 +18,11 @@
 
 ### 최근 완료 ✅
 
+- 데모 앱 기능 테스트 환경 완성 ✅
+  - 멘션 기능 테스트 가능 (Mock 사용자 8명)
+  - 드래그 핸들 활성화
+  - 사이드바 슬래시 명령어 목록 업데이트 (36개)
+
 - Phase 15: 추가 기능 (선택) 완료 ✅
   - 이모지 선택기 (`/emoji` 슬래시 명령어 + EmojiPicker 컴포넌트)
   - 멘션 (@) 기능 (Mention 확장 + MentionList 컴포넌트)
@@ -130,6 +135,16 @@
 ### UX 개선 ✅
 
 - 슬래시 메뉴 스크롤 시 자동 닫힘 (scroll/wheel/touchmove 이벤트 감지)
+- 멘션 메뉴 스크롤 시 자동 닫힘 (슬래시 메뉴와 동일한 동작)
+
+---
+
+## 알려진 이슈 ⚠️
+
+### DragHandle (블록 드래그 앤 드롭)
+- **위치 정렬**: Heading, Checkbox 등 일부 블록에서 핸들 위치가 텍스트와 정확히 정렬되지 않음
+- **TaskItem 드래그**: 개별 체크박스 항목 드래그가 불안정함
+- **향후 개선 필요**: 블록 드래그 앤 드롭 기능 전반적인 재검토 필요
 
 ---
 
@@ -141,6 +156,30 @@
 - [ ] CHANGELOG.md 작성
 - [ ] npm publish 설정
 - [ ] GitHub Actions CI/CD
+
+---
+
+## 데모 앱 기능 테스트
+
+### 테스트 가능한 기능 (데모에서 바로 사용 가능)
+- 모든 슬래시 명령어 (36개)
+- 이미지/파일 업로드 (드래그앤드롭, 붙여넣기)
+- 멘션 (@) - 8명의 Mock 사용자 (John, Jane, Bob, Alice 등)
+- 드래그 핸들 - 블록 왼쪽에 호버하여 이동
+- 이모지 선택기 (`/emoji`)
+- 모든 커스텀 노드 (Terminal, API, Mermaid, GraphQL 등)
+
+### 별도 설정 필요
+- **협업 편집**: WebSocket 서버 + Y.js 패키지 필요
+  ```bash
+  # 1. 패키지 설치
+  pnpm add yjs y-websocket @tiptap/extension-collaboration @tiptap/extension-collaboration-cursor
+
+  # 2. WebSocket 서버 실행
+  npx y-websocket
+
+  # 3. CollaborationProvider로 에디터 감싸기
+  ```
 
 ---
 
