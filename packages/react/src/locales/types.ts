@@ -139,6 +139,15 @@ export interface FileAttachmentNodeLocale {
   download: string;
   addCaption: string;
   uploadingFile: string;
+  // PDF Preview
+  pdfPreview: string;
+  pdfLoading: string;
+  pdfError: string;
+  pdfNotInstalled: string;
+  pdfPage: string;
+  pdfPrevPage: string;
+  pdfNextPage: string;
+  pdfClose: string;
 }
 
 /**

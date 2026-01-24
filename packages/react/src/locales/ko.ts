@@ -186,6 +186,15 @@ export const koLocale: ZmEditorLocale = {
       download: '다운로드',
       addCaption: '캡션 추가...',
       uploadingFile: '파일 업로드 중...',
+      // PDF Preview
+      pdfPreview: 'PDF 미리보기',
+      pdfLoading: 'PDF 로딩 중...',
+      pdfError: 'PDF 로드 실패',
+      pdfNotInstalled: 'PDF 미리보기는 pdfjs-dist가 필요합니다. 설치: npm install pdfjs-dist',
+      pdfPage: '페이지',
+      pdfPrevPage: '이전 페이지',
+      pdfNextPage: '다음 페이지',
+      pdfClose: '미리보기 닫기',
     },
     image: {
       invalidUrl: '유효하지 않은 이미지 URL입니다',

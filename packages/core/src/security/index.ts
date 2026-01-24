@@ -30,6 +30,8 @@ export type {
   LinkUrlOptions,
   SsrfCheckResult,
   SsrfBlockReason,
+  HtmlSanitizerOptions,
+  HtmlSanitizationResult,
 } from './types';
 
 export {
@@ -59,3 +61,16 @@ export {
   checkSsrf,
   getSsrfBlockMessage,
 } from './ssrf-guard';
+
+// HTML Sanitization (requires optional dompurify peer dependency)
+export {
+  configureDOMPurify,
+  isDOMPurifyAvailable,
+  getDOMPurifyVersion,
+  sanitizeHtml,
+  sanitizeHtmlWithDetails,
+  createSanitizer,
+  containsDangerousHtml,
+  DEFAULT_ALLOWED_TAGS,
+  DEFAULT_ALLOWED_ATTRIBUTES,
+} from './html-sanitizer';

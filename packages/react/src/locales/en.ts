@@ -186,6 +186,15 @@ export const enLocale: ZmEditorLocale = {
       download: 'Download',
       addCaption: 'Add a caption...',
       uploadingFile: 'Uploading file...',
+      // PDF Preview
+      pdfPreview: 'Preview PDF',
+      pdfLoading: 'Loading PDF...',
+      pdfError: 'Failed to load PDF',
+      pdfNotInstalled: 'PDF preview requires pdfjs-dist. Install it with: npm install pdfjs-dist',
+      pdfPage: 'Page',
+      pdfPrevPage: 'Previous page',
+      pdfNextPage: 'Next page',
+      pdfClose: 'Close preview',
     },
     image: {
       invalidUrl: 'Invalid image URL',

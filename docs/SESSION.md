@@ -16,8 +16,10 @@
 | **Git 상태** | Clean ✅ |
 | **개발 서버** | 포트 3100 (FE), 포트 4000 (API) |
 
-### 완료된 미완료 선택기능 ✅
+### 최근 완료 ✅
 
+- PDF 미리보기 (PDF.js 연동, optional peer dependency)
+- DOMPurify HTML sanitizer 통합 (optional peer dependency)
 - 테이블 셀 배경색 선택 (9가지 컬러 프리셋)
 - Alt 텍스트 인라인 편집 UI (window.prompt 제거)
 - 이미지 업로드 플레이스홀더 (스켈레톤 UI, 진행률 표시)
@@ -54,6 +56,7 @@
 - 파일 타입별 아이콘 (PDF, Word, Excel, PowerPoint, Archive, Text, Image, Video, Audio)
 - `/file` 슬래시 명령어
 - 파일 다운로드 버튼, 캡션 지원
+- PDF 미리보기 (PDF.js 연동, optional peer dependency)
 
 ### Phase 9: 보안 강화 ✅
 
@@ -65,6 +68,7 @@
 - BubbleMenu 링크 URL 검증
 - ImageNode SSRF 검증
 - EmbedNode iframe sandbox 속성 추가
+- DOMPurify HTML sanitizer 통합 (optional peer dependency)
 - 보안 문서화 (`docs/SECURITY.md`)
 
 ### Phase 10: 개발자 기능 (필수) ✅

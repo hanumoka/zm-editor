@@ -234,22 +234,100 @@ async function validateUpload(file) {
 
 ## HTML Sanitization (Optional)
 
-For additional protection, you can integrate DOMPurify:
+zm-editor provides built-in integration with DOMPurify for HTML sanitization. DOMPurify is an optional peer dependency - install it only if you need HTML sanitization.
+
+### Installation
 
 ```bash
 npm install dompurify
 npm install -D @types/dompurify
 ```
 
+### Configuration
+
 ```typescript
 import DOMPurify from 'dompurify';
+import { configureDOMPurify, sanitizeHtml, isDOMPurifyAvailable } from '@zm-editor/core';
 
-// When importing HTML content
-const cleanHtml = DOMPurify.sanitize(dirtyHtml, {
-  ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li', 'h1', 'h2', 'h3'],
-  ALLOWED_ATTR: ['href', 'target', 'rel'],
-});
+// Configure DOMPurify (required before using sanitizeHtml)
+configureDOMPurify(DOMPurify);
+
+// Check if configured
+if (isDOMPurifyAvailable()) {
+  console.log('DOMPurify is ready');
+}
 ```
+
+### Usage
+
+```typescript
+import { sanitizeHtml, sanitizeHtmlWithDetails, createSanitizer } from '@zm-editor/core';
+
+// Basic sanitization
+const clean = sanitizeHtml('<script>alert(1)</script><p>Safe content</p>');
+// Result: '<p>Safe content</p>'
+
+// With custom options
+const clean = sanitizeHtml(html, {
+  allowedTags: ['p', 'strong', 'em', 'a'],
+  allowedAttributes: { a: ['href', 'target'] },
+  allowDataUrls: false,
+});
+
+// Get detailed result
+const result = sanitizeHtmlWithDetails(userInput);
+console.log(result.sanitized);   // Cleaned HTML
+console.log(result.removed);     // ['script', '@onclick']
+console.log(result.wasModified); // true
+
+// Create reusable sanitizer with preset options
+const sanitizeUserContent = createSanitizer({
+  allowedTags: ['p', 'strong', 'em', 'br'],
+});
+const clean = sanitizeUserContent(userInput);
+```
+
+### API Reference
+
+#### `configureDOMPurify(instance)`
+Configure the DOMPurify instance. Must be called before using sanitization functions.
+
+#### `isDOMPurifyAvailable(): boolean`
+Check if DOMPurify has been configured.
+
+#### `sanitizeHtml(html, options?): string`
+Sanitize HTML content. Returns sanitized HTML string.
+
+Options:
+- `allowedTags?: string[]` - List of allowed HTML tags
+- `allowedAttributes?: Record<string, string[]>` - Map of allowed attributes per tag
+- `allowDataUrls?: boolean` - Allow data: URLs (default: false)
+- `allowScripts?: boolean` - Allow script tags (default: false)
+
+#### `sanitizeHtmlWithDetails(html, options?): HtmlSanitizationResult`
+Sanitize HTML with detailed information about removed content.
+
+Returns:
+```typescript
+interface HtmlSanitizationResult {
+  sanitized: string;    // Cleaned HTML
+  removed: string[];    // Removed elements/attributes
+  wasModified: boolean; // Whether HTML was modified
+}
+```
+
+#### `containsDangerousHtml(html): boolean`
+Quick check for potentially dangerous content without modifying the HTML.
+
+### Default Allowed Content
+
+The default configuration allows common formatting elements:
+
+**Tags**: p, br, span, div, h1-h6, strong, em, u, code, a, ul, ol, li, blockquote, pre, hr, table elements, img, figure, figcaption
+
+**Attributes**: href, target, rel, src, alt, class, id, style, colspan, rowspan, etc.
+
+**Always Blocked**: script, iframe, object, embed, form, style (as tag), event handlers (onclick, onerror, etc.)
 
 ---
 
@@ -266,6 +344,14 @@ If you discover a security vulnerability, please report it responsibly:
 
 ## Security Changelog
 
+### Phase 9 Update (2026-01-24)
+
+- Added DOMPurify integration for HTML sanitization (optional peer dependency)
+- Added `sanitizeHtml`, `sanitizeHtmlWithDetails`, `createSanitizer` functions
+- Added `containsDangerousHtml` for quick content checks
+- Added `configureDOMPurify`, `isDOMPurifyAvailable` for setup
+- Added comprehensive types for sanitization options and results
+
 ### Phase 9 (2026-01-23)
 
 - Added URL validation to BubbleMenu link insertion
@@ -276,4 +362,4 @@ If you discover a security vulnerability, please report it responsibly:
 
 ---
 
-*Last updated: 2026-01-23*
+*Last updated: 2026-01-24*

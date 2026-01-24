@@ -164,7 +164,7 @@
 - [x] 파일 드래그 앤 드롭
 - [x] 파일 정보 표시 (파일명, 크기, 타입)
 - [x] 파일 다운로드 버튼
-- [ ] PDF 미리보기 (PDF.js 연동) - 선택
+- [x] PDF 미리보기 (PDF.js 연동, optional peer dependency)
 - [x] 슬래시 명령어에 `/file` 추가
 
 ### Phase 9: 보안 강화 ✅
@@ -180,7 +180,7 @@
 - [x] 파일 업로드 검증 (백엔드 가이드 문서화)
 - [x] CSP 헤더 가이드 문서화
 - [x] 보안 문서 생성 (`docs/SECURITY.md`)
-- [ ] DOMPurify 통합 (선택적 - optional peer dependency)
+- [x] DOMPurify 통합 (optional peer dependency)
 
 ### Phase 10: 개발자 친화적 기능 (필수) ✅
 
@@ -261,6 +261,26 @@
 ---
 
 ## 변경 이력
+
+### 2026-01-24 (오후)
+
+**Phase 8 & 9 추가 기능 완료**
+
+#### PDF 미리보기 (Phase 8)
+- `FileAttachmentNode.tsx` - PDF.js 동적 import, 미리보기 기능 추가
+- 미리보기 버튼, 캔버스 렌더링, 페이지 네비게이션
+- 로딩/에러/미설치 상태 표시
+- `pdfjs-dist` optional peer dependency 추가
+- 라이트/다크 모드 CSS 스타일
+
+#### DOMPurify HTML Sanitizer (Phase 9)
+- `packages/core/src/security/html-sanitizer.ts` 생성
+- `configureDOMPurify()`, `sanitizeHtml()`, `sanitizeHtmlWithDetails()` 함수
+- `createSanitizer()`, `containsDangerousHtml()` 유틸리티
+- `dompurify` optional peer dependency 추가
+- 보안 문서 업데이트 (`docs/SECURITY.md`)
+
+---
 
 ### 2026-01-24
 

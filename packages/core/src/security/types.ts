@@ -113,3 +113,54 @@ export const CLOUD_METADATA_HOSTS = [
   'metadata.gcp.internal',
   '100.100.100.200', // Alibaba Cloud
 ] as const;
+
+/**
+ * Options for HTML sanitization
+ */
+export interface HtmlSanitizerOptions {
+  /**
+   * List of allowed HTML tags
+   * @default DEFAULT_ALLOWED_TAGS (includes common formatting tags)
+   */
+  allowedTags?: string[];
+
+  /**
+   * Map of allowed attributes per tag
+   * Use '*' key for global attributes
+   * @default DEFAULT_ALLOWED_ATTRIBUTES
+   */
+  allowedAttributes?: Record<string, string[]>;
+
+  /**
+   * Allow data: URLs in href and src attributes
+   * @default false
+   */
+  allowDataUrls?: boolean;
+
+  /**
+   * Allow script tags (dangerous, use with caution)
+   * @default false
+   */
+  allowScripts?: boolean;
+}
+
+/**
+ * Result of HTML sanitization with details
+ */
+export interface HtmlSanitizationResult {
+  /**
+   * Sanitized HTML content
+   */
+  sanitized: string;
+
+  /**
+   * List of removed elements/attributes
+   * Elements are lowercase tag names, attributes are prefixed with @
+   */
+  removed: string[];
+
+  /**
+   * Whether the HTML was modified during sanitization
+   */
+  wasModified: boolean;
+}
