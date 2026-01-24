@@ -10,19 +10,24 @@
 
 | 항목 | 상태 |
 |------|------|
-| **현재 Phase** | Phase 11 완료 (12/12) ✅ |
+| **현재 Phase** | Phase 12 완료 ✅ |
 | **빌드 상태** | 성공 ✅ |
 | **타입 체크** | 성공 ✅ |
-| **Git 상태** | Clean ✅ |
+| **Git 상태** | Modified (Phase 12 구현) |
 | **개발 서버** | 포트 3100 (FE), 포트 4000 (API) |
 
 ### 최근 완료 ✅
 
-- PDF 미리보기 (PDF.js 연동, optional peer dependency)
-- DOMPurify HTML sanitizer 통합 (optional peer dependency)
-- 테이블 셀 배경색 선택 (9가지 컬러 프리셋)
-- Alt 텍스트 인라인 편집 UI (window.prompt 제거)
-- 이미지 업로드 플레이스홀더 (스켈레톤 UI, 진행률 표시)
+- Phase 12: 개발자 기능 (선택) 전체 구현
+  - StackBlitz/Replit 임베드 (EmbedNode 확장)
+  - 버전 배지 / Since 태그 (인라인 마크)
+  - 로그 블록 (debug/info/warn/error 레벨)
+  - 스택 트레이스 블록 (파일 경로/라인 하이라이트)
+  - 메타데이터 블록 (작성자, 난이도, 태그 등)
+  - GraphQL 쿼리 블록 (쿼리/변수/응답 탭)
+  - OpenAPI/Swagger 임베드 (Swagger UI/ReDoc/Minimal 모드)
+  - PlantUML / D2 다이어그램 블록
+  - 용어 정의 (Glossary) 마크
 
 ---
 
@@ -94,6 +99,18 @@
 - [x] 코드 Diff 블록 (DiffBlockNode)
 - [x] 각주 (FootnoteNode)
 
+### Phase 12: 개발자 기능 (선택) ✅
+
+- [x] StackBlitz/Replit 임베드 (EmbedNode 확장)
+- [x] 버전 배지 / Since 태그 (VersionBadge 마크)
+- [x] 로그 블록 (LogBlockNode) - debug/info/warn/error 레벨
+- [x] 스택 트레이스 블록 (StackTraceNode)
+- [x] 메타데이터 블록 (MetadataNode)
+- [x] GraphQL 쿼리 블록 (GraphQLNode)
+- [x] OpenAPI/Swagger 임베드 (OpenAPINode)
+- [x] PlantUML / D2 다이어그램 (DiagramNode)
+- [x] 용어 정의 (Glossary 마크)
+
 ### 데모 앱 개선 ✅
 
 - 사용 가이드 사이드바 (슬래시 명령어, 단축키, 마크다운)
@@ -111,12 +128,12 @@
 
 ## 다음 작업
 
-### Phase 12: 개발자 기능 (선택)
-- [ ] StackBlitz/Replit 임베드
-- [ ] OpenAPI/Swagger 임베드
-- [ ] GraphQL 쿼리 블록
-- [ ] 내부 링크/앵커
-- [ ] 용어 정의 (Glossary)
+### Phase 13: 안정화 및 최적화
+- [ ] 성능 최적화 검증
+- [ ] 메모리 누수 테스트
+- [ ] 다양한 브라우저 호환성 테스트
+- [ ] 접근성(a11y) 개선
+- [ ] 번들 크기 최적화
 
 ---
 
@@ -132,14 +149,14 @@
 | 9 | 보안 강화 | ✅ 완료 |
 | 10 | 개발자 기능 (필수) | ✅ 완료 |
 | 11 | 개발자 기능 (권장) | ✅ 완료 |
-| 12 | 개발자 기능 (선택) | 📋 대기 |
+| 12 | 개발자 기능 (선택) | ✅ 완료 |
 | 13 | 안정화 및 최적화 | 📋 대기 |
 | 14 | npm 배포 준비 | 📋 대기 |
 | 15 | 추가 기능 (선택) | 📋 대기 |
 
 ---
 
-## 구현된 슬래시 명령어 (27개)
+## 구현된 슬래시 명령어 (34개)
 
 | 명령어 | 기능 |
 |--------|------|
@@ -154,7 +171,7 @@
 | `/table` | 테이블 (3x3) |
 | `/image` | 이미지 |
 | `/file` | 파일 첨부 |
-| `/embed` | 임베드 (YouTube 등) |
+| `/embed` | 임베드 (YouTube, StackBlitz, Replit 등) |
 | `/callout` | 콜아웃 박스 |
 | `/toggle` | 토글 (접기/펼치기) |
 | `/bookmark` | 북마크 (링크 미리보기) |
@@ -170,6 +187,12 @@
 | `/gist` | GitHub Gist 임베드 |
 | `/diff` | 코드 Diff 블록 |
 | `/footnote` | 각주 블록 |
+| `/log` | 로그 블록 (debug/info/warn/error) |
+| `/stacktrace` | 스택 트레이스 블록 |
+| `/metadata` | 문서 메타데이터 |
+| `/graphql` | GraphQL 쿼리 블록 |
+| `/openapi` | OpenAPI/Swagger 임베드 |
+| `/diagram` | PlantUML/D2 다이어그램 |
 
 ---
 
@@ -186,12 +209,12 @@
 | `packages/react/src/components/BubbleMenu.tsx` | 버블 메뉴 |
 | `packages/react/src/components/TableBubbleMenu.tsx` | 테이블 버블 메뉴 |
 
-### 커스텀 노드 (18개)
+### 커스텀 노드 (24개)
 
 | 파일 | 설명 |
 |------|------|
 | `packages/react/src/components/ImageNode/` | 리사이즈 이미지 |
-| `packages/react/src/components/EmbedNode/` | 임베드 (YouTube 등) |
+| `packages/react/src/components/EmbedNode/` | 임베드 (YouTube, StackBlitz, Replit 등) |
 | `packages/react/src/components/CalloutNode/` | 콜아웃 박스 |
 | `packages/react/src/components/ToggleNode/` | 토글 블록 |
 | `packages/react/src/components/BookmarkNode/` | 링크 미리보기 |
@@ -208,6 +231,12 @@
 | `packages/react/src/components/GistNode/` | GitHub Gist 임베드 |
 | `packages/react/src/components/DiffBlockNode/` | 코드 Diff |
 | `packages/react/src/components/FootnoteNode/` | 각주 |
+| `packages/react/src/components/LogBlockNode/` | 로그 메시지 (4 레벨) |
+| `packages/react/src/components/StackTraceNode/` | 스택 트레이스 |
+| `packages/react/src/components/MetadataNode/` | 문서 메타데이터 |
+| `packages/react/src/components/GraphQLNode/` | GraphQL 쿼리/응답 |
+| `packages/react/src/components/OpenAPINode/` | OpenAPI/Swagger 임베드 |
+| `packages/react/src/components/DiagramNode/` | PlantUML/D2 다이어그램 |
 
 ### 데모 앱
 

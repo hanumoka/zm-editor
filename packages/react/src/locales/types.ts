@@ -45,6 +45,12 @@ export interface SlashMenuLocale {
     gist: SlashCommandLocale;
     diffBlock: SlashCommandLocale;
     footnote: SlashCommandLocale;
+    logBlock: SlashCommandLocale;
+    stackTrace: SlashCommandLocale;
+    metadata: SlashCommandLocale;
+    graphql: SlashCommandLocale;
+    openapi: SlashCommandLocale;
+    diagram: SlashCommandLocale;
   };
 }
 
@@ -315,6 +321,101 @@ export interface FootnoteNodeLocale {
 }
 
 /**
+ * Log 블록 노드 번역
+ */
+export interface LogBlockNodeLocale {
+  timestampPlaceholder: string;
+  sourcePlaceholder: string;
+  messagePlaceholder: string;
+  copy: string;
+  edit: string;
+  hint: string;
+}
+
+/**
+ * Stack Trace 노드 번역
+ */
+export interface StackTraceNodeLocale {
+  errorTypePlaceholder: string;
+  errorMessagePlaceholder: string;
+  stackPlaceholder: string;
+  copy: string;
+  edit: string;
+  hint: string;
+}
+
+/**
+ * Metadata 노드 번역
+ */
+export interface MetadataNodeLocale {
+  title: string;
+  author: string;
+  authorPlaceholder: string;
+  difficulty: string;
+  beginner: string;
+  intermediate: string;
+  advanced: string;
+  duration: string;
+  durationPlaceholder: string;
+  lastUpdated: string;
+  datePlaceholder: string;
+  tags: string;
+  tagsPlaceholder: string;
+  customFields: string;
+  customFieldsPlaceholder: string;
+  edit: string;
+  clickToAdd: string;
+  hint: string;
+}
+
+/**
+ * GraphQL 노드 번역
+ */
+export interface GraphQLNodeLocale {
+  endpointPlaceholder: string;
+  query: string;
+  variables: string;
+  response: string;
+  queryPlaceholder: string;
+  variablesPlaceholder: string;
+  responsePlaceholder: string;
+  copy: string;
+  edit: string;
+  hint: string;
+}
+
+/**
+ * OpenAPI 노드 번역
+ */
+export interface OpenAPINodeLocale {
+  urlPlaceholder: string;
+  displayMode: string;
+  minimal: string;
+  openInSwagger: string;
+  openInRedoc: string;
+  openSpec: string;
+  edit: string;
+  hint: string;
+}
+
+/**
+ * Diagram 노드 번역 (PlantUML/D2)
+ */
+export interface DiagramNodeLocale {
+  plantumlPlaceholder: string;
+  d2Placeholder: string;
+  theme: string;
+  themePlaceholder: string;
+  copy: string;
+  edit: string;
+  hint: string;
+  d2Hint: string;
+  d2Note: string;
+  openInPlayground: string;
+  renderError: string;
+}
+
+/**
  * NodeView 컴포넌트 번역
  */
 export interface NodesLocale {
@@ -333,6 +434,12 @@ export interface NodesLocale {
   gist: GistNodeLocale;
   diffBlock: DiffBlockNodeLocale;
   footnote: FootnoteNodeLocale;
+  logBlock: LogBlockNodeLocale;
+  stackTrace: StackTraceNodeLocale;
+  metadata: MetadataNodeLocale;
+  graphql: GraphQLNodeLocale;
+  openapi: OpenAPINodeLocale;
+  diagram: DiagramNodeLocale;
 }
 
 /**

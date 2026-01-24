@@ -6,8 +6,8 @@
 
 - **버전**: 0.1.0 (개발 중)
 - **상태**: Alpha
-- **완료**: Phase 1~9 완료
-- **다음**: Phase 10 (개발자 기능)
+- **완료**: Phase 1~12 완료
+- **다음**: Phase 13 (안정화 및 최적화)
 
 ---
 
@@ -26,7 +26,7 @@
 | 9 | 보안 강화 | ✅ 완료 |
 | 10 | 개발자 기능 (필수) | ✅ 완료 |
 | 11 | 개발자 기능 (권장) | ✅ 완료 |
-| 12 | 개발자 기능 (선택) | 📋 대기 |
+| 12 | 개발자 기능 (선택) | ✅ 완료 |
 | 13 | 안정화 및 최적화 | 📋 대기 |
 | 14 | npm 배포 준비 | 📋 대기 |
 | 15 | 추가 기능 (선택) | 📋 대기 |
@@ -211,20 +211,19 @@
 - [x] 코드 Diff 블록 (DiffBlockNode) - 추가/삭제 라인 색상, 통계 표시
 - [x] OS별 명령어 탭 (macOS/Linux/Windows) - OsCommandNode
 
-### Phase 12: 개발자 친화적 기능 (선택)
+### Phase 12: 개발자 친화적 기능 (선택) ✅
 
 - [x] 링크 미리보기 (OEmbed) - Phase 7에서 구현 (BookmarkNode)
 - [x] CodePen/CodeSandbox 임베드 - Phase 7에서 구현 (EmbedNode)
-- [ ] StackBlitz/Replit 임베드
-- [ ] OpenAPI/Swagger 임베드
-- [ ] GraphQL 쿼리 블록
-- [ ] 내부 링크/앵커
-- [ ] 용어 정의 (Glossary) - 팝오버
-- [ ] 스택 트레이스 블록
-- [ ] 로그 블록 (INFO/WARN/ERROR 색상)
-- [ ] 버전 배지 / Since 태그
-- [ ] 메타데이터 블록 (작성자, 난이도, 소요시간)
-- [ ] PlantUML / D2 다이어그램
+- [x] StackBlitz/Replit 임베드 - EmbedNode 확장
+- [x] OpenAPI/Swagger 임베드 - OpenAPINode (Swagger UI/ReDoc/Minimal 모드)
+- [x] GraphQL 쿼리 블록 - GraphQLNode (쿼리/변수/응답 탭)
+- [x] 용어 정의 (Glossary 마크) - 호버 시 툴팁 표시
+- [x] 스택 트레이스 블록 - StackTraceNode (파일 경로/라인 하이라이트)
+- [x] 로그 블록 (debug/info/warn/error) - LogBlockNode
+- [x] 버전 배지 / Since 태그 - VersionBadge 마크 (5가지 타입)
+- [x] 메타데이터 블록 - MetadataNode (작성자, 난이도, 태그, 커스텀 필드)
+- [x] PlantUML / D2 다이어그램 - DiagramNode (외부 서비스 연동)
 
 ### Phase 13: 안정화 및 최적화
 

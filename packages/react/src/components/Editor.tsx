@@ -12,6 +12,8 @@ import {
   markdownToHtml,
   extractTableOfContents,
   Keyboard,
+  VersionBadge,
+  Glossary,
   type SlashCommandItem,
   type ZmStarterKitOptions,
   type TocItem,
@@ -38,6 +40,12 @@ import { EnvBlock } from './EnvBlockNode';
 import { Gist } from './GistNode';
 import { DiffBlock } from './DiffBlockNode';
 import { FootnoteBlock } from './FootnoteNode';
+import { LogBlock } from './LogBlockNode';
+import { StackTrace } from './StackTraceNode';
+import { Metadata } from './MetadataNode';
+import { GraphQL } from './GraphQLNode';
+import { OpenAPI } from './OpenAPINode';
+import { Diagram } from './DiagramNode';
 import type { ZmEditorLocale } from '../locales';
 import { enLocale } from '../locales';
 import { LocaleProvider } from '../context';
@@ -541,6 +549,54 @@ function createLocalizedSlashCommands(locale: ZmEditorLocale): SlashCommandItem[
         editor.chain().focus().deleteRange(range).setFootnoteBlock().run();
       },
     },
+    {
+      title: commands.logBlock?.title || 'Log',
+      description: commands.logBlock?.description || 'Log message with level (debug/info/warn/error)',
+      searchTerms: ['log', 'debug', 'info', 'warn', 'error', 'console', '로그', '디버그', 'message'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setLogBlock().run();
+      },
+    },
+    {
+      title: commands.stackTrace?.title || 'Stack Trace',
+      description: commands.stackTrace?.description || 'Error stack trace with highlighting',
+      searchTerms: ['stacktrace', 'trace', 'error', 'exception', 'stack', '스택', '에러', 'traceback'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setStackTrace().run();
+      },
+    },
+    {
+      title: commands.metadata?.title || 'Metadata',
+      description: commands.metadata?.description || 'Document metadata (author, difficulty, tags)',
+      searchTerms: ['metadata', 'meta', 'info', 'author', 'tag', '메타', '정보', '작성자', '태그'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setMetadata().run();
+      },
+    },
+    {
+      title: commands.graphql?.title || 'GraphQL',
+      description: commands.graphql?.description || 'GraphQL query with variables and response',
+      searchTerms: ['graphql', 'gql', 'query', 'api', 'apollo', '쿼리', 'mutation'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setGraphQL().run();
+      },
+    },
+    {
+      title: commands.openapi?.title || 'OpenAPI',
+      description: commands.openapi?.description || 'OpenAPI/Swagger documentation embed',
+      searchTerms: ['openapi', 'swagger', 'api', 'documentation', 'spec', '스웨거', 'rest'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setOpenAPI().run();
+      },
+    },
+    {
+      title: commands.diagram?.title || 'Diagram',
+      description: commands.diagram?.description || 'PlantUML or D2 diagram',
+      searchTerms: ['diagram', 'plantuml', 'd2', 'uml', 'sequence', '다이어그램', 'flowchart'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).setDiagram().run();
+      },
+    },
   ];
 }
 
@@ -840,6 +896,62 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         },
       });
 
+      // LogBlock 확장 (로그 블록)
+      const logBlockExtension = LogBlock.configure({
+        HTMLAttributes: {
+          class: 'zm-log-block',
+        },
+      });
+
+      // StackTrace 확장 (스택 트레이스 블록)
+      const stackTraceExtension = StackTrace.configure({
+        HTMLAttributes: {
+          class: 'zm-stack-trace',
+        },
+      });
+
+      // Metadata 확장 (메타데이터 블록)
+      const metadataExtension = Metadata.configure({
+        HTMLAttributes: {
+          class: 'zm-metadata',
+        },
+      });
+
+      // GraphQL 확장 (GraphQL 쿼리 블록)
+      const graphqlExtension = GraphQL.configure({
+        HTMLAttributes: {
+          class: 'zm-graphql',
+        },
+      });
+
+      // OpenAPI 확장 (OpenAPI/Swagger 블록)
+      const openapiExtension = OpenAPI.configure({
+        HTMLAttributes: {
+          class: 'zm-openapi',
+        },
+      });
+
+      // Diagram 확장 (PlantUML/D2 다이어그램 블록)
+      const diagramExtension = Diagram.configure({
+        HTMLAttributes: {
+          class: 'zm-diagram',
+        },
+      });
+
+      // VersionBadge 확장 (버전 배지 마크)
+      const versionBadgeExtension = VersionBadge.configure({
+        HTMLAttributes: {
+          class: 'zm-version-badge',
+        },
+      });
+
+      // Glossary 확장 (용어 정의 마크)
+      const glossaryExtension = Glossary.configure({
+        HTMLAttributes: {
+          class: 'zm-glossary',
+        },
+      });
+
       return [
         ...baseExtensions,
         codeBlockExtension,
@@ -862,6 +974,14 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         gistExtension,
         diffBlockExtension,
         footnoteExtension,
+        logBlockExtension,
+        stackTraceExtension,
+        metadataExtension,
+        graphqlExtension,
+        openapiExtension,
+        diagramExtension,
+        versionBadgeExtension,
+        glossaryExtension,
         ...(slashCommandExtension ? [slashCommandExtension] : []),
         ...customExtensions,
       ];

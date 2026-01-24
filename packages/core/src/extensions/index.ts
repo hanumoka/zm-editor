@@ -33,3 +33,9 @@ export {
 
 // Keyboard (kbd tag)
 export { Keyboard, type KeyboardOptions } from './keyboard';
+
+// Version Badge (inline mark)
+export { VersionBadge, type VersionBadgeOptions, type BadgeType } from './version-badge';
+
+// Glossary (term definition with popover)
+export { Glossary, type GlossaryOptions } from './glossary';

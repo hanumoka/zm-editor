@@ -2,7 +2,7 @@
  * Embed URL 파싱 유틸리티
  */
 
-export type EmbedType = 'youtube' | 'vimeo' | 'twitter' | 'codepen' | 'codesandbox' | 'unknown';
+export type EmbedType = 'youtube' | 'vimeo' | 'twitter' | 'codepen' | 'codesandbox' | 'stackblitz' | 'replit' | 'unknown';
 
 export interface EmbedInfo {
   type: EmbedType;
@@ -132,6 +132,67 @@ function parseCodeSandbox(url: string): EmbedInfo | null {
 }
 
 /**
+ * StackBlitz URL 파싱
+ * - stackblitz.com/edit/PROJECT_ID
+ * - stackblitz.com/github/USER/REPO
+ * - stackblitz.com/fork/github/USER/REPO
+ */
+function parseStackBlitz(url: string): EmbedInfo | null {
+  const patterns = [
+    // stackblitz.com/edit/project-id
+    /stackblitz\.com\/edit\/([^/?]+)/,
+    // stackblitz.com/github/user/repo
+    /stackblitz\.com\/github\/([^/?]+\/[^/?]+)/,
+    // stackblitz.com/fork/github/user/repo
+    /stackblitz\.com\/fork\/github\/([^/?]+\/[^/?]+)/,
+  ];
+
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match && match[1]) {
+      // Determine embed URL based on pattern
+      let embedUrl: string;
+      if (url.includes('/github/') || url.includes('/fork/github/')) {
+        embedUrl = `https://stackblitz.com/github/${match[1]}?embed=1&file=README.md`;
+      } else {
+        embedUrl = `https://stackblitz.com/edit/${match[1]}?embed=1&file=README.md`;
+      }
+      return {
+        type: 'stackblitz',
+        embedUrl,
+        originalUrl: url,
+        videoId: match[1],
+        aspectRatio: '16/9',
+      };
+    }
+  }
+  return null;
+}
+
+/**
+ * Replit URL 파싱
+ * - replit.com/@USERNAME/PROJECT_NAME
+ * - replit.com/@USERNAME/PROJECT_NAME#FILE_PATH
+ */
+function parseReplit(url: string): EmbedInfo | null {
+  const pattern = /replit\.com\/@([^/]+)\/([^/?#]+)/;
+  const match = url.match(pattern);
+
+  if (match && match[1] && match[2]) {
+    const user = match[1];
+    const project = match[2];
+    return {
+      type: 'replit',
+      embedUrl: `https://replit.com/@${user}/${project}?embed=true`,
+      originalUrl: url,
+      videoId: `${user}/${project}`,
+      aspectRatio: '16/9',
+    };
+  }
+  return null;
+}
+
+/**
  * URL을 분석하여 임베드 정보 반환
  */
 export function parseEmbedUrl(url: string): EmbedInfo {
@@ -145,6 +206,8 @@ export function parseEmbedUrl(url: string): EmbedInfo {
     parseTwitter,
     parseCodePen,
     parseCodeSandbox,
+    parseStackBlitz,
+    parseReplit,
   ];
 
   for (const parser of parsers) {
@@ -172,6 +235,8 @@ export function getEmbedLabel(type: EmbedType): string {
     twitter: 'Twitter',
     codepen: 'CodePen',
     codesandbox: 'CodeSandbox',
+    stackblitz: 'StackBlitz',
+    replit: 'Replit',
     unknown: 'Embed',
   };
   return labels[type];

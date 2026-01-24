@@ -5819,3 +5819,1555 @@ kbd {
 .dark .zm-file-attachment-pdf-page-info {
   color: #e5e7eb;
 }
+
+/* ========================================
+   Phase 12: Developer Features (Optional)
+   ======================================== */
+
+/* ========================================
+   Log Block
+   ======================================== */
+
+.zm-log-block-wrapper {
+  margin: 0.5rem 0;
+}
+
+.zm-log-block {
+  border-radius: 6px;
+  border: 1px solid;
+  overflow: hidden;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+}
+
+.zm-log-block.is-selected {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Log levels */
+.zm-log-debug {
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.zm-log-info {
+  background-color: #eff6ff;
+  border-color: #93c5fd;
+}
+
+.zm-log-warn {
+  background-color: #fffbeb;
+  border-color: #fcd34d;
+}
+
+.zm-log-error {
+  background-color: #fef2f2;
+  border-color: #fca5a5;
+}
+
+/* Log header */
+.zm-log-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  border-bottom: 1px solid inherit;
+}
+
+.zm-log-icon {
+  font-size: 1rem;
+}
+
+.zm-log-level-badge {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.zm-log-debug .zm-log-level-badge { color: #6b7280; }
+.zm-log-info .zm-log-level-badge { color: #2563eb; }
+.zm-log-warn .zm-log-level-badge { color: #d97706; }
+.zm-log-error .zm-log-level-badge { color: #dc2626; }
+
+.zm-log-timestamp {
+  color: #6b7280;
+  font-size: 0.7rem;
+}
+
+.zm-log-source {
+  color: #6b7280;
+  font-size: 0.7rem;
+}
+
+/* Log message */
+.zm-log-message {
+  padding: 0.75rem;
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Log editing */
+.zm-log-block-editing {
+  padding: 0.75rem;
+}
+
+.zm-log-level-selector {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.zm-log-level-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: all 0.15s;
+}
+
+.zm-log-level-btn:hover {
+  background-color: #f3f4f6;
+}
+
+.zm-log-level-btn.is-active {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+  color: white;
+}
+
+.zm-log-meta-inputs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.zm-log-timestamp-input,
+.zm-log-source-input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-family: inherit;
+}
+
+.zm-log-message-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.zm-log-hint {
+  margin-top: 0.5rem;
+  font-size: 0.7rem;
+  color: #6b7280;
+}
+
+/* Log toolbar */
+.zm-log-toolbar {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background: #f3f4f6;
+  border-top: 1px solid #e5e7eb;
+}
+
+.zm-log-toolbar-btn {
+  padding: 0.375rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 4px;
+  color: #6b7280;
+  transition: all 0.15s;
+}
+
+.zm-log-toolbar-btn:hover {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+.zm-log-toolbar-btn.is-active {
+  background-color: #3b82f6;
+  color: white;
+}
+
+/* ========================================
+   Stack Trace
+   ======================================== */
+
+.zm-stack-trace-wrapper {
+  margin: 0.5rem 0;
+}
+
+.zm-stack-trace {
+  border-radius: 6px;
+  border: 1px solid #fca5a5;
+  background-color: #fef2f2;
+  overflow: hidden;
+}
+
+.zm-stack-trace.is-selected {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.zm-stack-trace-error-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  background-color: #dc2626;
+  color: white;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+  cursor: pointer;
+}
+
+.zm-stack-trace-error-type {
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+.zm-stack-trace-error-separator {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.zm-stack-trace-error-message {
+  font-size: 0.875rem;
+}
+
+.zm-stack-trace-body {
+  padding: 0;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  background-color: #0d1117;
+  color: #c9d1d9;
+  cursor: pointer;
+}
+
+.zm-stack-trace-line {
+  display: flex;
+  padding: 0.125rem 0;
+}
+
+.zm-stack-trace-line:hover {
+  background-color: #161b22;
+}
+
+.zm-stack-trace-line-num {
+  min-width: 2.5rem;
+  padding: 0 0.5rem;
+  text-align: right;
+  color: #6e7681;
+  user-select: none;
+}
+
+.zm-stack-trace-line-content {
+  flex: 1;
+  padding-right: 0.5rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.zm-stack-trace-file {
+  color: #79c0ff;
+}
+
+.zm-stack-trace-location {
+  color: #ffa657;
+}
+
+/* Stack Trace editing */
+.zm-stack-trace-editing {
+  padding: 0.75rem;
+}
+
+.zm-stack-trace-header-edit {
+  margin-bottom: 0.75rem;
+}
+
+.zm-stack-trace-language-select {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+
+.zm-stack-trace-error-inputs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.zm-stack-trace-error-type-input,
+.zm-stack-trace-error-message-input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #fca5a5;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+  background-color: #fef2f2;
+}
+
+.zm-stack-trace-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+  background-color: #0d1117;
+  color: #c9d1d9;
+  resize: vertical;
+}
+
+.zm-stack-trace-hint {
+  margin-top: 0.5rem;
+  font-size: 0.7rem;
+  color: #6b7280;
+}
+
+/* Stack Trace toolbar */
+.zm-stack-trace-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: #f3f4f6;
+  border-top: 1px solid #e5e7eb;
+}
+
+.zm-stack-trace-language-badge {
+  padding: 0.25rem 0.5rem;
+  background-color: #e5e7eb;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.zm-stack-trace-toolbar-btn {
+  padding: 0.375rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 4px;
+  color: #6b7280;
+  transition: all 0.15s;
+}
+
+.zm-stack-trace-toolbar-btn:hover {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+/* ========================================
+   Metadata Block
+   ======================================== */
+
+.zm-metadata-wrapper {
+  margin: 0.5rem 0;
+}
+
+.zm-metadata {
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+  padding: 1rem;
+}
+
+.zm-metadata.is-selected {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.zm-metadata-empty {
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  background-color: #f3f4f6;
+  border: 2px dashed #d1d5db;
+}
+
+.zm-metadata-empty:hover {
+  background-color: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+.zm-metadata-empty-text {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.zm-metadata-title {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #374151;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.zm-metadata-edit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.zm-metadata-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.zm-metadata-field-full {
+  grid-column: 1 / -1;
+}
+
+.zm-metadata-label {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.zm-metadata-label svg {
+  color: #9ca3af;
+}
+
+.zm-metadata-input,
+.zm-metadata-select {
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.zm-metadata-textarea {
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+  resize: vertical;
+}
+
+.zm-metadata-hint {
+  margin-top: 0.75rem;
+  font-size: 0.7rem;
+  color: #6b7280;
+  text-align: right;
+}
+
+/* Metadata display */
+.zm-metadata-display {
+  cursor: pointer;
+}
+
+.zm-metadata-display:hover {
+  background-color: #f3f4f6;
+}
+
+.zm-metadata-display-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+}
+
+.zm-metadata-item {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.875rem;
+}
+
+.zm-metadata-item svg {
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+.zm-metadata-item-value {
+  color: #374151;
+}
+
+.zm-metadata-difficulty-badge {
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.zm-meta-difficulty-beginner {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.zm-meta-difficulty-intermediate {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.zm-meta-difficulty-advanced {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.zm-metadata-tags {
+  flex-wrap: wrap;
+}
+
+.zm-metadata-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.zm-metadata-tag {
+  padding: 0.125rem 0.5rem;
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  color: #4b5563;
+}
+
+.zm-metadata-custom-key {
+  font-weight: 500;
+  color: #6b7280;
+}
+
+/* Metadata toolbar */
+.zm-metadata-toolbar {
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+  justify-content: flex-end;
+}
+
+.zm-metadata-toolbar-btn {
+  padding: 0.375rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 4px;
+  color: #6b7280;
+  transition: all 0.15s;
+}
+
+.zm-metadata-toolbar-btn:hover {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+/* ========================================
+   GraphQL Block
+   ======================================== */
+
+.zm-graphql-wrapper {
+  margin: 0.5rem 0;
+}
+
+.zm-graphql {
+  border-radius: 8px;
+  border: 1px solid #e535ab;
+  background-color: #fdf2f8;
+  overflow: hidden;
+}
+
+.zm-graphql.is-selected {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.zm-graphql-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background-color: #e535ab;
+  color: white;
+  cursor: pointer;
+}
+
+.zm-graphql-header svg {
+  width: 20px;
+  height: 20px;
+}
+
+.zm-graphql-label {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.zm-graphql-endpoint {
+  margin-left: auto;
+  font-size: 0.75rem;
+  opacity: 0.8;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+}
+
+.zm-graphql-tabs {
+  display: flex;
+  border-bottom: 1px solid #f9a8d4;
+  background-color: #fce7f3;
+}
+
+.zm-graphql-tab {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #9d174d;
+  transition: all 0.15s;
+}
+
+.zm-graphql-tab:hover {
+  background-color: #fbcfe8;
+}
+
+.zm-graphql-tab.is-active {
+  background-color: white;
+  border-bottom: 2px solid #e535ab;
+}
+
+.zm-graphql-content {
+  cursor: pointer;
+}
+
+.zm-graphql-textarea {
+  width: 100%;
+  min-height: 150px;
+  padding: 0.75rem;
+  border: none;
+  font-size: 0.75rem;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+  resize: vertical;
+  background-color: #0d1117;
+  color: #c9d1d9;
+}
+
+.zm-graphql-code {
+  padding: 0.75rem;
+  margin: 0;
+  font-size: 0.75rem;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+  background-color: #0d1117;
+  color: #c9d1d9;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.zm-graphql-editing {
+  padding: 0.75rem;
+}
+
+.zm-graphql-endpoint-group {
+  margin-bottom: 0.75rem;
+}
+
+.zm-graphql-endpoint-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #f9a8d4;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+}
+
+.zm-graphql-hint {
+  margin-top: 0.5rem;
+  font-size: 0.7rem;
+  color: #9d174d;
+}
+
+/* GraphQL toolbar */
+.zm-graphql-toolbar {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background: #fce7f3;
+  border-top: 1px solid #f9a8d4;
+}
+
+.zm-graphql-toolbar-btn {
+  padding: 0.375rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 4px;
+  color: #9d174d;
+  transition: all 0.15s;
+}
+
+.zm-graphql-toolbar-btn:hover {
+  background-color: #fbcfe8;
+  color: #831843;
+}
+
+/* ========================================
+   OpenAPI Block
+   ======================================== */
+
+.zm-openapi-wrapper {
+  margin: 0.5rem 0;
+}
+
+.zm-openapi {
+  border-radius: 8px;
+  border: 1px solid #22c55e;
+  background-color: #f0fdf4;
+  overflow: hidden;
+}
+
+.zm-openapi.is-selected {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.zm-openapi-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background-color: #22c55e;
+  color: white;
+  cursor: pointer;
+}
+
+.zm-openapi-label {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.zm-openapi-mode-badge {
+  margin-left: auto;
+  padding: 0.125rem 0.5rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.zm-openapi-editing {
+  padding: 0.75rem;
+}
+
+.zm-openapi-input-group {
+  margin-bottom: 0.75rem;
+}
+
+.zm-openapi-url-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #86efac;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+}
+
+.zm-openapi-mode-selector {
+  margin-bottom: 0.75rem;
+}
+
+.zm-openapi-mode-label {
+  display: block;
+  margin-bottom: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #166534;
+}
+
+.zm-openapi-mode-buttons {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.zm-openapi-mode-btn {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid #86efac;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: all 0.15s;
+}
+
+.zm-openapi-mode-btn:hover {
+  background-color: #dcfce7;
+}
+
+.zm-openapi-mode-btn.is-active {
+  background-color: #22c55e;
+  border-color: #22c55e;
+  color: white;
+}
+
+.zm-openapi-hint {
+  font-size: 0.7rem;
+  color: #166534;
+}
+
+/* OpenAPI display */
+.zm-openapi-minimal {
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.zm-openapi-url-display {
+  margin-bottom: 0.75rem;
+}
+
+.zm-openapi-url-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-right: 0.5rem;
+}
+
+.zm-openapi-url-link {
+  font-size: 0.75rem;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+  color: #22c55e;
+  text-decoration: none;
+}
+
+.zm-openapi-url-link:hover {
+  text-decoration: underline;
+}
+
+.zm-openapi-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.zm-openapi-action-btn {
+  padding: 0.5rem 1rem;
+  background-color: #22c55e;
+  color: white;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  text-decoration: none;
+  transition: background-color 0.15s;
+}
+
+.zm-openapi-action-btn:hover {
+  background-color: #16a34a;
+}
+
+.zm-openapi-iframe-container {
+  height: 500px;
+}
+
+.zm-openapi-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* OpenAPI toolbar */
+.zm-openapi-toolbar {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background: #dcfce7;
+  border-top: 1px solid #86efac;
+}
+
+.zm-openapi-toolbar-btn {
+  padding: 0.375rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 4px;
+  color: #166534;
+  transition: all 0.15s;
+}
+
+.zm-openapi-toolbar-btn:hover {
+  background-color: #bbf7d0;
+  color: #14532d;
+}
+
+/* ========================================
+   Diagram Block (PlantUML/D2)
+   ======================================== */
+
+.zm-diagram-wrapper {
+  margin: 0.5rem 0;
+}
+
+.zm-diagram {
+  border-radius: 8px;
+  border: 1px solid #a855f7;
+  background-color: #faf5ff;
+  overflow: hidden;
+}
+
+.zm-diagram.is-selected {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.zm-diagram-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background-color: #a855f7;
+  color: white;
+  cursor: pointer;
+}
+
+.zm-diagram-label {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.zm-diagram-editing {
+  padding: 0.75rem;
+}
+
+.zm-diagram-type-selector {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.zm-diagram-type-btn {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid #d8b4fe;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: all 0.15s;
+}
+
+.zm-diagram-type-btn:hover {
+  background-color: #f3e8ff;
+}
+
+.zm-diagram-type-btn.is-active {
+  background-color: #a855f7;
+  border-color: #a855f7;
+  color: white;
+}
+
+.zm-diagram-input-group {
+  margin-bottom: 0.75rem;
+}
+
+.zm-diagram-code-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d8b4fe;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+  background-color: #0d1117;
+  color: #c9d1d9;
+  resize: vertical;
+}
+
+.zm-diagram-theme-group {
+  margin-bottom: 0.75rem;
+}
+
+.zm-diagram-theme-label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.75rem;
+  color: #7e22ce;
+}
+
+.zm-diagram-theme-input {
+  width: 200px;
+  padding: 0.375rem 0.5rem;
+  border: 1px solid #d8b4fe;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+
+.zm-diagram-hint {
+  font-size: 0.7rem;
+  color: #7e22ce;
+}
+
+.zm-diagram-error {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  color: #dc2626;
+}
+
+/* Diagram preview */
+.zm-diagram-preview {
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+}
+
+.zm-diagram-image {
+  max-width: 100%;
+  height: auto;
+}
+
+.zm-diagram-code-preview {
+  padding: 0.75rem;
+  margin: 0;
+  font-size: 0.75rem;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+  background-color: #0d1117;
+  color: #c9d1d9;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  text-align: left;
+}
+
+.zm-diagram-d2-preview {
+  text-align: center;
+}
+
+.zm-diagram-d2-note {
+  margin: 0.75rem 0;
+  font-size: 0.75rem;
+  color: #7e22ce;
+}
+
+.zm-diagram-d2-link {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #a855f7;
+  color: white;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  text-decoration: none;
+  transition: background-color 0.15s;
+}
+
+.zm-diagram-d2-link:hover {
+  background-color: #9333ea;
+}
+
+/* Diagram toolbar */
+.zm-diagram-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: #f3e8ff;
+  border-top: 1px solid #d8b4fe;
+}
+
+.zm-diagram-type-badge {
+  padding: 0.25rem 0.5rem;
+  background-color: #e9d5ff;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #7e22ce;
+}
+
+.zm-diagram-toolbar-btn {
+  padding: 0.375rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 4px;
+  color: #7e22ce;
+  transition: all 0.15s;
+}
+
+.zm-diagram-toolbar-btn:hover {
+  background-color: #e9d5ff;
+  color: #581c87;
+}
+
+/* ========================================
+   Version Badge (Inline Mark)
+   ======================================== */
+
+.zm-version-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.375rem;
+  margin: 0 0.125rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+  vertical-align: middle;
+}
+
+.zm-version-badge[data-badge-type="version"] {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
+.zm-version-badge[data-badge-type="since"] {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.zm-version-badge[data-badge-type="deprecated"] {
+  background-color: #fee2e2;
+  color: #991b1b;
+  text-decoration: line-through;
+}
+
+.zm-version-badge[data-badge-type="beta"] {
+  background-color: #ffedd5;
+  color: #c2410c;
+}
+
+.zm-version-badge[data-badge-type="new"] {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+/* ========================================
+   Glossary (Term Definition Mark)
+   ======================================== */
+
+.zm-glossary {
+  border-bottom: 1px dotted #6b7280;
+  cursor: help;
+  position: relative;
+}
+
+.zm-glossary:hover {
+  border-bottom-color: #3b82f6;
+  color: #3b82f6;
+}
+
+/* Tooltip styling using native title attribute */
+.zm-glossary[title] {
+  text-decoration-style: dotted;
+}
+
+/* ========================================
+   Dark Mode Styles for Phase 12
+   ======================================== */
+
+/* Log Block - Dark Mode */
+.dark .zm-log-debug {
+  background-color: #1f2937;
+  border-color: #4b5563;
+}
+
+.dark .zm-log-info {
+  background-color: #1e3a5f;
+  border-color: #3b82f6;
+}
+
+.dark .zm-log-warn {
+  background-color: #422006;
+  border-color: #d97706;
+}
+
+.dark .zm-log-error {
+  background-color: #450a0a;
+  border-color: #dc2626;
+}
+
+.dark .zm-log-debug .zm-log-level-badge { color: #9ca3af; }
+.dark .zm-log-info .zm-log-level-badge { color: #60a5fa; }
+.dark .zm-log-warn .zm-log-level-badge { color: #fbbf24; }
+.dark .zm-log-error .zm-log-level-badge { color: #f87171; }
+
+.dark .zm-log-timestamp,
+.dark .zm-log-source {
+  color: #9ca3af;
+}
+
+.dark .zm-log-message {
+  color: #e5e7eb;
+}
+
+.dark .zm-log-level-btn {
+  background-color: #374151;
+  border-color: #4b5563;
+  color: #e5e7eb;
+}
+
+.dark .zm-log-level-btn:hover {
+  background-color: #4b5563;
+}
+
+.dark .zm-log-level-btn.is-active {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.dark .zm-log-timestamp-input,
+.dark .zm-log-source-input,
+.dark .zm-log-message-input {
+  background-color: #1f2937;
+  border-color: #4b5563;
+  color: #e5e7eb;
+}
+
+.dark .zm-log-hint {
+  color: #9ca3af;
+}
+
+.dark .zm-log-toolbar {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+.dark .zm-log-toolbar-btn {
+  color: #9ca3af;
+}
+
+.dark .zm-log-toolbar-btn:hover {
+  background-color: #374151;
+  color: #e5e7eb;
+}
+
+/* Stack Trace - Dark Mode */
+.dark .zm-stack-trace {
+  background-color: #1c1917;
+  border-color: #dc2626;
+}
+
+.dark .zm-stack-trace-error-header {
+  background-color: #b91c1c;
+}
+
+.dark .zm-stack-trace-error-type-input,
+.dark .zm-stack-trace-error-message-input {
+  background-color: #1c1917;
+  border-color: #dc2626;
+  color: #fca5a5;
+}
+
+.dark .zm-stack-trace-hint {
+  color: #9ca3af;
+}
+
+.dark .zm-stack-trace-toolbar {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+.dark .zm-stack-trace-language-badge {
+  background-color: #374151;
+  color: #e5e7eb;
+}
+
+.dark .zm-stack-trace-toolbar-btn {
+  color: #9ca3af;
+}
+
+.dark .zm-stack-trace-toolbar-btn:hover {
+  background-color: #374151;
+  color: #e5e7eb;
+}
+
+/* Metadata - Dark Mode */
+.dark .zm-metadata {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+.dark .zm-metadata-empty {
+  background-color: #111827;
+  border-color: #374151;
+}
+
+.dark .zm-metadata-empty:hover {
+  background-color: #1f2937;
+  border-color: #4b5563;
+}
+
+.dark .zm-metadata-empty-text {
+  color: #9ca3af;
+}
+
+.dark .zm-metadata-title {
+  color: #e5e7eb;
+  border-color: #374151;
+}
+
+.dark .zm-metadata-label {
+  color: #9ca3af;
+}
+
+.dark .zm-metadata-label svg {
+  color: #6b7280;
+}
+
+.dark .zm-metadata-input,
+.dark .zm-metadata-select,
+.dark .zm-metadata-textarea {
+  background-color: #111827;
+  border-color: #374151;
+  color: #e5e7eb;
+}
+
+.dark .zm-metadata-hint {
+  color: #6b7280;
+}
+
+.dark .zm-metadata-display:hover {
+  background-color: #111827;
+}
+
+.dark .zm-metadata-item-value {
+  color: #e5e7eb;
+}
+
+.dark .zm-meta-difficulty-beginner {
+  background-color: #14532d;
+  color: #86efac;
+}
+
+.dark .zm-meta-difficulty-intermediate {
+  background-color: #78350f;
+  color: #fcd34d;
+}
+
+.dark .zm-meta-difficulty-advanced {
+  background-color: #7f1d1d;
+  color: #fca5a5;
+}
+
+.dark .zm-metadata-tag {
+  background-color: #374151;
+  color: #d1d5db;
+}
+
+.dark .zm-metadata-custom-key {
+  color: #9ca3af;
+}
+
+.dark .zm-metadata-toolbar-btn {
+  color: #9ca3af;
+}
+
+.dark .zm-metadata-toolbar-btn:hover {
+  background-color: #374151;
+  color: #e5e7eb;
+}
+
+/* GraphQL - Dark Mode */
+.dark .zm-graphql {
+  background-color: #1a0a14;
+  border-color: #e535ab;
+}
+
+.dark .zm-graphql-tabs {
+  background-color: #2d0d1f;
+  border-color: #831843;
+}
+
+.dark .zm-graphql-tab {
+  color: #f9a8d4;
+}
+
+.dark .zm-graphql-tab:hover {
+  background-color: #3f0d29;
+}
+
+.dark .zm-graphql-tab.is-active {
+  background-color: #0d1117;
+  border-bottom-color: #e535ab;
+}
+
+.dark .zm-graphql-endpoint-input {
+  background-color: #0d1117;
+  border-color: #831843;
+  color: #f9a8d4;
+}
+
+.dark .zm-graphql-hint {
+  color: #f9a8d4;
+}
+
+.dark .zm-graphql-toolbar {
+  background-color: #2d0d1f;
+  border-color: #831843;
+}
+
+.dark .zm-graphql-toolbar-btn {
+  color: #f9a8d4;
+}
+
+.dark .zm-graphql-toolbar-btn:hover {
+  background-color: #3f0d29;
+  color: #fbcfe8;
+}
+
+/* OpenAPI - Dark Mode */
+.dark .zm-openapi {
+  background-color: #052e16;
+  border-color: #22c55e;
+}
+
+.dark .zm-openapi-url-input {
+  background-color: #0d1117;
+  border-color: #166534;
+  color: #86efac;
+}
+
+.dark .zm-openapi-mode-label {
+  color: #86efac;
+}
+
+.dark .zm-openapi-mode-btn {
+  background-color: #052e16;
+  border-color: #166534;
+  color: #86efac;
+}
+
+.dark .zm-openapi-mode-btn:hover {
+  background-color: #14532d;
+}
+
+.dark .zm-openapi-mode-btn.is-active {
+  background-color: #22c55e;
+  color: white;
+}
+
+.dark .zm-openapi-hint {
+  color: #86efac;
+}
+
+.dark .zm-openapi-url-label {
+  color: #9ca3af;
+}
+
+.dark .zm-openapi-url-link {
+  color: #4ade80;
+}
+
+.dark .zm-openapi-toolbar {
+  background-color: #14532d;
+  border-color: #166534;
+}
+
+.dark .zm-openapi-toolbar-btn {
+  color: #86efac;
+}
+
+.dark .zm-openapi-toolbar-btn:hover {
+  background-color: #166534;
+  color: #bbf7d0;
+}
+
+/* Diagram - Dark Mode */
+.dark .zm-diagram {
+  background-color: #1a0a2a;
+  border-color: #a855f7;
+}
+
+.dark .zm-diagram-type-btn {
+  background-color: #1a0a2a;
+  border-color: #7e22ce;
+  color: #d8b4fe;
+}
+
+.dark .zm-diagram-type-btn:hover {
+  background-color: #2e1065;
+}
+
+.dark .zm-diagram-type-btn.is-active {
+  background-color: #a855f7;
+  color: white;
+}
+
+.dark .zm-diagram-theme-label {
+  color: #d8b4fe;
+}
+
+.dark .zm-diagram-theme-input {
+  background-color: #1a0a2a;
+  border-color: #7e22ce;
+  color: #d8b4fe;
+}
+
+.dark .zm-diagram-hint {
+  color: #d8b4fe;
+}
+
+.dark .zm-diagram-d2-note {
+  color: #d8b4fe;
+}
+
+.dark .zm-diagram-toolbar {
+  background-color: #2e1065;
+  border-color: #7e22ce;
+}
+
+.dark .zm-diagram-type-badge {
+  background-color: #581c87;
+  color: #d8b4fe;
+}
+
+.dark .zm-diagram-toolbar-btn {
+  color: #d8b4fe;
+}
+
+.dark .zm-diagram-toolbar-btn:hover {
+  background-color: #581c87;
+  color: #e9d5ff;
+}
+
+/* Version Badge - Dark Mode */
+.dark .zm-version-badge[data-badge-type="version"] {
+  background-color: #1e3a5f;
+  color: #93c5fd;
+}
+
+.dark .zm-version-badge[data-badge-type="since"] {
+  background-color: #14532d;
+  color: #86efac;
+}
+
+.dark .zm-version-badge[data-badge-type="deprecated"] {
+  background-color: #7f1d1d;
+  color: #fca5a5;
+}
+
+.dark .zm-version-badge[data-badge-type="beta"] {
+  background-color: #7c2d12;
+  color: #fdba74;
+}
+
+.dark .zm-version-badge[data-badge-type="new"] {
+  background-color: #064e3b;
+  color: #6ee7b7;
+}
+
+/* Glossary - Dark Mode */
+.dark .zm-glossary {
+  border-bottom-color: #9ca3af;
+}
+
+.dark .zm-glossary:hover {
+  border-bottom-color: #60a5fa;
+  color: #60a5fa;
+}
