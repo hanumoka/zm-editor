@@ -10,7 +10,7 @@
 
 | 항목 | 상태 |
 |------|------|
-| **현재 Phase** | Phase 13 진행중 🔄 |
+| **현재 Phase** | Phase 15 완료 ✅, Phase 14 대기 |
 | **빌드 상태** | 성공 ✅ |
 | **타입 체크** | 성공 ✅ |
 | **Git 상태** | Clean |
@@ -18,12 +18,14 @@
 
 ### 최근 완료 ✅
 
-- Phase 13: 안정화 및 최적화 (진행중)
+- Phase 15: 추가 기능 (선택) 완료 ✅
+  - 이모지 선택기 (`/emoji` 슬래시 명령어 + EmojiPicker 컴포넌트)
+  - 멘션 (@) 기능 (Mention 확장 + MentionList 컴포넌트)
+  - 드래그 앤 드롭 블록 이동 (DragHandle 컴포넌트)
+  - 협업 편집 (CollaborationProvider - Y.js 기반)
+
+- Phase 13: 안정화 및 최적화
   - 접근성(a11y) 개선: BubbleMenu, TableBubbleMenu, Editor 컴포넌트
-    - `aria-label`, `aria-pressed` 버튼 속성 추가
-    - `role="toolbar"`, `role="group"` 추가
-    - SVG 아이콘에 `aria-hidden="true"` 추가
-    - 로딩/업로드 상태에 `aria-live`, `aria-busy` 추가
 
 - Phase 12: 개발자 기능 (선택) 완료 ✅
 
@@ -109,6 +111,13 @@
 - [x] PlantUML / D2 다이어그램 (DiagramNode)
 - [x] 용어 정의 (Glossary 마크)
 
+### Phase 15: 추가 기능 (선택) ✅
+
+- [x] 이모지 선택기 (`/emoji` + EmojiPicker)
+- [x] 멘션 (@) 기능 (Mention 확장 + MentionList)
+- [x] 드래그 앤 드롭 블록 이동 (DragHandle)
+- [x] 협업 편집 (CollaborationProvider - Y.js 기반)
+
 ### 데모 앱 개선 ✅
 
 - 사용 가이드 사이드바 (슬래시 명령어, 단축키, 마크다운)
@@ -126,12 +135,12 @@
 
 ## 다음 작업
 
-### Phase 13: 안정화 및 최적화 (진행중)
-- [ ] 성능 최적화 검증
-- [ ] 메모리 누수 테스트
-- [ ] 다양한 브라우저 호환성 테스트
-- [x] 접근성(a11y) 개선 - BubbleMenu, TableBubbleMenu, Editor
-- [ ] 번들 크기 최적화
+### Phase 14: npm 배포 준비
+- [ ] package.json 메타데이터 검토
+- [ ] README.md 작성
+- [ ] CHANGELOG.md 작성
+- [ ] npm publish 설정
+- [ ] GitHub Actions CI/CD
 
 ---
 
@@ -150,11 +159,11 @@
 | 12 | 개발자 기능 (선택) | ✅ 완료 |
 | 13 | 안정화 및 최적화 | 🔄 진행중 |
 | 14 | npm 배포 준비 | 📋 대기 |
-| 15 | 추가 기능 (선택) | 📋 대기 |
+| 15 | 추가 기능 (선택) | ✅ 완료 |
 
 ---
 
-## 구현된 슬래시 명령어 (34개)
+## 구현된 슬래시 명령어 (35개)
 
 | 명령어 | 기능 |
 |--------|------|
@@ -191,6 +200,7 @@
 | `/graphql` | GraphQL 쿼리 블록 |
 | `/openapi` | OpenAPI/Swagger 임베드 |
 | `/diagram` | PlantUML/D2 다이어그램 |
+| `/emoji` | 이모지 선택기 |
 
 ---
 
@@ -202,6 +212,7 @@
 |------|------|
 | `packages/core/src/extensions/starter-kit.ts` | Tiptap 확장 설정 |
 | `packages/core/src/extensions/slash-command.ts` | 슬래시 명령어 |
+| `packages/core/src/extensions/mention.ts` | 멘션 확장 |
 | `packages/react/src/components/Editor.tsx` | 메인 에디터 컴포넌트 |
 | `packages/react/src/components/CodeBlock.tsx` | 코드블록 (언어 선택 UI) |
 | `packages/react/src/components/BubbleMenu.tsx` | 버블 메뉴 |
@@ -235,6 +246,15 @@
 | `packages/react/src/components/GraphQLNode/` | GraphQL 쿼리/응답 |
 | `packages/react/src/components/OpenAPINode/` | OpenAPI/Swagger 임베드 |
 | `packages/react/src/components/DiagramNode/` | PlantUML/D2 다이어그램 |
+
+### Phase 15 컴포넌트
+
+| 파일 | 설명 |
+|------|------|
+| `packages/react/src/components/EmojiPicker/` | 이모지 선택기 |
+| `packages/react/src/components/MentionList/` | 멘션 제안 목록 |
+| `packages/react/src/components/DragHandle/` | 드래그 핸들 |
+| `packages/react/src/components/Collaboration/` | 협업 제공자 |
 
 ### 데모 앱
 

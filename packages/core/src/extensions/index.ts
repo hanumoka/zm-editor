@@ -39,3 +39,6 @@ export { VersionBadge, type VersionBadgeOptions, type BadgeType } from './versio
 
 // Glossary (term definition with popover)
 export { Glossary, type GlossaryOptions } from './glossary';
+
+// Mention (@mention)
+export { Mention, MentionPluginKey, type MentionOptions } from './mention';

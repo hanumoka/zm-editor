@@ -152,6 +152,10 @@ export const koLocale: ZmEditorLocale = {
         title: '다이어그램',
         description: 'PlantUML 또는 D2 다이어그램',
       },
+      emoji: {
+        title: '이모지',
+        description: '이모지 삽입',
+      },
     },
   },
   bubbleMenu: {

@@ -51,6 +51,7 @@ export interface SlashMenuLocale {
     graphql: SlashCommandLocale;
     openapi: SlashCommandLocale;
     diagram: SlashCommandLocale;
+    emoji: SlashCommandLocale;
   };
 }
 

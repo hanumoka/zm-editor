@@ -14,6 +14,7 @@ import {
   Keyboard,
   VersionBadge,
   Glossary,
+  Mention,
   type SlashCommandItem,
   type ZmStarterKitOptions,
   type TocItem,
@@ -46,6 +47,9 @@ import { Metadata } from './MetadataNode';
 import { GraphQL } from './GraphQLNode';
 import { OpenAPI } from './OpenAPINode';
 import { Diagram } from './DiagramNode';
+import { EmojiPicker } from './EmojiPicker';
+import { MentionList, type MentionItem } from './MentionList';
+import { DragHandle } from './DragHandle';
 import type { ZmEditorLocale } from '../locales';
 import { enLocale } from '../locales';
 import { LocaleProvider } from '../context';
@@ -275,6 +279,12 @@ export interface ZmEditorProps {
   fileConfig?: FileUploadConfig;
   /** 파일 업로드 에러 핸들러 */
   onFileUploadError?: (error: Error, file: File) => void;
+  /** 멘션 기능 활성화 */
+  enableMention?: boolean;
+  /** 멘션 사용자 검색 (query로 사용자 목록 반환) */
+  onMentionSearch?: (query: string) => MentionItem[] | Promise<MentionItem[]>;
+  /** 드래그 핸들 활성화 (블록 이동) */
+  enableDragHandle?: boolean;
 }
 
 export interface ZmEditorRef {
@@ -597,6 +607,19 @@ function createLocalizedSlashCommands(locale: ZmEditorLocale): SlashCommandItem[
         editor.chain().focus().deleteRange(range).setDiagram().run();
       },
     },
+    {
+      title: commands.emoji?.title || 'Emoji',
+      description: commands.emoji?.description || 'Insert an emoji',
+      searchTerms: ['emoji', 'emoticon', 'smiley', 'face', '이모지', '이모티콘'],
+      command: ({ editor, range }) => {
+        editor.chain().focus().deleteRange(range).run();
+        // 이모지 선택기 팝업 트리거
+        const emojiButton = document.getElementById('zm-editor-emoji-trigger');
+        if (emojiButton) {
+          emojiButton.click();
+        }
+      },
+    },
   ];
 }
 
@@ -629,6 +652,9 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
       onFileUpload,
       fileConfig,
       onFileUploadError,
+      enableMention = false,
+      onMentionSearch,
+      enableDragHandle = false,
     },
     ref
   ) => {
@@ -652,6 +678,10 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
 
     // 업로드 중인 파일 수 추적
     const [uploadingCount, setUploadingCount] = useState(0);
+
+    // 이모지 선택기 상태
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+    const [emojiPickerPosition, setEmojiPickerPosition] = useState({ top: 0, left: 0 });
 
     // 로케일 기반 슬래시 명령어 (커스텀 명령어가 없을 경우)
     const localizedSlashCommands = useMemo(
@@ -952,6 +982,47 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         },
       });
 
+      // Mention 확장 (@ 멘션)
+      const mentionExtension = enableMention
+        ? Mention.configure({
+            HTMLAttributes: {
+              class: 'zm-mention',
+            },
+            suggestion: {
+              items: async ({ query }: { query: string }) => {
+                if (!onMentionSearch) {
+                  // 기본 빈 배열 반환
+                  return [];
+                }
+                const results = await onMentionSearch(query);
+                return results;
+              },
+              render: () => {
+                let component: MentionMenuComponent | null = null;
+
+                return {
+                  onStart: (props: MentionRenderProps) => {
+                    component = new MentionMenuComponent(props);
+                  },
+                  onUpdate: (props: MentionRenderProps) => {
+                    component?.updateProps(props);
+                  },
+                  onKeyDown: (props: { event: KeyboardEvent }) => {
+                    if (props.event.key === 'Escape') {
+                      component?.destroy();
+                      return true;
+                    }
+                    return component?.onKeyDown(props.event) ?? false;
+                  },
+                  onExit: () => {
+                    component?.destroy();
+                  },
+                };
+              },
+            },
+          })
+        : null;
+
       return [
         ...baseExtensions,
         codeBlockExtension,
@@ -982,10 +1053,11 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
         diagramExtension,
         versionBadgeExtension,
         glossaryExtension,
+        ...(mentionExtension ? [mentionExtension] : []),
         ...(slashCommandExtension ? [slashCommandExtension] : []),
         ...customExtensions,
       ];
-    }, [editorPlaceholder, characterLimit, enableSlashCommand, localizedSlashCommands, customExtensions, locale]);
+    }, [editorPlaceholder, characterLimit, enableSlashCommand, localizedSlashCommands, customExtensions, locale, enableMention, onMentionSearch]);
 
     // onChange 콜백 메모이제이션
     const handleUpdate = useCallback(
@@ -1331,6 +1403,35 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
       [processFile]
     );
 
+    // 이모지 선택기 열기 핸들러
+    const handleEmojiTrigger = useCallback(() => {
+      if (!editor) return;
+      // 현재 커서 위치에서 팝업 위치 계산
+      const { view } = editor;
+      const { from } = view.state.selection;
+      const coords = view.coordsAtPos(from);
+      setEmojiPickerPosition({
+        top: coords.bottom + 8,
+        left: coords.left,
+      });
+      setShowEmojiPicker(true);
+    }, [editor]);
+
+    // 이모지 선택 핸들러
+    const handleEmojiSelect = useCallback(
+      (emoji: string) => {
+        if (!editor) return;
+        editor.chain().focus().insertContent(emoji).run();
+        setShowEmojiPicker(false);
+      },
+      [editor]
+    );
+
+    // 이모지 선택기 닫기 핸들러
+    const handleEmojiPickerClose = useCallback(() => {
+      setShowEmojiPicker(false);
+    }, []);
+
     // 서버/클라이언트 hydration 일관성을 위해 마운트 전에는 로딩 상태 표시
     if (!isMounted || !editor) {
       return (
@@ -1373,6 +1474,32 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
             aria-label="Upload file"
             tabIndex={-1}
           />
+          {/* 숨겨진 이모지 트리거 버튼 (슬래시 명령어에서 사용) */}
+          <button
+            id="zm-editor-emoji-trigger"
+            type="button"
+            style={{ display: 'none' }}
+            onClick={handleEmojiTrigger}
+            aria-label="Open emoji picker"
+            tabIndex={-1}
+          />
+          {/* 이모지 선택기 팝업 */}
+          {showEmojiPicker && (
+            <div
+              className="zm-emoji-picker-overlay"
+              style={{
+                position: 'fixed',
+                top: emojiPickerPosition.top,
+                left: emojiPickerPosition.left,
+                zIndex: 9999,
+              }}
+            >
+              <EmojiPicker
+                onSelect={handleEmojiSelect}
+                onClose={handleEmojiPickerClose}
+              />
+            </div>
+          )}
           {enableBubbleMenu && (
             <BubbleMenu
               editor={editor}
@@ -1387,6 +1514,8 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
             />
           )}
           <EditorContent editor={editor} />
+          {/* 드래그 핸들 */}
+          {enableDragHandle && <DragHandle editor={editor} />}
           {/* 이미지 업로드 중 인디케이터 */}
           {uploadingCount > 0 && (
             <div
@@ -1614,6 +1743,163 @@ class SlashMenuComponent {
   destroy() {
     this.removeGlobalKeydownListener();
     this.removeScrollListener();
+    this.removeEventListeners();
+    this.element?.remove();
+    this.element = null;
+    this.selectedIndex = 0;
+  }
+}
+
+// MentionMenu 컴포넌트를 위한 타입 및 클래스
+interface MentionRenderProps {
+  editor: TiptapEditor;
+  range: { from: number; to: number };
+  items: MentionItem[];
+  command: (item: MentionItem) => void;
+  clientRect?: (() => DOMRect | null) | null;
+}
+
+class MentionMenuComponent {
+  private props: MentionRenderProps;
+  private element: HTMLElement | null = null;
+  private selectedIndex = 0;
+  private clickHandlers: Array<{ element: Element; handler: () => void }> = [];
+
+  constructor(props: MentionRenderProps) {
+    this.props = props;
+    this.render();
+  }
+
+  updateProps(props: MentionRenderProps) {
+    this.props = props;
+    if (this.selectedIndex >= props.items.length) {
+      this.selectedIndex = 0;
+    }
+    this.render();
+  }
+
+  onKeyDown(event: KeyboardEvent): boolean {
+    if (event.key === 'ArrowDown') {
+      this.selectedIndex = Math.min(
+        this.selectedIndex + 1,
+        this.props.items.length - 1
+      );
+      this.render();
+      return true;
+    }
+
+    if (event.key === 'ArrowUp') {
+      this.selectedIndex = Math.max(this.selectedIndex - 1, 0);
+      this.render();
+      return true;
+    }
+
+    if (event.key === 'Enter') {
+      const item = this.props.items[this.selectedIndex];
+      if (item) {
+        this.props.command(item);
+      }
+      return true;
+    }
+
+    return false;
+  }
+
+  private removeEventListeners() {
+    this.clickHandlers.forEach(({ element, handler }) => {
+      element.removeEventListener('click', handler);
+    });
+    this.clickHandlers = [];
+  }
+
+  private render() {
+    if (!this.element) {
+      this.element = document.createElement('div');
+      this.element.className = 'zm-mention-list';
+      document.body.appendChild(this.element);
+    }
+
+    const rect = this.props.clientRect?.();
+    if (rect) {
+      this.element.style.position = 'fixed';
+      this.element.style.left = `${rect.left}px`;
+      this.element.style.top = `${rect.bottom + 8}px`;
+    }
+
+    this.removeEventListeners();
+    this.element.innerHTML = '';
+
+    if (this.props.items.length === 0) {
+      const emptyDiv = document.createElement('div');
+      emptyDiv.className = 'zm-mention-list-empty';
+      emptyDiv.textContent = 'No users found';
+      this.element.appendChild(emptyDiv);
+      return;
+    }
+
+    this.props.items.forEach((item, index) => {
+      const itemDiv = document.createElement('div');
+      itemDiv.className = `zm-mention-list-item ${index === this.selectedIndex ? 'selected' : ''}`;
+
+      // Avatar
+      if (item.avatar) {
+        const avatarImg = document.createElement('img');
+        avatarImg.src = item.avatar;
+        avatarImg.alt = item.label;
+        avatarImg.className = 'zm-mention-list-avatar';
+        itemDiv.appendChild(avatarImg);
+      } else {
+        const avatarPlaceholder = document.createElement('div');
+        avatarPlaceholder.className = 'zm-mention-list-avatar-placeholder';
+        avatarPlaceholder.textContent = item.label.charAt(0).toUpperCase();
+        itemDiv.appendChild(avatarPlaceholder);
+      }
+
+      // Content
+      const contentDiv = document.createElement('div');
+      contentDiv.className = 'zm-mention-list-content';
+
+      const labelDiv = document.createElement('div');
+      labelDiv.className = 'zm-mention-list-label';
+      labelDiv.textContent = item.label;
+      contentDiv.appendChild(labelDiv);
+
+      if (item.description) {
+        const descDiv = document.createElement('div');
+        descDiv.className = 'zm-mention-list-description';
+        descDiv.textContent = item.description;
+        contentDiv.appendChild(descDiv);
+      }
+
+      itemDiv.appendChild(contentDiv);
+      this.element!.appendChild(itemDiv);
+
+      const handler = () => {
+        this.props.command(item);
+      };
+      itemDiv.addEventListener('click', handler);
+      this.clickHandlers.push({ element: itemDiv, handler });
+
+      itemDiv.addEventListener('mouseenter', () => {
+        this.selectedIndex = index;
+        this.updateSelection();
+      });
+    });
+  }
+
+  private updateSelection() {
+    if (!this.element) return;
+    const items = this.element.querySelectorAll('.zm-mention-list-item');
+    items.forEach((item, index) => {
+      if (index === this.selectedIndex) {
+        item.classList.add('selected');
+      } else {
+        item.classList.remove('selected');
+      }
+    });
+  }
+
+  destroy() {
     this.removeEventListeners();
     this.element?.remove();
     this.element = null;

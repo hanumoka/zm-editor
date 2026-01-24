@@ -152,6 +152,10 @@ export const enLocale: ZmEditorLocale = {
         title: 'Diagram',
         description: 'PlantUML or D2 diagram',
       },
+      emoji: {
+        title: 'Emoji',
+        description: 'Insert an emoji',
+      },
     },
   },
   bubbleMenu: {

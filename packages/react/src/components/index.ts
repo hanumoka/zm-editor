@@ -63,3 +63,20 @@ export { OpenAPINode, OpenAPI } from './OpenAPINode';
 export type { OpenAPINodeProps, OpenAPIOptions, DisplayMode } from './OpenAPINode';
 export { DiagramNode, Diagram } from './DiagramNode';
 export type { DiagramNodeProps, DiagramOptions, DiagramType } from './DiagramNode';
+export { EmojiPicker } from './EmojiPicker';
+export type { EmojiPickerProps, EmojiCategory } from './EmojiPicker';
+export { MentionList } from './MentionList';
+export type { MentionListProps, MentionListRef, MentionItem } from './MentionList';
+export { DragHandle } from './DragHandle';
+export type { DragHandleProps } from './DragHandle';
+export {
+  CollaborationProvider,
+  useCollaboration,
+  COLLABORATION_COLORS,
+  getRandomCollaborationColor,
+} from './Collaboration';
+export type {
+  CollaborationProviderProps,
+  CollaborationConfig,
+  CollaborationUser,
+} from './Collaboration';
