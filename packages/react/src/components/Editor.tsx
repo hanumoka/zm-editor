@@ -48,7 +48,7 @@ import { GraphQL } from './GraphQLNode';
 import { OpenAPI } from './OpenAPINode';
 import { Diagram } from './DiagramNode';
 import { EmojiPicker } from './EmojiPicker';
-import { MentionList, type MentionItem } from './MentionList';
+import type { MentionItem } from './MentionList';
 import { DragHandle } from './DragHandle';
 import type { ZmEditorLocale } from '../locales';
 import { enLocale } from '../locales';
