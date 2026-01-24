@@ -91,8 +91,8 @@ export function DragHandle({ editor }: DragHandleProps) {
       currentNodeRef.current = { pos: nodeStart, node: dom };
 
       setPosition({
-        top: domRect.top + window.scrollY,
-        left: domRect.left - 28 + window.scrollX,
+        top: domRect.top,
+        left: domRect.left - 28,
       });
       setVisible(true);
     },
@@ -205,7 +205,7 @@ export function DragHandle({ editor }: DragHandleProps) {
       ref={handleRef}
       className="zm-drag-handle"
       style={{
-        position: 'absolute',
+        position: 'fixed',
         top: position.top,
         left: position.left,
         zIndex: 100,

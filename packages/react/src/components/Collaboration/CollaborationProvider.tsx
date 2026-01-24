@@ -6,6 +6,7 @@ import {
   useEffect,
   useState,
   useMemo,
+  useRef,
   type ReactNode,
 } from 'react';
 
@@ -126,9 +127,14 @@ export function CollaborationProvider({
   const [isConnected, setIsConnected] = useState(false);
   const [connectedUsers, setConnectedUsers] = useState<CollaborationUser[]>([]);
 
+  // 콜백과 사용자 정보를 ref로 저장하여 useEffect 재실행 방지
+  const configRef = useRef(config);
+  configRef.current = config;
+
   useEffect(() => {
     let doc: YDoc | null = null;
     let wsProvider: WebsocketProvider | null = null;
+    let mounted = true;
 
     const initCollaboration = async () => {
       try {
@@ -136,29 +142,33 @@ export function CollaborationProvider({
         const Y = await import('yjs');
         const { WebsocketProvider: WsProvider } = await import('y-websocket');
 
+        if (!mounted) return;
+
         doc = new Y.Doc();
         wsProvider = new WsProvider(
-          config.websocketUrl,
-          config.documentName,
+          configRef.current.websocketUrl,
+          configRef.current.documentName,
           doc
         ) as unknown as WebsocketProvider;
 
         // 사용자 정보 설정
-        wsProvider.awareness.setLocalStateField('user', config.user);
+        wsProvider.awareness.setLocalStateField('user', configRef.current.user);
 
         // 연결 상태 이벤트
         wsProvider.on('status', (event: { status: string }) => {
+          if (!mounted) return;
           const connected = event.status === 'connected';
           setIsConnected(connected);
           if (connected) {
-            config.onConnect?.();
+            configRef.current.onConnect?.();
           } else {
-            config.onDisconnect?.();
+            configRef.current.onDisconnect?.();
           }
         });
 
         // 다른 사용자 상태 변경 이벤트
         wsProvider.awareness.on('change', () => {
+          if (!mounted) return;
           const states = wsProvider!.awareness.getStates();
           const users: CollaborationUser[] = [];
 
@@ -169,11 +179,13 @@ export function CollaborationProvider({
           });
 
           setConnectedUsers(users);
-          config.onAwarenessChange?.(users);
+          configRef.current.onAwarenessChange?.(users);
         });
 
-        setYdoc(doc);
-        setProvider(wsProvider);
+        if (mounted) {
+          setYdoc(doc);
+          setProvider(wsProvider);
+        }
       } catch (error) {
         console.warn(
           '[CollaborationProvider] Failed to initialize collaboration.',
@@ -186,10 +198,11 @@ export function CollaborationProvider({
     initCollaboration();
 
     return () => {
+      mounted = false;
       wsProvider?.destroy();
       doc?.destroy();
     };
-  }, [config.documentName, config.websocketUrl, config.user, config.onConnect, config.onDisconnect, config.onAwarenessChange]);
+  }, [config.documentName, config.websocketUrl]);
 
   const value = useMemo<CollaborationContextValue>(
     () => ({
