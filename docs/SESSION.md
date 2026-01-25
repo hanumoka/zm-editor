@@ -165,10 +165,12 @@
 | `metadata` | ✅ 동작 확인 |
 | `openapi` | ✅ 동작 확인 |
 | `stackTrace` | ✅ 동작 확인 |
+| `tableRow` | ✅ 동작 확인 (같은 테이블 내) |
 
-#### 향후 개선사항
-- 테이블 행(tableRow) 개별 드래그 지원
+#### 완료된 추가 기능 ✅
+- 테이블 행(tableRow) 개별 드래그 지원 (같은 테이블 내 재정렬)
 - Table 설정에 `allowTableNodeSelection: true` 추가
+- DEBUG 모드 비활성화 (프로덕션)
 
 ---
 

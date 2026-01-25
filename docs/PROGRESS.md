@@ -259,8 +259,8 @@
 | DH-002 | codeBlock 드래그 불가 | ✅ Closed | 높음 |
 | DH-003 | horizontalRule 드래그 불가 - atom 노드 posAtCoords 문제 | ✅ Closed | 높음 |
 | DH-004 | 8개 extension draggable 미설정 (apiBlock, diagram, graphql, logBlock, metadata, openapi, stackTrace, terminal) | ✅ Closed | 중간 |
-| DH-005 | tableRow 개별 드래그 미지원 | 🟡 Open | 중간 |
-| DH-006 | Table allowTableNodeSelection 미설정 | 🟢 Open | 낮음 |
+| DH-005 | tableRow 개별 드래그 미지원 | ✅ Closed | 중간 |
+| DH-006 | Table allowTableNodeSelection 미설정 | ✅ Closed | 낮음 |
 
 ---
 
