@@ -29,6 +29,8 @@ export const OpenAPI = Node.create<OpenAPIOptions>({
 
   atom: true,
 
+  draggable: true,
+
   addOptions() {
     return {
       HTMLAttributes: {
@@ -66,7 +68,7 @@ export const OpenAPI = Node.create<OpenAPIOptions>({
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ['div', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, { 'data-openapi-block': '' }), 0];
+    return ['div', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, { 'data-openapi-block': '' })];
   },
 
   addNodeView() {

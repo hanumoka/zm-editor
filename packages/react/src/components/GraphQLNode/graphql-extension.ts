@@ -29,6 +29,8 @@ export const GraphQL = Node.create<GraphQLOptions>({
 
   atom: true,
 
+  draggable: true,
+
   addOptions() {
     return {
       HTMLAttributes: {
@@ -83,7 +85,7 @@ export const GraphQL = Node.create<GraphQLOptions>({
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ['div', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, { 'data-graphql-block': '' }), 0];
+    return ['div', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, { 'data-graphql-block': '' })];
   },
 
   addNodeView() {

@@ -26,6 +26,8 @@ export const LogBlock = Node.create<LogBlockOptions>({
 
   atom: true,
 
+  draggable: true,
+
   addOptions() {
     return {
       HTMLAttributes: {
@@ -78,7 +80,7 @@ export const LogBlock = Node.create<LogBlockOptions>({
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ['div', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, { 'data-log-block': '' }), 0];
+    return ['div', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, { 'data-log-block': '' })];
   },
 
   addNodeView() {

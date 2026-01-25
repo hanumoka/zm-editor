@@ -31,6 +31,8 @@ export const Terminal = Node.create<TerminalOptions>({
 
   atom: true,
 
+  draggable: true,
+
   addOptions() {
     return {
       HTMLAttributes: {
@@ -72,7 +74,6 @@ export const Terminal = Node.create<TerminalOptions>({
       mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
         'data-terminal': '',
       }),
-      0,
     ];
   },
 

@@ -31,6 +31,8 @@ export const StackTrace = Node.create<StackTraceOptions>({
 
   atom: true,
 
+  draggable: true,
+
   addOptions() {
     return {
       HTMLAttributes: {
@@ -84,7 +86,7 @@ export const StackTrace = Node.create<StackTraceOptions>({
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ['div', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, { 'data-stack-trace-block': '' }), 0];
+    return ['div', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, { 'data-stack-trace-block': '' })];
   },
 
   addNodeView() {

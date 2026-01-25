@@ -46,6 +46,235 @@ function debugLog(category: string, ...args: unknown[]) {
   }
 }
 
+// Atom 노드 타입과 해당 data 속성 매핑
+const ATOM_NODE_DATA_ATTRIBUTES = [
+  'data-api-block',
+  'data-terminal',
+  'data-diagram-block',
+  'data-graphql-block',
+  'data-log-block',
+  'data-metadata-block',
+  'data-openapi-block',
+  'data-stack-trace-block',
+];
+
+/**
+ * DOM 요소에서 가장 가까운 NodeViewWrapper를 찾습니다.
+ * React NodeView (atom 노드 포함)를 감지하는 데 사용됩니다.
+ */
+function findClosestNodeViewWrapper(element: HTMLElement | null, editorDom: HTMLElement): HTMLElement | null {
+  let current = element;
+  while (current && current !== document.body && current !== editorDom) {
+    // Tiptap의 NodeViewWrapper는 data-node-view-wrapper 속성을 가짐
+    if (current.hasAttribute('data-node-view-wrapper')) {
+      debugLog('findWrapper', 'Found via data-node-view-wrapper');
+      return current;
+    }
+    // Atom 노드의 data 속성 확인 (data-api-block, data-terminal 등)
+    for (const attr of ATOM_NODE_DATA_ATTRIBUTES) {
+      if (current.hasAttribute(attr)) {
+        debugLog('findWrapper', 'Found via atom data attribute:', attr);
+        return current;
+      }
+    }
+    // zm- 접두사가 붙은 node wrapper 클래스 확인
+    if (current.className && typeof current.className === 'string') {
+      const classes = current.className.split(' ');
+      for (const cls of classes) {
+        if (cls.includes('-node-wrapper') || cls.includes('-node ') || cls.startsWith('zm-') && cls.includes('-block')) {
+          debugLog('findWrapper', 'Found via class:', cls);
+          return current;
+        }
+      }
+    }
+    // data-type 속성 확인 (일부 노드 뷰에서 사용)
+    if (current.hasAttribute('data-type')) {
+      debugLog('findWrapper', 'Found via data-type:', current.getAttribute('data-type'));
+      return current;
+    }
+    current = current.parentElement;
+  }
+  return null;
+}
+
+/**
+ * DOM 요소에서 최상위 블록 요소를 찾습니다.
+ * ProseMirror 에디터의 직접 자식 요소를 찾습니다.
+ */
+function findTopLevelBlockElement(element: HTMLElement | null, editorDom: HTMLElement): HTMLElement | null {
+  let current = element;
+  let lastValidBlock: HTMLElement | null = null;
+
+  while (current && current !== document.body) {
+    if (current.parentElement === editorDom) {
+      // editorDom의 직접 자식 = 최상위 블록
+      debugLog('findTopLevelBlock', 'Found direct child of editor:', current.tagName, current.className);
+      return current;
+    }
+    // editorDom 안에 있는 요소라면 기록
+    if (editorDom.contains(current)) {
+      lastValidBlock = current;
+    }
+    current = current.parentElement;
+  }
+  return lastValidBlock;
+}
+
+/**
+ * DOM 요소에서 ProseMirror 노드 위치를 찾습니다.
+ * posAtCoords가 실패할 때 폴백으로 사용됩니다.
+ */
+function findNodePosFromDOM(
+  editor: Editor,
+  element: HTMLElement
+): { pos: number; node: ProseMirrorNode } | null {
+  const editorDom = editor.view.dom;
+
+  try {
+    debugLog('findNodePosFromDOM', 'Searching from element:', element.tagName, element.className);
+
+    // 1. NodeViewWrapper 찾기
+    const wrapper = findClosestNodeViewWrapper(element, editorDom);
+    if (wrapper) {
+      debugLog('findNodePosFromDOM', 'Found wrapper:', wrapper.className, wrapper.tagName);
+
+      // 에디터의 직접 자식까지 올라가서 찾기 (ProseMirror가 추적하는 요소)
+      let nodeElement: HTMLElement | null = wrapper;
+      while (nodeElement && nodeElement.parentElement !== editorDom) {
+        nodeElement = nodeElement.parentElement;
+      }
+
+      if (nodeElement) {
+        debugLog('findNodePosFromDOM', 'Found direct child of editor:', nodeElement.tagName, nodeElement.className);
+        try {
+          const pos = editor.view.posAtDOM(nodeElement, 0);
+          debugLog('findNodePosFromDOM', 'posAtDOM for direct child returned:', pos);
+
+          if (pos >= 0) {
+            // 해당 위치에서 노드 찾기
+            const nodeAtPos = editor.state.doc.nodeAt(pos);
+            if (nodeAtPos) {
+              debugLog('findNodePosFromDOM', 'Found node at pos:', {
+                type: nodeAtPos.type.name,
+                pos: pos
+              });
+              return { pos, node: nodeAtPos as ProseMirrorNode };
+            }
+
+            // depth 1에서 노드 찾기 (경계 문제 해결)
+            const $pos = editor.state.doc.resolve(pos);
+            if ($pos.depth >= 1) {
+              const nodePos = $pos.before(1);
+              const node = editor.state.doc.nodeAt(nodePos);
+              if (node) {
+                debugLog('findNodePosFromDOM', 'Found node via $pos.before(1):', {
+                  type: node.type.name,
+                  pos: nodePos
+                });
+                return { pos: nodePos, node: node as ProseMirrorNode };
+              }
+            }
+          }
+        } catch (e) {
+          debugLog('findNodePosFromDOM', 'Error getting pos from direct child:', e);
+        }
+      }
+
+      // 원래 wrapper에서 다시 시도
+      try {
+        const pos = editor.view.posAtDOM(wrapper, 0);
+        debugLog('findNodePosFromDOM', 'posAtDOM for wrapper returned:', pos);
+
+        if (pos >= 0) {
+          const $pos = editor.state.doc.resolve(pos);
+          debugLog('findNodePosFromDOM', 'Resolved pos depth:', $pos.depth);
+
+          // depth >= 1에서 노드 찾기
+          if ($pos.depth >= 1) {
+            const nodePos = $pos.before(1);
+            const node = editor.state.doc.nodeAt(nodePos);
+            if (node) {
+              debugLog('findNodePosFromDOM', 'Found node via wrapper $pos.before(1):', {
+                type: node.type.name,
+                pos: nodePos
+              });
+              return { pos: nodePos, node: node as ProseMirrorNode };
+            }
+          }
+
+          // pos에서 직접 찾기
+          const nodeAtPos = editor.state.doc.nodeAt(pos);
+          if (nodeAtPos) {
+            debugLog('findNodePosFromDOM', 'Found node at exact pos:', {
+              type: nodeAtPos.type.name,
+              pos: pos
+            });
+            return { pos, node: nodeAtPos as ProseMirrorNode };
+          }
+
+          // pos-1에서도 시도 (경계 문제 해결)
+          if (pos > 0) {
+            const nodeAtPosMinus1 = editor.state.doc.nodeAt(pos - 1);
+            if (nodeAtPosMinus1) {
+              debugLog('findNodePosFromDOM', 'Found node at pos-1:', {
+                type: nodeAtPosMinus1.type.name,
+                pos: pos - 1
+              });
+              return { pos: pos - 1, node: nodeAtPosMinus1 as ProseMirrorNode };
+            }
+          }
+        }
+      } catch (e) {
+        debugLog('findNodePosFromDOM', 'posAtDOM error for wrapper:', e);
+      }
+    }
+
+    // 2. 최상위 블록 요소 찾기 (폴백)
+    const topBlock = findTopLevelBlockElement(element, editorDom);
+    if (topBlock) {
+      debugLog('findNodePosFromDOM', 'Trying top block element:', topBlock.tagName, topBlock.className);
+      try {
+        const pos = editor.view.posAtDOM(topBlock, 0);
+        debugLog('findNodePosFromDOM', 'Top block posAtDOM:', pos);
+
+        if (pos >= 0) {
+          // 해당 위치에서 노드 찾기
+          const nodeAtPos = editor.state.doc.nodeAt(pos);
+          if (nodeAtPos) {
+            debugLog('findNodePosFromDOM', 'Found node via top block:', {
+              type: nodeAtPos.type.name,
+              pos: pos
+            });
+            return { pos, node: nodeAtPos as ProseMirrorNode };
+          }
+
+          // resolve 후 depth 1에서 찾기
+          const $pos = editor.state.doc.resolve(pos);
+          if ($pos.depth >= 1) {
+            const nodePos = $pos.before(1);
+            const node = editor.state.doc.nodeAt(nodePos);
+            if (node) {
+              debugLog('findNodePosFromDOM', 'Found node via resolve:', {
+                type: node.type.name,
+                pos: nodePos
+              });
+              return { pos: nodePos, node: node as ProseMirrorNode };
+            }
+          }
+        }
+      } catch (e) {
+        debugLog('findNodePosFromDOM', 'Top block error:', e);
+      }
+    }
+
+    debugLog('findNodePosFromDOM', 'No node found');
+    return null;
+  } catch (e) {
+    debugLog('findNodePosFromDOM', 'Error:', e);
+    return null;
+  }
+}
+
 /**
  * 문서 구조를 디버그 로그로 출력합니다.
  */
@@ -301,6 +530,17 @@ function getContentTop(element: HTMLElement, nodeTypeName: string): number {
     return rect.top;
   }
 
+  // Atom 노드 (React NodeView) 처리: 요소의 rect.top 직접 사용
+  // React 컴포넌트 내부의 텍스트 요소는 정확한 위치를 제공하지 않을 수 있음
+  const atomNodeTypes = [
+    'apiBlock', 'terminal', 'diagram', 'graphql', 'logBlock',
+    'metadata', 'openapi', 'stackTrace', 'horizontalRule'
+  ];
+  if (atomNodeTypes.includes(nodeTypeName)) {
+    debugLog('getContentTop', `Atom node (${nodeTypeName}): using rect.top=${rect.top}`);
+    return rect.top;
+  }
+
   // 기본: 첫 번째 텍스트 요소 찾기
   const firstTextElement = findFirstTextElement(element);
   if (firstTextElement && firstTextElement !== element) {
@@ -366,6 +606,18 @@ function getNodeLineHeight(element: HTMLElement, nodeTypeName: string): number {
       debugLog('getNodeLineHeight', `TaskItem content lineHeight=${lh}`);
       return lh;
     }
+  }
+
+  // Atom 노드 (React NodeView): 고정 라인 높이 사용
+  // React 컴포넌트 내부에서 텍스트 요소를 찾는 것이 정확하지 않음
+  const atomNodeTypes = [
+    'apiBlock', 'terminal', 'diagram', 'graphql', 'logBlock',
+    'metadata', 'openapi', 'stackTrace', 'horizontalRule'
+  ];
+  if (atomNodeTypes.includes(nodeTypeName)) {
+    const atomLineHeight = 24; // 고정 라인 높이
+    debugLog('getNodeLineHeight', `Atom node (${nodeTypeName}): using fixed lineHeight=${atomLineHeight}`);
+    return atomLineHeight;
   }
 
   // 기본: 첫 번째 텍스트 요소의 라인 높이
@@ -486,18 +738,51 @@ export function DragHandle({ editor }: DragHandleProps) {
         });
       }
 
-      const posAtCoords = editor.view.posAtCoords({
-        left: coordsX,
-        top: event.clientY,
-      });
+      let draggableInfo: { node: ProseMirrorNode; pos: number; depth: number } | null = null;
+      let dom: HTMLElement | null = null;
 
-      if (!posAtCoords) {
-        debugLog('mouseMove', 'No position at coords, hiding', { x: event.clientX, y: event.clientY });
-        hideWithDelay();
-        return;
+      // 마우스가 왼쪽 여백에 있을 때, 조정된 좌표에서 실제 대상 요소 찾기
+      let targetElement: HTMLElement | null = event.target instanceof HTMLElement ? event.target : null;
+      if (isInLeftMargin) {
+        const elementAtAdjustedCoords = document.elementFromPoint(coordsX, event.clientY);
+        if (elementAtAdjustedCoords instanceof HTMLElement && editorElement.contains(elementAtAdjustedCoords)) {
+          targetElement = elementAtAdjustedCoords;
+          debugLog('mouseMove', 'Using element from adjusted coords:', targetElement.tagName, targetElement.className);
+        }
       }
 
-      const draggableInfo = findDraggableNode(editor, posAtCoords.pos);
+      // 1차 시도: React NodeView 확인 (atom 노드용)
+      // React NodeView 내부의 posAtCoords는 정확하지 않으므로 먼저 NodeViewWrapper를 확인
+      if (targetElement) {
+        const wrapper = findClosestNodeViewWrapper(targetElement, editorElement);
+        if (wrapper) {
+          debugLog('mouseMove', 'Found React NodeView wrapper, trying DOM-based detection');
+          const nodeFromDOM = findNodePosFromDOM(editor, targetElement);
+          if (nodeFromDOM) {
+            draggableInfo = {
+              node: nodeFromDOM.node,
+              pos: nodeFromDOM.pos,
+              depth: 1,
+            };
+            debugLog('mouseMove', 'Found node via DOM (React NodeView):', {
+              type: nodeFromDOM.node.type.name,
+              pos: nodeFromDOM.pos
+            });
+          }
+        }
+      }
+
+      // 2차 시도: posAtCoords를 사용하여 위치 찾기 (일반 블록용)
+      if (!draggableInfo) {
+        const posAtCoords = editor.view.posAtCoords({
+          left: coordsX,
+          top: event.clientY,
+        });
+
+        if (posAtCoords) {
+          draggableInfo = findDraggableNode(editor, posAtCoords.pos);
+        }
+      }
 
       if (!draggableInfo) {
         debugLog('mouseMove', 'No draggable node found, hiding');
@@ -505,7 +790,18 @@ export function DragHandle({ editor }: DragHandleProps) {
         return;
       }
 
-      const dom = editor.view.nodeDOM(draggableInfo.pos);
+      dom = editor.view.nodeDOM(draggableInfo.pos) as HTMLElement | null;
+
+      // DOM을 찾지 못한 경우, NodeViewWrapper에서 찾기
+      if (!dom || !(dom instanceof HTMLElement)) {
+        if (targetElement) {
+          const wrapper = findClosestNodeViewWrapper(targetElement, editorElement);
+          if (wrapper) {
+            dom = wrapper;
+            debugLog('mouseMove', 'Using NodeViewWrapper as DOM element');
+          }
+        }
+      }
 
       if (!dom || !(dom instanceof HTMLElement)) {
         debugLog('mouseMove', 'No DOM element for node, hiding');

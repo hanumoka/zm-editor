@@ -33,6 +33,8 @@ export const Metadata = Node.create<MetadataOptions>({
 
   atom: true,
 
+  draggable: true,
+
   addOptions() {
     return {
       HTMLAttributes: {
@@ -103,7 +105,7 @@ export const Metadata = Node.create<MetadataOptions>({
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ['div', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, { 'data-metadata-block': '' }), 0];
+    return ['div', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, { 'data-metadata-block': '' })];
   },
 
   addNodeView() {

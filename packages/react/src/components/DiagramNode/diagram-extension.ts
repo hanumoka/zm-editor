@@ -30,6 +30,8 @@ export const Diagram = Node.create<DiagramOptions>({
 
   atom: true,
 
+  draggable: true,
+
   addOptions() {
     return {
       HTMLAttributes: {
@@ -75,7 +77,7 @@ export const Diagram = Node.create<DiagramOptions>({
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ['div', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, { 'data-diagram-block': '' }), 0];
+    return ['div', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, { 'data-diagram-block': '' })];
   },
 
   addNodeView() {

@@ -39,6 +39,8 @@ export const ApiBlock = Node.create<ApiBlockOptions>({
 
   atom: true,
 
+  draggable: true,
+
   addOptions() {
     return {
       HTMLAttributes: {
@@ -104,7 +106,6 @@ export const ApiBlock = Node.create<ApiBlockOptions>({
       mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
         'data-api-block': '',
       }),
-      0,
     ];
   },
 
