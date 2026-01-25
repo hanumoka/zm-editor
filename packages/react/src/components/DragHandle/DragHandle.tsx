@@ -690,10 +690,57 @@ export function DragHandle({ editor }: DragHandleProps) {
 
         // 드롭 대상 노드 찾기
         debugLog('drop', '--- Finding target node ---');
-        const targetInfo = findDraggableNode(editor, dropPosInfo.pos);
+        let targetInfo = findDraggableNode(editor, dropPosInfo.pos);
+
+        // 타겟 노드를 찾지 못한 경우 (빈 paragraph, 블록 사이 등)
+        // 드롭 위치의 최상위 블록을 찾아서 사용
         if (!targetInfo) {
-          debugLog('drop', 'ERROR: Could not find target draggable node');
-          return;
+          debugLog('drop', 'No draggable node at drop position, trying to find nearest block');
+
+          // 드롭 위치에서 노드 직접 확인
+          const nodeAtDrop = editor.state.doc.nodeAt(dropPosInfo.pos);
+          if (nodeAtDrop) {
+            debugLog('drop', 'Found node at drop position:', nodeAtDrop.type.name, 'size:', nodeAtDrop.nodeSize);
+            targetInfo = {
+              node: nodeAtDrop as ProseMirrorNode,
+              pos: dropPosInfo.pos,
+              depth: 1,
+            };
+          } else {
+            // 노드가 없으면 resolve해서 가장 가까운 블록 찾기
+            try {
+              const resolved = editor.state.doc.resolve(dropPosInfo.pos);
+              if (resolved.depth >= 1) {
+                const parentNode = resolved.node(1);
+                const parentPos = resolved.before(1);
+                debugLog('drop', 'Using parent node:', parentNode.type.name, 'at pos:', parentPos);
+                targetInfo = {
+                  node: parentNode as ProseMirrorNode,
+                  pos: parentPos,
+                  depth: 1,
+                };
+              } else {
+                // depth가 0이면 해당 위치 바로 뒤의 노드 사용
+                const afterPos = dropPosInfo.pos;
+                const afterNode = editor.state.doc.nodeAt(afterPos);
+                if (afterNode) {
+                  debugLog('drop', 'Using node after drop position:', afterNode.type.name);
+                  targetInfo = {
+                    node: afterNode as ProseMirrorNode,
+                    pos: afterPos,
+                    depth: 1,
+                  };
+                }
+              }
+            } catch (e) {
+              debugLog('drop', 'Error resolving drop position:', e);
+            }
+          }
+
+          if (!targetInfo) {
+            debugLog('drop', 'ERROR: Could not find any target node');
+            return;
+          }
         }
         debugLog('drop', 'Target node found:', {
           type: targetInfo.node.type.name,
@@ -801,53 +848,101 @@ export function DragHandle({ editor }: DragHandleProps) {
           editor.view.dispatch(tr);
           debugLog('drop', 'Transaction dispatched successfully');
           debugDocumentStructure(editor, 'AFTER DROP (same parent blocks)');
-        } else {
-          // 다른 부모로 이동하는 경우 - 최상위 블록 단위로 이동
-          debugLog('drop', '=== CASE: Different parents - moving top-level blocks ===');
-          const topSourceResolved = editor.state.doc.resolve(sourcePos);
-          const topTargetResolved = editor.state.doc.resolve(targetInfo.pos);
+        } else if (bothAreListItems) {
+          // 다른 리스트 간 아이템 이동 (예: taskList A의 item을 taskList B로)
+          debugLog('drop', '=== CASE: Different parents, both list items ===');
 
-          const topSourcePos = topSourceResolved.before(1);
-          const topTargetPos = topTargetResolved.before(1);
-
-          debugLog('drop', 'Top-level positions:', { topSourcePos, topTargetPos });
-
-          if (topSourcePos === topTargetPos) {
-            debugLog('drop', 'Same top-level block, ignoring');
-            return;
-          }
-
-          const topSourceNode = editor.state.doc.nodeAt(topSourcePos);
-          if (!topSourceNode) {
-            debugLog('drop', 'ERROR: Could not get top source node');
-            return;
-          }
-
-          debugLog('drop', 'Top source node:', {
-            type: topSourceNode.type.name,
-            nodeSize: topSourceNode.nodeSize
-          });
-
-          const topSourceSlice = editor.state.doc.slice(topSourcePos, topSourcePos + topSourceNode.nodeSize);
+          const sourceSlice = editor.state.doc.slice(sourceInfo.pos, sourceInfo.pos + sourceInfo.node.nodeSize);
+          debugLog('drop', 'Moving individual list item between lists');
 
           const tr = editor.state.tr;
 
-          if (topTargetPos > topSourcePos) {
-            debugLog('drop', 'Top target is AFTER top source');
-            debugLog('drop', 'Insert at:', topTargetPos, 'Delete:', topSourcePos, '-', topSourcePos + topSourceNode.nodeSize);
-            tr.insert(topTargetPos, topSourceSlice.content);
-            tr.delete(topSourcePos, topSourcePos + topSourceNode.nodeSize);
+          // 타겟 위치 계산 - 타겟 아이템 뒤에 삽입
+          const insertPos = targetInfo.pos + targetInfo.node.nodeSize;
+
+          debugLog('drop', 'Insert at:', insertPos, 'Delete:', sourceInfo.pos, '-', sourceInfo.pos + sourceInfo.node.nodeSize);
+
+          if (insertPos > sourceInfo.pos) {
+            // 타겟이 소스 뒤에 있으면 - 먼저 삽입 후 삭제
+            tr.insert(insertPos, sourceSlice.content);
+            tr.delete(sourceInfo.pos, sourceInfo.pos + sourceInfo.node.nodeSize);
           } else {
-            debugLog('drop', 'Top target is BEFORE top source');
-            debugLog('drop', 'Delete:', topSourcePos, '-', topSourcePos + topSourceNode.nodeSize, 'Insert at:', topTargetPos);
-            tr.delete(topSourcePos, topSourcePos + topSourceNode.nodeSize);
-            tr.insert(topTargetPos, topSourceSlice.content);
+            // 타겟이 소스 앞에 있으면 - 먼저 삭제 후 삽입
+            tr.delete(sourceInfo.pos, sourceInfo.pos + sourceInfo.node.nodeSize);
+            tr.insert(insertPos - sourceInfo.node.nodeSize, sourceSlice.content);
           }
 
           debugLog('drop', 'Dispatching transaction...');
           editor.view.dispatch(tr);
           debugLog('drop', 'Transaction dispatched successfully');
-          debugDocumentStructure(editor, 'AFTER DROP (different parents)');
+          debugDocumentStructure(editor, 'AFTER DROP (list items between lists)');
+        } else if (DRAGGABLE_ITEM_TYPES.includes(sourceInfo.node.type.name)) {
+          // 리스트 아이템을 리스트가 아닌 곳으로 이동 (예: taskItem을 paragraph 위치로)
+          debugLog('drop', '=== CASE: List item to non-list location ===');
+
+          // 소스 아이템의 부모 리스트 타입 확인
+          const sourceParentNode = editor.state.doc.nodeAt(sourceParentPos);
+          const parentListType = sourceParentNode?.type.name || 'taskList';
+          debugLog('drop', 'Parent list type:', parentListType);
+
+          // 아이템만 추출
+          const sourceSlice = editor.state.doc.slice(sourceInfo.pos, sourceInfo.pos + sourceInfo.node.nodeSize);
+
+          // 타겟의 최상위 블록 위치 계산
+          const topTargetResolved = editor.state.doc.resolve(targetInfo.pos);
+          const topTargetPos = topTargetResolved.before(1);
+
+          debugLog('drop', 'Target top-level pos:', topTargetPos);
+
+          const tr = editor.state.tr;
+
+          // 새로운 리스트로 래핑하여 삽입
+          const listNodeType = editor.schema.nodes[parentListType];
+          if (listNodeType) {
+            const newListNode = listNodeType.create(null, sourceSlice.content);
+
+            if (topTargetPos > sourceInfo.pos) {
+              tr.insert(topTargetPos, newListNode);
+              tr.delete(sourceInfo.pos, sourceInfo.pos + sourceInfo.node.nodeSize);
+            } else {
+              tr.delete(sourceInfo.pos, sourceInfo.pos + sourceInfo.node.nodeSize);
+              tr.insert(topTargetPos, newListNode);
+            }
+
+            debugLog('drop', 'Created new list wrapper:', parentListType);
+          } else {
+            debugLog('drop', 'ERROR: Could not find list node type:', parentListType);
+            return;
+          }
+
+          debugLog('drop', 'Dispatching transaction...');
+          editor.view.dispatch(tr);
+          debugLog('drop', 'Transaction dispatched successfully');
+          debugDocumentStructure(editor, 'AFTER DROP (list item to non-list)');
+        } else {
+          // 일반 블록을 다른 위치로 이동
+          debugLog('drop', '=== CASE: Different parents - moving blocks ===');
+
+          const sourceSlice = editor.state.doc.slice(sourceInfo.pos, sourceInfo.pos + sourceInfo.node.nodeSize);
+
+          // 타겟의 최상위 블록 위치 계산
+          const topTargetResolved = editor.state.doc.resolve(targetInfo.pos);
+          const topTargetPos = topTargetResolved.before(1);
+
+          const tr = editor.state.tr;
+
+          if (topTargetPos > sourceInfo.pos) {
+            tr.insert(topTargetPos, sourceSlice.content);
+            tr.delete(sourceInfo.pos, sourceInfo.pos + sourceInfo.node.nodeSize);
+          } else {
+            tr.delete(sourceInfo.pos, sourceInfo.pos + sourceInfo.node.nodeSize);
+            tr.insert(topTargetPos, sourceSlice.content);
+          }
+
+          debugLog('drop', 'Dispatching transaction...');
+          editor.view.dispatch(tr);
+          debugLog('drop', 'Transaction dispatched successfully');
+          debugDocumentStructure(editor, 'AFTER DROP (different parents blocks)');
         }
       } catch (e) {
         debugLog('drop', 'ERROR in drop handler:', e);
