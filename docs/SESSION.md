@@ -141,7 +141,7 @@
 
 ## 알려진 이슈 ⚠️
 
-### DragHandle - 주요 블록 드래그 앤 드롭 완료 ✅ (2026-01-25)
+### DragHandle - 모든 블록 드래그 앤 드롭 완료 ✅ (2026-01-25)
 
 #### 동작 확인됨 ✅
 
@@ -156,17 +156,15 @@
 | `table` | ✅ 동작 확인 |
 | `bulletList` | ✅ 동작 확인 |
 | `taskList` | ✅ 동작 확인 |
-
-#### 미해결 이슈 (우선순위 낮음)
-
-**1. atom 노드의 posAtCoords 문제**
-- **해당**: `horizontalRule`, 모든 `atom: true` 노드
-- **증상**: 노드 위 호버해도 위치 감지 실패
-- **원인**: atom 노드는 내부 콘텐츠 없어 posAtCoords 부정확
-
-**2. draggable 속성 미설정 (8개 extension)**
-- **해당 노드**: `apiBlock`, `diagram`, `graphql`, `logBlock`, `metadata`, `openapi`, `stackTrace`, `terminal`
-- **해결 필요**: 각 extension에 `draggable: true` 추가
+| `horizontalRule` | ✅ 동작 확인 |
+| `apiBlock` | ✅ 동작 확인 |
+| `terminal` | ✅ 동작 확인 |
+| `diagram` | ✅ 동작 확인 |
+| `graphql` | ✅ 동작 확인 |
+| `logBlock` | ✅ 동작 확인 |
+| `metadata` | ✅ 동작 확인 |
+| `openapi` | ✅ 동작 확인 |
+| `stackTrace` | ✅ 동작 확인 |
 
 #### 향후 개선사항
 - 테이블 행(tableRow) 개별 드래그 지원

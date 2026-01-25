@@ -582,10 +582,27 @@ body {
 }
 
 /* Horizontal Rule */
+.zm-horizontal-rule-wrapper {
+  padding: 12px 0;
+  margin: 0.5rem 0;
+  cursor: pointer;
+  position: relative;
+}
+
+.zm-horizontal-rule-wrapper:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+  border-radius: 4px;
+}
+
+.zm-horizontal-rule-wrapper.ProseMirror-selectednode {
+  background-color: rgba(59, 130, 246, 0.1);
+  border-radius: 4px;
+}
+
 .zm-horizontal-rule {
   border: none;
   border-top: 2px solid #e5e7eb;
-  margin: 1.5rem 0;
+  margin: 0;
 }
 
 /* Placeholder */
@@ -3738,6 +3755,14 @@ kbd {
 }
 
 /* Horizontal Rule */
+[data-theme="dark"] .zm-horizontal-rule-wrapper:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .zm-horizontal-rule-wrapper.ProseMirror-selectednode {
+  background-color: rgba(59, 130, 246, 0.2);
+}
+
 [data-theme="dark"] .zm-horizontal-rule {
   border-top-color: #4b5563;
 }

@@ -255,10 +255,10 @@
 
 | ID | 설명 | 상태 | 우선순위 |
 |----|------|------|----------|
-| DH-001 | table 드래그 불가 - NON_DRAGGABLE_TYPES 로직 문제 | 🔴 Open | 높음 |
-| DH-002 | codeBlock 드래그 불가 | 🔴 Open | 높음 |
-| DH-003 | horizontalRule 드래그 불가 - atom 노드 posAtCoords 문제 | 🔴 Open | 높음 |
-| DH-004 | 8개 extension draggable 미설정 (apiBlock, diagram, graphql, logBlock, metadata, openapi, stackTrace, terminal) | 🟡 Open | 중간 |
+| DH-001 | table 드래그 불가 - NON_DRAGGABLE_TYPES 로직 문제 | ✅ Closed | 높음 |
+| DH-002 | codeBlock 드래그 불가 | ✅ Closed | 높음 |
+| DH-003 | horizontalRule 드래그 불가 - atom 노드 posAtCoords 문제 | ✅ Closed | 높음 |
+| DH-004 | 8개 extension draggable 미설정 (apiBlock, diagram, graphql, logBlock, metadata, openapi, stackTrace, terminal) | ✅ Closed | 중간 |
 | DH-005 | tableRow 개별 드래그 미지원 | 🟡 Open | 중간 |
 | DH-006 | Table allowTableNodeSelection 미설정 | 🟢 Open | 낮음 |
 
@@ -267,6 +267,26 @@
 ## 변경 이력
 
 ### 2026-01-25
+
+**DragHandle - Atom 노드 드래그 지원 완료**
+
+#### Atom 노드 드래그 지원 (8개 extension)
+- `apiBlock`, `terminal`, `diagram`, `graphql`, `logBlock`, `metadata`, `openapi`, `stackTrace`에 `draggable: true` 추가
+- React NodeView 감지를 위한 DOM 기반 탐지 로직 추가
+- `findClosestNodeViewWrapper`: atom 노드의 data 속성 (`data-api-block`, `data-terminal` 등) 감지
+- `getContentTop`, `getNodeLineHeight`: atom 노드에 대한 특별 처리 (React 컴포넌트 내부 탐지 불가 문제 해결)
+- `document.elementFromPoint`: 왼쪽 여백에서 정확한 요소 감지
+
+#### HorizontalRule 드래그 지원
+- `CustomHorizontalRule` 확장 생성 (`draggable: true`)
+- 래퍼 div (`zm-horizontal-rule-wrapper`)로 선택 영역 확대
+- `data-type="horizontalRule"` 속성 추가
+- CSS: 패딩으로 클릭 영역 확대, 호버/선택 시각적 피드백
+
+#### 동작 확인된 블록 (18종)
+paragraph, heading, codeBlock, blockquote, callout, toggle, table, bulletList, taskList, horizontalRule, apiBlock, terminal, diagram, graphql, logBlock, metadata, openapi, stackTrace
+
+---
 
 **DragHandle 대폭 개선 및 코드 리뷰**
 

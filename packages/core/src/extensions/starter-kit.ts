@@ -17,6 +17,30 @@ import TableHeader from '@tiptap/extension-table-header';
 import TableCell from '@tiptap/extension-table-cell';
 import { common, createLowlight } from 'lowlight';
 
+// HorizontalRule 확장에 draggable 속성 추가 및 선택 영역 확대
+const CustomHorizontalRule = HorizontalRule.extend({
+  draggable: true,
+
+  // 더 넓은 선택 영역을 위한 래퍼 div 사용
+  renderHTML({ HTMLAttributes }) {
+    return [
+      'div',
+      {
+        class: 'zm-horizontal-rule-wrapper',
+        'data-type': 'horizontalRule',
+      },
+      ['hr', HTMLAttributes],
+    ];
+  },
+
+  parseHTML() {
+    return [
+      { tag: 'hr' },
+      { tag: 'div.zm-horizontal-rule-wrapper hr' },
+    ];
+  },
+});
+
 // TableCell 확장에 backgroundColor 속성 추가
 const CustomTableCell = TableCell.extend({
   addAttributes() {
@@ -127,8 +151,8 @@ export function createStarterExtensions(options: ZmStarterKitOptions = {}) {
       },
     }),
 
-    // 구분선
-    HorizontalRule.configure({
+    // 구분선 (draggable 지원)
+    CustomHorizontalRule.configure({
       HTMLAttributes: {
         class: 'zm-horizontal-rule',
       },
