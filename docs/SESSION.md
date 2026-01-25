@@ -141,27 +141,23 @@
 
 ## 알려진 이슈 ⚠️
 
-### DragHandle - 일부 블록 드래그 불가 (2026-01-25 진행중)
+### DragHandle - 주요 블록 드래그 앤 드롭 완료 ✅ (2026-01-25)
 
-#### 수정 완료 ✅
+#### 동작 확인됨 ✅
 
-**1. 드래그 중 문서 변경으로 인한 소스 노드 못 찾는 문제**
-- **증상**: paragraph, heading, codeBlock 등 핸들 표시되지만 드롭 시 실패
-- **원인**: ProseMirror 네이티브 드래그가 문서를 변경하여 저장된 위치가 무효화됨
-- **해결**: `handleDragStart`에서 `nodeJSON` 저장, `handleDrop`에서 JSON으로 노드 재생성
+| 블록 | 상태 |
+|------|------|
+| `paragraph` | ✅ 동작 확인 |
+| `heading` | ✅ 동작 확인 |
+| `codeBlock` | ✅ 동작 확인 |
+| `blockquote` | ✅ 동작 확인 |
+| `callout` | ✅ 동작 확인 |
+| `toggle` | ✅ 동작 확인 |
+| `table` | ✅ 동작 확인 |
+| `bulletList` | ✅ 동작 확인 |
+| `taskList` | ✅ 동작 확인 |
 
-**2. 테이블 드래그 핸들 미표시 문제**
-- **증상**: 테이블 위 호버 시 드래그 핸들 미표시
-- **원인**: `NON_DRAGGABLE_TYPES`에 table 관련 모든 타입 포함
-- **해결**: `TABLE_INTERNAL_TYPES` 분리, tableCell/tableRow는 `continue`로 상위 탐색
-
-#### 검증 필요 ⏳
-
-- [ ] paragraph, heading, codeBlock 드래그 앤 드롭 동작 확인
-- [ ] table 전체 드래그 앤 드롭 동작 확인
-- [ ] horizontalRule (atom 노드) 핸들 표시 확인
-
-#### 미해결 이슈
+#### 미해결 이슈 (우선순위 낮음)
 
 **1. atom 노드의 posAtCoords 문제**
 - **해당**: `horizontalRule`, 모든 `atom: true` 노드
@@ -170,9 +166,9 @@
 
 **2. draggable 속성 미설정 (8개 extension)**
 - **해당 노드**: `apiBlock`, `diagram`, `graphql`, `logBlock`, `metadata`, `openapi`, `stackTrace`, `terminal`
-- **해결**: 각 extension에 `draggable: true` 추가 필요
+- **해결 필요**: 각 extension에 `draggable: true` 추가
 
-#### 추가 요구사항 (향후)
+#### 향후 개선사항
 - 테이블 행(tableRow) 개별 드래그 지원
 - Table 설정에 `allowTableNodeSelection: true` 추가
 
@@ -180,17 +176,22 @@
 
 ## 최근 개선 사항
 
-### DragHandle 드래그 앤 드롭 수정 - 2026-01-25 🔧
+### DragHandle 드래그 앤 드롭 수정 완료 - 2026-01-25 ✅
 
 #### 드래그 중 문서 변경 문제 해결
 - **문제**: 드래그 시작 시 저장한 위치가 드롭 시점에 무효화됨
 - **해결**: `handleDragStart`에서 노드 JSON 저장, `handleDrop`에서 JSON으로 노드 재생성
 - 원본 위치의 노드가 존재하고 타입이 일치할 때만 삭제
+- `schema.nodeFromJSON()` 사용하여 노드 재생성
+- 위치 resolve 시 try-catch 예외 처리 추가
 
 #### 테이블 드래그 지원
 - `TABLE_INTERNAL_TYPES` 분리 (`tableCell`, `tableHeader`, `tableRow`)
 - 테이블 내부 요소 위 호버 시 `table` 노드 반환
 - `NON_DRAGGABLE_TYPES`를 빈 배열로 변경 (모든 블록 드래그 가능)
+
+#### 동작 확인된 블록 (9종)
+paragraph, heading, codeBlock, blockquote, callout, toggle, table, bulletList, taskList
 
 ### DragHandle 대폭 개선 - 2026-01-25 ✅
 
