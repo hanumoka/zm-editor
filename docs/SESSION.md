@@ -141,10 +141,14 @@
 
 ## 알려진 이슈 ⚠️
 
-### DragHandle (블록 드래그 앤 드롭)
-- **위치 정렬**: Heading, Checkbox 등 일부 블록에서 핸들 위치가 텍스트와 정확히 정렬되지 않음
-- **TaskItem 드래그**: 개별 체크박스 항목 드래그가 불안정함
-- **향후 개선 필요**: 블록 드래그 앤 드롭 기능 전반적인 재검토 필요
+### DragHandle (블록 드래그 앤 드롭) - 2026-01-25 개선됨 ✅
+- **위치 정렬 개선**: Heading, TaskItem, ListItem에 대한 노드 타입별 위치 계산 로직 추가
+  - `getContentTop()`: 노드 타입에 따라 콘텐츠 영역의 상단 위치를 정확히 계산
+  - `findTaskItemContentElement()`: TaskItem에서 텍스트 콘텐츠 영역(div)을 정확히 찾음
+  - `getNodeLineHeight()`: 노드 타입에 따른 적절한 라인 높이 계산
+- **TaskItem 드래그 안정화**: 같은 리스트 내 아이템 이동 로직 개선
+  - `doc.slice()`를 사용하여 노드 복사 방식 변경
+  - 삽입/삭제 순서 최적화로 위치 계산 오류 방지
 
 ---
 

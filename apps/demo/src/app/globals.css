@@ -7647,8 +7647,8 @@ kbd {
   border-radius: 4px;
   cursor: grab;
   color: #9ca3af;
-  transition: all 0.15s;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  /* transition 완전 제거 - 위치 이동 애니메이션 방지 */
 }
 
 .zm-drag-handle:hover {
