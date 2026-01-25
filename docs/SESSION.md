@@ -141,7 +141,38 @@
 
 ## 알려진 이슈 ⚠️
 
-현재 알려진 이슈 없음
+### DragHandle - 일부 블록 드래그 불가 (2026-01-25 분석)
+
+#### 확인된 문제 블록
+| 노드 타입 | 증상 | 원인 |
+|----------|------|------|
+| `table` | 드래그 핸들 미표시 | NON_DRAGGABLE_TYPES 로직 문제 |
+| `codeBlock` | 드래그 핸들 미표시 | 원인 분석 필요 |
+| `horizontalRule` | 드래그 핸들 미표시 | atom 노드, posAtCoords 문제 |
+
+#### 원인 1: NON_DRAGGABLE_TYPES 로직 문제
+- **해당**: `table`, `tableRow`, `tableCell`, `tableHeader`
+- **증상**: 테이블 내부 호버 시 드래그 핸들 미표시
+- **원인**: `findDraggableNode`에서 tableCell을 만나면 즉시 `return null`
+- **해결**: tableCell/tableRow 만나면 `continue`로 상위 탐색 계속
+
+#### 원인 2: atom 노드의 posAtCoords 문제
+- **해당**: `horizontalRule`, 모든 `atom: true` 노드
+- **증상**: 노드 위 호버해도 위치 감지 실패
+- **원인**: atom 노드는 내부 콘텐츠 없어 posAtCoords 부정확
+
+#### 원인 3: draggable 속성 미설정 (8개 extension)
+- **해당 노드**: `apiBlock`, `diagram`, `graphql`, `logBlock`, `metadata`, `openapi`, `stackTrace`, `terminal`
+- **해결**: 각 extension에 `draggable: true` 추가 필요
+
+#### 검증 필요 블록
+- `callout`, `toggle`, `image` (content 있는 NodeView)
+- `bookmark`, `embed`, `math`, `mermaid` 등 (draggable: true 설정됨)
+
+#### 추가 요구사항
+- 테이블 행(tableRow) 개별 드래그 지원 필요
+- 테이블 전체 드래그도 동시 지원 필요
+- Table 설정에 `allowTableNodeSelection: true` 추가 필요
 
 ---
 
