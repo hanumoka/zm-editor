@@ -25,9 +25,9 @@ const MIN_LEFT_MARGIN = 4;
 const LEFT_MARGIN_X_OFFSET = 10;
 
 // 개별 항목으로 드래그 가능한 노드 타입
-const DRAGGABLE_ITEM_TYPES = ['taskItem', 'listItem'];
+const DRAGGABLE_ITEM_TYPES = ['taskItem', 'listItem', 'tableRow'];
 // 테이블 내부 노드 (테이블 자체가 아닌 내부 요소들) - 이 요소 위에서는 테이블 전체를 드래그
-const TABLE_INTERNAL_TYPES = ['tableCell', 'tableHeader', 'tableRow'];
+const TABLE_INTERNAL_TYPES = ['tableCell', 'tableHeader'];
 // 드래그 핸들을 표시하지 않을 노드 타입 (완전히 드래그 불가)
 const NON_DRAGGABLE_TYPES: string[] = [];
 // 노드 타입별 추가 오프셋 (미세 조정)
@@ -38,7 +38,7 @@ const NODE_TYPE_OFFSETS: Record<string, number> = {
 };
 
 // 디버그 모드 플래그 (프로덕션에서는 false)
-const DEBUG = true;
+const DEBUG = false;
 
 function debugLog(category: string, ...args: unknown[]) {
   if (DEBUG) {
@@ -1174,8 +1174,21 @@ export function DragHandle({ editor }: DragHandleProps) {
         const sameParent = sourceParentPos === targetParentPos && sourceInfo.depth === targetInfo.depth;
         const bothAreListItems = DRAGGABLE_ITEM_TYPES.includes(sourceInfo.node.type.name) &&
                                   DRAGGABLE_ITEM_TYPES.includes(targetInfo.node.type.name);
+        const isTableRowDrag = nodeTypeName === 'tableRow';
 
-        debugLog('drop', 'Move type:', { sameParent, bothAreListItems });
+        debugLog('drop', 'Move type:', { sameParent, bothAreListItems, isTableRowDrag });
+
+        // tableRow 특별 처리: 같은 테이블 내에서만 이동 가능
+        if (isTableRowDrag) {
+          if (!sameParent) {
+            debugLog('drop', 'ERROR: tableRow can only be reordered within the same table');
+            return;
+          }
+          if (targetInfo.node.type.name !== 'tableRow') {
+            debugLog('drop', 'ERROR: tableRow can only be dropped on another tableRow');
+            return;
+          }
+        }
 
         if (sameParent && bothAreListItems) {
           // 같은 리스트 내에서 아이템 이동 (taskItem끼리, listItem끼리)

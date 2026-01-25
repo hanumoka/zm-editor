@@ -239,6 +239,7 @@ export function createStarterExtensions(options: ZmStarterKitOptions = {}) {
     extensions.push(
       Table.configure({
         resizable: true,
+        allowTableNodeSelection: true,
         HTMLAttributes: {
           class: 'zm-table',
         },
