@@ -19,6 +19,10 @@ const HANDLE_SIZE = 24;
 const HANDLE_LEFT_OFFSET = 32;
 // 숨김 지연 시간 (ms)
 const HIDE_DELAY = 150;
+// 뷰포트 왼쪽 경계 최소 여백 (px)
+const MIN_LEFT_MARGIN = 4;
+// 왼쪽 여백 영역에서 마우스 X좌표 조정값 (px)
+const LEFT_MARGIN_X_OFFSET = 10;
 
 // 개별 항목으로 드래그 가능한 노드 타입
 const DRAGGABLE_ITEM_TYPES = ['taskItem', 'listItem'];
@@ -31,8 +35,8 @@ const NODE_TYPE_OFFSETS: Record<string, number> = {
   listItem: 0,
 };
 
-// 디버그 모드 플래그
-const DEBUG = true;
+// 디버그 모드 플래그 (프로덕션에서는 false)
+const DEBUG = false;
 
 function debugLog(category: string, ...args: unknown[]) {
   if (DEBUG) {
@@ -119,12 +123,18 @@ function findDraggableNode(
       debugLog('findDraggableNode', 'Node at exact pos:', nodeTypeName, 'nodeSize:', nodeAtPos.nodeSize);
 
       if (DRAGGABLE_ITEM_TYPES.includes(nodeTypeName)) {
-        // 해당 위치의 depth 계산
-        const nodeResolvedPos = editor.state.doc.resolve(pos + 1);
+        // 해당 위치의 depth 계산 (범위 초과 시 안전하게 처리)
+        let depth = 1;
+        try {
+          const nodeResolvedPos = editor.state.doc.resolve(pos + 1);
+          depth = nodeResolvedPos.depth;
+        } catch {
+          debugLog('findDraggableNode', 'Could not resolve pos+1, using depth=1');
+        }
         const result = {
           node: nodeAtPos as ProseMirrorNode,
           pos: pos,
-          depth: nodeResolvedPos.depth,
+          depth: depth,
         };
         debugLog('findDraggableNode', 'Found draggable item at exact pos:', {
           type: nodeTypeName,
@@ -369,6 +379,7 @@ export function DragHandle({ editor }: DragHandleProps) {
   const currentNodeRef = useRef<{ pos: number; nodeSize: number; depth: number } | null>(null);
   const hideTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isMouseOverHandleRef = useRef(false);
+  const isDraggingRef = useRef(false);
 
   const cancelHideTimeout = useCallback(() => {
     if (hideTimeoutRef.current) {
@@ -384,16 +395,16 @@ export function DragHandle({ editor }: DragHandleProps) {
     hideTimeoutRef.current = setTimeout(() => {
       debugLog('visibility', 'hideWithDelay: Timeout fired', {
         isMouseOverHandle: isMouseOverHandleRef.current,
-        isDragging
+        isDragging: isDraggingRef.current
       });
-      if (!isMouseOverHandleRef.current && !isDragging) {
+      if (!isMouseOverHandleRef.current && !isDraggingRef.current) {
         debugLog('visibility', 'hideWithDelay: >>> HIDING HANDLE <<<');
         setVisible(false);
       } else {
         debugLog('visibility', 'hideWithDelay: Skipped hiding (mouse over handle or dragging)');
       }
     }, HIDE_DELAY);
-  }, [cancelHideTimeout, isDragging]);
+  }, [cancelHideTimeout]);
 
   const handleMouseMove = useCallback(
     (event: MouseEvent) => {
@@ -437,7 +448,7 @@ export function DragHandle({ editor }: DragHandleProps) {
 
       if (isInLeftMargin) {
         // 에디터 왼쪽 가장자리 + 약간의 여백으로 조정
-        coordsX = editorRect.left + 10;
+        coordsX = editorRect.left + LEFT_MARGIN_X_OFFSET;
         debugLog('mouseMove', 'Mouse in left margin, adjusting X:', {
           originalX: event.clientX,
           adjustedX: coordsX,
@@ -511,7 +522,7 @@ export function DragHandle({ editor }: DragHandleProps) {
       const newTop = contentTop + verticalOffset + nodeOffset;
       // 핸들이 뷰포트 왼쪽 밖으로 나가지 않도록 최소값 보장
       const calculatedLeft = editorRect.left - HANDLE_LEFT_OFFSET;
-      const newLeft = Math.max(4, calculatedLeft); // 최소 4px 여백 유지
+      const newLeft = Math.max(MIN_LEFT_MARGIN, calculatedLeft);
 
       if (isNewNode) {
         debugLog('position', '=== Position Calculation for NEW node ===');
@@ -584,6 +595,7 @@ export function DragHandle({ editor }: DragHandleProps) {
       }
 
       setIsDragging(true);
+      isDraggingRef.current = true;
       event.dataTransfer.effectAllowed = 'move';
 
       const { pos, nodeSize, depth } = currentNodeRef.current;
@@ -636,6 +648,7 @@ export function DragHandle({ editor }: DragHandleProps) {
     debugLog('dragEnd', '========== DRAG END ==========');
     debugLog('visibility', '>>> Drag ended - setIsDragging(false), setVisible(false)');
     setIsDragging(false);
+    isDraggingRef.current = false;
     setVisible(false);
   }, []);
 

@@ -2,7 +2,7 @@
 
 > **이 파일은 Claude 세션 시작 시 자동으로 읽어야 합니다.**
 >
-> 최종 업데이트: 2026-01-24
+> 최종 업데이트: 2026-01-25
 
 ---
 
@@ -141,14 +141,40 @@
 
 ## 알려진 이슈 ⚠️
 
-### DragHandle (블록 드래그 앤 드롭) - 2026-01-25 개선됨 ✅
-- **위치 정렬 개선**: Heading, TaskItem, ListItem에 대한 노드 타입별 위치 계산 로직 추가
-  - `getContentTop()`: 노드 타입에 따라 콘텐츠 영역의 상단 위치를 정확히 계산
-  - `findTaskItemContentElement()`: TaskItem에서 텍스트 콘텐츠 영역(div)을 정확히 찾음
-  - `getNodeLineHeight()`: 노드 타입에 따른 적절한 라인 높이 계산
-- **TaskItem 드래그 안정화**: 같은 리스트 내 아이템 이동 로직 개선
-  - `doc.slice()`를 사용하여 노드 복사 방식 변경
-  - 삽입/삭제 순서 최적화로 위치 계산 오류 방지
+현재 알려진 이슈 없음
+
+---
+
+## 최근 개선 사항
+
+### DragHandle 대폭 개선 - 2026-01-25 ✅
+
+#### 위치 정렬 개선
+- `getContentTop()`: 노드 타입에 따라 콘텐츠 영역의 상단 위치를 정확히 계산
+- `findTaskItemContentElement()`: TaskItem에서 텍스트 콘텐츠 영역(div)을 정확히 찾음
+- `getNodeLineHeight()`: 노드 타입에 따른 적절한 라인 높이 계산
+- 핸들이 뷰포트 왼쪽 밖으로 잘리지 않도록 최소 여백 보장
+
+#### 노드 경계 감지 개선
+- 왼쪽 여백 영역에서 마우스 X좌표 자동 조정
+- `parentOffset === 0` 체크로 노드 경계 정확히 감지
+- `nodeAt(pos)` 직접 확인으로 정확한 노드 반환
+
+#### 개별 리스트 아이템 드래그 (Notion 스타일) ✅
+- taskItem, listItem 개별 드래그 지원 (전체 리스트 블록이 아닌 개별 아이템)
+- 5가지 드롭 케이스 처리:
+  1. 같은 리스트 내 아이템 이동
+  2. 같은 부모 내 일반 블록 이동
+  3. 다른 리스트 간 아이템 이동
+  4. 리스트 아이템을 비-리스트 위치로 이동 (새 리스트로 래핑)
+  5. 일반 블록을 다른 위치로 이동
+- 드롭 대상 감지 폴백 로직 (빈 paragraph, 블록 사이 등)
+
+#### 코드 품질 개선
+- `DEBUG = false` (프로덕션 모드)
+- stale closure 문제 해결 (`isDraggingRef` ref 추가)
+- magic number 상수화 (`MIN_LEFT_MARGIN`, `LEFT_MARGIN_X_OFFSET`)
+- 예외 처리 강화 (pos+1 resolve 시 try-catch)
 
 ---
 
