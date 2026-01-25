@@ -26,8 +26,10 @@ const LEFT_MARGIN_X_OFFSET = 10;
 
 // 개별 항목으로 드래그 가능한 노드 타입
 const DRAGGABLE_ITEM_TYPES = ['taskItem', 'listItem'];
-// 드래그 핸들을 표시하지 않을 노드 타입
-const NON_DRAGGABLE_TYPES = ['tableCell', 'tableHeader', 'tableRow', 'table'];
+// 테이블 내부 노드 (테이블 자체가 아닌 내부 요소들) - 이 요소 위에서는 테이블 전체를 드래그
+const TABLE_INTERNAL_TYPES = ['tableCell', 'tableHeader', 'tableRow'];
+// 드래그 핸들을 표시하지 않을 노드 타입 (완전히 드래그 불가)
+const NON_DRAGGABLE_TYPES: string[] = [];
 // 노드 타입별 추가 오프셋 (미세 조정)
 const NODE_TYPE_OFFSETS: Record<string, number> = {
   heading: 0,
@@ -36,7 +38,7 @@ const NODE_TYPE_OFFSETS: Record<string, number> = {
 };
 
 // 디버그 모드 플래그 (프로덕션에서는 false)
-const DEBUG = false;
+const DEBUG = true;
 
 function debugLog(category: string, ...args: unknown[]) {
   if (DEBUG) {
@@ -158,6 +160,28 @@ function findDraggableNode(
         return null;
       }
 
+      // 테이블 내부 요소(cell, header, row)는 건너뛰고 table 자체를 찾기 위해 계속
+      if (TABLE_INTERNAL_TYPES.includes(nodeTypeName)) {
+        debugLog('findDraggableNode', 'Table internal type, continuing to find table');
+        continue;
+      }
+
+      // table 타입이면 테이블 전체를 드래그 가능하게 반환
+      if (nodeTypeName === 'table') {
+        const result = {
+          node,
+          pos: resolvedPos.before(d),
+          depth: d,
+        };
+        debugLog('findDraggableNode', 'Found table node:', {
+          type: nodeTypeName,
+          pos: result.pos,
+          depth: result.depth,
+          nodeSize: node.nodeSize
+        });
+        return result;
+      }
+
       // 개별 항목 타입이면 해당 항목 반환
       if (DRAGGABLE_ITEM_TYPES.includes(nodeTypeName)) {
         const result = {
@@ -178,8 +202,14 @@ function findDraggableNode(
     // 최상위 블록 (depth 1) 반환
     if (resolvedPos.depth >= 1) {
       const node = resolvedPos.node(1);
-      if (NON_DRAGGABLE_TYPES.includes(node.type.name)) {
+      const topNodeTypeName = node.type.name;
+      if (NON_DRAGGABLE_TYPES.includes(topNodeTypeName)) {
         debugLog('findDraggableNode', 'Top-level node is non-draggable');
+        return null;
+      }
+      // 테이블 내부 타입이 최상위에 있는 경우는 없지만 안전하게 체크
+      if (TABLE_INTERNAL_TYPES.includes(topNodeTypeName)) {
+        debugLog('findDraggableNode', 'Top-level is table internal type (unexpected)');
         return null;
       }
       const result = {
@@ -188,7 +218,7 @@ function findDraggableNode(
         depth: 1,
       };
       debugLog('findDraggableNode', 'Found top-level block:', {
-        type: node.type.name,
+        type: topNodeTypeName,
         pos: result.pos,
         depth: result.depth,
         nodeSize: node.nodeSize
@@ -601,11 +631,16 @@ export function DragHandle({ editor }: DragHandleProps) {
       const { pos, nodeSize, depth } = currentNodeRef.current;
       debugLog('dragStart', 'Source node:', { pos, nodeSize, depth });
 
-      // 현재 노드 정보 로깅
+      // 현재 노드 정보 및 JSON 저장
       const sourceNode = editor.state.doc.nodeAt(pos);
+      let nodeJSON = null;
+      let nodeTypeName = '';
       if (sourceNode) {
-        debugLog('dragStart', 'Source node type:', sourceNode.type.name);
+        nodeTypeName = sourceNode.type.name;
+        nodeJSON = sourceNode.toJSON();
+        debugLog('dragStart', 'Source node type:', nodeTypeName);
         debugLog('dragStart', 'Source node content:', sourceNode.textContent?.substring(0, 50) || '(empty)');
+        debugLog('dragStart', 'Source node JSON saved');
       } else {
         debugLog('dragStart', 'WARNING: Could not find node at pos', pos);
       }
@@ -634,8 +669,9 @@ export function DragHandle({ editor }: DragHandleProps) {
         debugLog('dragStart', 'WARNING: No DOM element found or not HTMLElement');
       }
 
-      const dragData = JSON.stringify({ pos, nodeSize, depth });
-      debugLog('dragStart', 'Setting drag data:', dragData);
+      // 노드 JSON을 포함하여 드래그 데이터 저장
+      const dragData = JSON.stringify({ pos, nodeSize, depth, nodeJSON, nodeTypeName });
+      debugLog('dragStart', 'Setting drag data with nodeJSON');
       event.dataTransfer.setData(
         'application/x-zm-editor-block',
         dragData
@@ -683,8 +719,14 @@ export function DragHandle({ editor }: DragHandleProps) {
       event.preventDefault();
 
       try {
-        const { pos: sourcePos, nodeSize: originalNodeSize, depth: originalDepth } = JSON.parse(data);
-        debugLog('drop', 'Parsed source info:', { sourcePos, originalNodeSize, originalDepth });
+        const { pos: sourcePos, nodeSize: originalNodeSize, depth: originalDepth, nodeJSON, nodeTypeName } = JSON.parse(data);
+        debugLog('drop', 'Parsed source info:', { sourcePos, originalNodeSize, originalDepth, nodeTypeName });
+
+        // nodeJSON이 없으면 에러
+        if (!nodeJSON) {
+          debugLog('drop', 'ERROR: No nodeJSON in drag data');
+          return;
+        }
 
         // 문서 구조 출력 (드롭 전)
         debugDocumentStructure(editor, 'BEFORE DROP');
@@ -762,15 +804,34 @@ export function DragHandle({ editor }: DragHandleProps) {
           nodeSize: targetInfo.node.nodeSize
         });
 
-        // 소스 노드의 실제 정보 다시 계산 (드래그 중 문서가 변경되었을 수 있음)
-        debugLog('drop', '--- Finding source node (re-resolve) ---');
-        const sourceInfo = findDraggableNode(editor, sourcePos);
-        if (!sourceInfo) {
-          debugLog('drop', 'ERROR: Could not find source node at original position', sourcePos);
-          debugLog('drop', 'Document may have changed during drag');
+        // 저장된 nodeJSON에서 노드 재생성
+        debugLog('drop', '--- Reconstructing source node from JSON ---');
+        if (!editor.schema.nodes[nodeTypeName]) {
+          debugLog('drop', 'ERROR: Unknown node type:', nodeTypeName);
           return;
         }
-        debugLog('drop', 'Source node found:', {
+
+        let sourceNode;
+        try {
+          // Schema.nodeFromJSON을 사용하여 노드 재생성
+          sourceNode = editor.schema.nodeFromJSON(nodeJSON);
+          debugLog('drop', 'Source node reconstructed:', {
+            type: sourceNode.type.name,
+            nodeSize: sourceNode.nodeSize,
+            textContent: sourceNode.textContent?.substring(0, 50) || '(empty)'
+          });
+        } catch (e) {
+          debugLog('drop', 'ERROR: Failed to reconstruct node from JSON:', e);
+          return;
+        }
+
+        // 소스 노드 정보 (저장된 데이터 + 재생성된 노드)
+        const sourceInfo = {
+          node: sourceNode as ProseMirrorNode,
+          pos: sourcePos,
+          depth: originalDepth,
+        };
+        debugLog('drop', 'Source info:', {
           type: sourceInfo.node.type.name,
           pos: sourceInfo.pos,
           depth: sourceInfo.depth,
@@ -784,11 +845,28 @@ export function DragHandle({ editor }: DragHandleProps) {
         }
 
         // 같은 부모 내에서 이동하는지 확인
-        const sourceResolved = editor.state.doc.resolve(sourceInfo.pos);
-        const targetResolved = editor.state.doc.resolve(targetInfo.pos);
+        // 문서가 드래그 중 변경되었을 수 있으므로 예외 처리
+        let sourceResolved, targetResolved;
+        let sourceParentPos = 0, targetParentPos = 0;
 
-        const sourceParentPos = sourceInfo.depth > 1 ? sourceResolved.before(sourceInfo.depth - 1) : 0;
-        const targetParentPos = targetInfo.depth > 1 ? targetResolved.before(targetInfo.depth - 1) : 0;
+        try {
+          // 소스 위치가 현재 문서 범위 내인지 확인
+          if (sourceInfo.pos < 0 || sourceInfo.pos > editor.state.doc.content.size) {
+            debugLog('drop', 'WARNING: sourceInfo.pos out of bounds, using fallback');
+            sourceParentPos = 0;
+          } else {
+            sourceResolved = editor.state.doc.resolve(sourceInfo.pos);
+            sourceParentPos = sourceInfo.depth > 1 ? sourceResolved.before(sourceInfo.depth - 1) : 0;
+          }
+
+          targetResolved = editor.state.doc.resolve(targetInfo.pos);
+          targetParentPos = targetInfo.depth > 1 ? targetResolved.before(targetInfo.depth - 1) : 0;
+        } catch (e) {
+          debugLog('drop', 'WARNING: Could not resolve positions, using depth-based comparison', e);
+          // 폴백: 위치 resolve 실패 시 단순 depth 비교
+          sourceParentPos = 0;
+          targetParentPos = 0;
+        }
 
         debugLog('drop', 'Parent analysis:', {
           sourceParentPos,
@@ -806,30 +884,44 @@ export function DragHandle({ editor }: DragHandleProps) {
         if (sameParent && bothAreListItems) {
           // 같은 리스트 내에서 아이템 이동 (taskItem끼리, listItem끼리)
           debugLog('drop', '=== CASE: Same parent, list items ===');
-          const sourceSlice = editor.state.doc.slice(sourceInfo.pos, sourceInfo.pos + sourceInfo.node.nodeSize);
-          debugLog('drop', 'Source slice created:', {
-            from: sourceInfo.pos,
-            to: sourceInfo.pos + sourceInfo.node.nodeSize,
-            content: sourceSlice.content.toString().substring(0, 100)
-          });
+          debugLog('drop', 'Using reconstructed source node');
 
           const tr = editor.state.tr;
+
+          // 원본 위치에서 소스 노드 삭제 시도 (문서가 변경되지 않았다면 가능)
+          let deleteFrom = sourceInfo.pos;
+          let deleteTo = sourceInfo.pos + originalNodeSize;
+
+          // 현재 문서에서 해당 위치의 노드 확인
+          const currentNodeAtPos = editor.state.doc.nodeAt(sourceInfo.pos);
+          if (currentNodeAtPos && currentNodeAtPos.type.name === nodeTypeName) {
+            // 원본 위치에 같은 타입의 노드가 있으면 삭제 가능
+            deleteTo = sourceInfo.pos + currentNodeAtPos.nodeSize;
+            debugLog('drop', 'Original source found at pos, will delete:', { deleteFrom, deleteTo });
+          } else {
+            debugLog('drop', 'WARNING: Original source not found or type mismatch, skipping delete');
+            deleteFrom = -1; // 삭제 스킵 마킹
+          }
 
           if (targetInfo.pos > sourceInfo.pos) {
             // 타겟이 소스 뒤에 있으면 - 타겟 노드 뒤에 삽입 후 원본 삭제
             const insertPos = targetInfo.pos + targetInfo.node.nodeSize;
             debugLog('drop', 'Target is AFTER source');
             debugLog('drop', 'Step 1: Insert at', insertPos);
-            debugLog('drop', 'Step 2: Delete from', sourceInfo.pos, 'to', sourceInfo.pos + sourceInfo.node.nodeSize);
-            tr.insert(insertPos, sourceSlice.content);
-            tr.delete(sourceInfo.pos, sourceInfo.pos + sourceInfo.node.nodeSize);
+            tr.insert(insertPos, sourceNode);
+            if (deleteFrom >= 0) {
+              debugLog('drop', 'Step 2: Delete from', deleteFrom, 'to', deleteTo);
+              tr.delete(deleteFrom, deleteTo);
+            }
           } else {
             // 타겟이 소스 앞에 있으면 - 원본 삭제 후 타겟 위치에 삽입
             debugLog('drop', 'Target is BEFORE source');
-            debugLog('drop', 'Step 1: Delete from', sourceInfo.pos, 'to', sourceInfo.pos + sourceInfo.node.nodeSize);
+            if (deleteFrom >= 0) {
+              debugLog('drop', 'Step 1: Delete from', deleteFrom, 'to', deleteTo);
+              tr.delete(deleteFrom, deleteTo);
+            }
             debugLog('drop', 'Step 2: Insert at', targetInfo.pos);
-            tr.delete(sourceInfo.pos, sourceInfo.pos + sourceInfo.node.nodeSize);
-            tr.insert(targetInfo.pos, sourceSlice.content);
+            tr.insert(targetInfo.pos, sourceNode);
           }
 
           debugLog('drop', 'Dispatching transaction...');
@@ -839,22 +931,40 @@ export function DragHandle({ editor }: DragHandleProps) {
         } else if (sameParent) {
           // 같은 부모 내에서 일반 블록 이동
           debugLog('drop', '=== CASE: Same parent, regular blocks ===');
-          const sourceSlice = editor.state.doc.slice(sourceInfo.pos, sourceInfo.pos + sourceInfo.node.nodeSize);
-          debugLog('drop', 'Source slice created');
+          debugLog('drop', 'Using reconstructed source node');
 
           const tr = editor.state.tr;
+
+          // 원본 위치에서 소스 노드 삭제 시도
+          let deleteFrom = sourceInfo.pos;
+          let deleteTo = sourceInfo.pos + originalNodeSize;
+
+          const currentNodeAtPos = editor.state.doc.nodeAt(sourceInfo.pos);
+          if (currentNodeAtPos && currentNodeAtPos.type.name === nodeTypeName) {
+            deleteTo = sourceInfo.pos + currentNodeAtPos.nodeSize;
+            debugLog('drop', 'Original source found at pos, will delete:', { deleteFrom, deleteTo });
+          } else {
+            debugLog('drop', 'WARNING: Original source not found or type mismatch, skipping delete');
+            deleteFrom = -1;
+          }
 
           if (targetInfo.pos > sourceInfo.pos) {
             const insertPos = targetInfo.pos + targetInfo.node.nodeSize;
             debugLog('drop', 'Target is AFTER source');
-            debugLog('drop', 'Insert at:', insertPos, 'Delete:', sourceInfo.pos, '-', sourceInfo.pos + sourceInfo.node.nodeSize);
-            tr.insert(insertPos, sourceSlice.content);
-            tr.delete(sourceInfo.pos, sourceInfo.pos + sourceInfo.node.nodeSize);
+            debugLog('drop', 'Insert at:', insertPos);
+            tr.insert(insertPos, sourceNode);
+            if (deleteFrom >= 0) {
+              debugLog('drop', 'Delete:', deleteFrom, '-', deleteTo);
+              tr.delete(deleteFrom, deleteTo);
+            }
           } else {
             debugLog('drop', 'Target is BEFORE source');
-            debugLog('drop', 'Delete:', sourceInfo.pos, '-', sourceInfo.pos + sourceInfo.node.nodeSize, 'Insert at:', targetInfo.pos);
-            tr.delete(sourceInfo.pos, sourceInfo.pos + sourceInfo.node.nodeSize);
-            tr.insert(targetInfo.pos, sourceSlice.content);
+            if (deleteFrom >= 0) {
+              debugLog('drop', 'Delete:', deleteFrom, '-', deleteTo);
+              tr.delete(deleteFrom, deleteTo);
+            }
+            debugLog('drop', 'Insert at:', targetInfo.pos);
+            tr.insert(targetInfo.pos, sourceNode);
           }
 
           debugLog('drop', 'Dispatching transaction...');
@@ -864,42 +974,57 @@ export function DragHandle({ editor }: DragHandleProps) {
         } else if (bothAreListItems) {
           // 다른 리스트 간 아이템 이동 (예: taskList A의 item을 taskList B로)
           debugLog('drop', '=== CASE: Different parents, both list items ===');
-
-          const sourceSlice = editor.state.doc.slice(sourceInfo.pos, sourceInfo.pos + sourceInfo.node.nodeSize);
-          debugLog('drop', 'Moving individual list item between lists');
+          debugLog('drop', 'Using reconstructed source node');
 
           const tr = editor.state.tr;
 
           // 타겟 위치 계산 - 타겟 아이템 뒤에 삽입
           const insertPos = targetInfo.pos + targetInfo.node.nodeSize;
 
-          debugLog('drop', 'Insert at:', insertPos, 'Delete:', sourceInfo.pos, '-', sourceInfo.pos + sourceInfo.node.nodeSize);
+          // 원본 위치에서 소스 노드 삭제 시도
+          let deleteFrom = sourceInfo.pos;
+          let deleteTo = sourceInfo.pos + originalNodeSize;
+
+          const currentNodeAtPos = editor.state.doc.nodeAt(sourceInfo.pos);
+          if (currentNodeAtPos && currentNodeAtPos.type.name === nodeTypeName) {
+            deleteTo = sourceInfo.pos + currentNodeAtPos.nodeSize;
+            debugLog('drop', 'Original source found, will delete:', { deleteFrom, deleteTo });
+          } else {
+            debugLog('drop', 'WARNING: Original source not found, skipping delete');
+            deleteFrom = -1;
+          }
+
+          debugLog('drop', 'Insert at:', insertPos);
 
           if (insertPos > sourceInfo.pos) {
             // 타겟이 소스 뒤에 있으면 - 먼저 삽입 후 삭제
-            tr.insert(insertPos, sourceSlice.content);
-            tr.delete(sourceInfo.pos, sourceInfo.pos + sourceInfo.node.nodeSize);
+            tr.insert(insertPos, sourceNode);
+            if (deleteFrom >= 0) {
+              tr.delete(deleteFrom, deleteTo);
+            }
           } else {
             // 타겟이 소스 앞에 있으면 - 먼저 삭제 후 삽입
-            tr.delete(sourceInfo.pos, sourceInfo.pos + sourceInfo.node.nodeSize);
-            tr.insert(insertPos - sourceInfo.node.nodeSize, sourceSlice.content);
+            if (deleteFrom >= 0) {
+              tr.delete(deleteFrom, deleteTo);
+              tr.insert(insertPos, sourceNode);
+            } else {
+              tr.insert(insertPos, sourceNode);
+            }
           }
 
           debugLog('drop', 'Dispatching transaction...');
           editor.view.dispatch(tr);
           debugLog('drop', 'Transaction dispatched successfully');
           debugDocumentStructure(editor, 'AFTER DROP (list items between lists)');
-        } else if (DRAGGABLE_ITEM_TYPES.includes(sourceInfo.node.type.name)) {
+        } else if (DRAGGABLE_ITEM_TYPES.includes(nodeTypeName)) {
           // 리스트 아이템을 리스트가 아닌 곳으로 이동 (예: taskItem을 paragraph 위치로)
           debugLog('drop', '=== CASE: List item to non-list location ===');
+          debugLog('drop', 'Using reconstructed source node');
 
           // 소스 아이템의 부모 리스트 타입 확인
           const sourceParentNode = editor.state.doc.nodeAt(sourceParentPos);
           const parentListType = sourceParentNode?.type.name || 'taskList';
           debugLog('drop', 'Parent list type:', parentListType);
-
-          // 아이템만 추출
-          const sourceSlice = editor.state.doc.slice(sourceInfo.pos, sourceInfo.pos + sourceInfo.node.nodeSize);
 
           // 타겟의 최상위 블록 위치 계산
           const topTargetResolved = editor.state.doc.resolve(targetInfo.pos);
@@ -909,16 +1034,33 @@ export function DragHandle({ editor }: DragHandleProps) {
 
           const tr = editor.state.tr;
 
+          // 원본 위치에서 소스 노드 삭제 시도
+          let deleteFrom = sourceInfo.pos;
+          let deleteTo = sourceInfo.pos + originalNodeSize;
+
+          const currentNodeAtPos = editor.state.doc.nodeAt(sourceInfo.pos);
+          if (currentNodeAtPos && currentNodeAtPos.type.name === nodeTypeName) {
+            deleteTo = sourceInfo.pos + currentNodeAtPos.nodeSize;
+            debugLog('drop', 'Original source found, will delete:', { deleteFrom, deleteTo });
+          } else {
+            debugLog('drop', 'WARNING: Original source not found, skipping delete');
+            deleteFrom = -1;
+          }
+
           // 새로운 리스트로 래핑하여 삽입
           const listNodeType = editor.schema.nodes[parentListType];
           if (listNodeType) {
-            const newListNode = listNodeType.create(null, sourceSlice.content);
+            const newListNode = listNodeType.create(null, sourceNode);
 
             if (topTargetPos > sourceInfo.pos) {
               tr.insert(topTargetPos, newListNode);
-              tr.delete(sourceInfo.pos, sourceInfo.pos + sourceInfo.node.nodeSize);
+              if (deleteFrom >= 0) {
+                tr.delete(deleteFrom, deleteTo);
+              }
             } else {
-              tr.delete(sourceInfo.pos, sourceInfo.pos + sourceInfo.node.nodeSize);
+              if (deleteFrom >= 0) {
+                tr.delete(deleteFrom, deleteTo);
+              }
               tr.insert(topTargetPos, newListNode);
             }
 
@@ -935,8 +1077,7 @@ export function DragHandle({ editor }: DragHandleProps) {
         } else {
           // 일반 블록을 다른 위치로 이동
           debugLog('drop', '=== CASE: Different parents - moving blocks ===');
-
-          const sourceSlice = editor.state.doc.slice(sourceInfo.pos, sourceInfo.pos + sourceInfo.node.nodeSize);
+          debugLog('drop', 'Using reconstructed source node');
 
           // 타겟의 최상위 블록 위치 계산
           const topTargetResolved = editor.state.doc.resolve(targetInfo.pos);
@@ -944,12 +1085,29 @@ export function DragHandle({ editor }: DragHandleProps) {
 
           const tr = editor.state.tr;
 
-          if (topTargetPos > sourceInfo.pos) {
-            tr.insert(topTargetPos, sourceSlice.content);
-            tr.delete(sourceInfo.pos, sourceInfo.pos + sourceInfo.node.nodeSize);
+          // 원본 위치에서 소스 노드 삭제 시도
+          let deleteFrom = sourceInfo.pos;
+          let deleteTo = sourceInfo.pos + originalNodeSize;
+
+          const currentNodeAtPos = editor.state.doc.nodeAt(sourceInfo.pos);
+          if (currentNodeAtPos && currentNodeAtPos.type.name === nodeTypeName) {
+            deleteTo = sourceInfo.pos + currentNodeAtPos.nodeSize;
+            debugLog('drop', 'Original source found, will delete:', { deleteFrom, deleteTo });
           } else {
-            tr.delete(sourceInfo.pos, sourceInfo.pos + sourceInfo.node.nodeSize);
-            tr.insert(topTargetPos, sourceSlice.content);
+            debugLog('drop', 'WARNING: Original source not found, skipping delete');
+            deleteFrom = -1;
+          }
+
+          if (topTargetPos > sourceInfo.pos) {
+            tr.insert(topTargetPos, sourceNode);
+            if (deleteFrom >= 0) {
+              tr.delete(deleteFrom, deleteTo);
+            }
+          } else {
+            if (deleteFrom >= 0) {
+              tr.delete(deleteFrom, deleteTo);
+            }
+            tr.insert(topTargetPos, sourceNode);
           }
 
           debugLog('drop', 'Dispatching transaction...');

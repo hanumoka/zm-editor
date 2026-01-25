@@ -141,42 +141,56 @@
 
 ## 알려진 이슈 ⚠️
 
-### DragHandle - 일부 블록 드래그 불가 (2026-01-25 분석)
+### DragHandle - 일부 블록 드래그 불가 (2026-01-25 진행중)
 
-#### 확인된 문제 블록
-| 노드 타입 | 증상 | 원인 |
-|----------|------|------|
-| `table` | 드래그 핸들 미표시 | NON_DRAGGABLE_TYPES 로직 문제 |
-| `codeBlock` | 드래그 핸들 미표시 | 원인 분석 필요 |
-| `horizontalRule` | 드래그 핸들 미표시 | atom 노드, posAtCoords 문제 |
+#### 수정 완료 ✅
 
-#### 원인 1: NON_DRAGGABLE_TYPES 로직 문제
-- **해당**: `table`, `tableRow`, `tableCell`, `tableHeader`
-- **증상**: 테이블 내부 호버 시 드래그 핸들 미표시
-- **원인**: `findDraggableNode`에서 tableCell을 만나면 즉시 `return null`
-- **해결**: tableCell/tableRow 만나면 `continue`로 상위 탐색 계속
+**1. 드래그 중 문서 변경으로 인한 소스 노드 못 찾는 문제**
+- **증상**: paragraph, heading, codeBlock 등 핸들 표시되지만 드롭 시 실패
+- **원인**: ProseMirror 네이티브 드래그가 문서를 변경하여 저장된 위치가 무효화됨
+- **해결**: `handleDragStart`에서 `nodeJSON` 저장, `handleDrop`에서 JSON으로 노드 재생성
 
-#### 원인 2: atom 노드의 posAtCoords 문제
+**2. 테이블 드래그 핸들 미표시 문제**
+- **증상**: 테이블 위 호버 시 드래그 핸들 미표시
+- **원인**: `NON_DRAGGABLE_TYPES`에 table 관련 모든 타입 포함
+- **해결**: `TABLE_INTERNAL_TYPES` 분리, tableCell/tableRow는 `continue`로 상위 탐색
+
+#### 검증 필요 ⏳
+
+- [ ] paragraph, heading, codeBlock 드래그 앤 드롭 동작 확인
+- [ ] table 전체 드래그 앤 드롭 동작 확인
+- [ ] horizontalRule (atom 노드) 핸들 표시 확인
+
+#### 미해결 이슈
+
+**1. atom 노드의 posAtCoords 문제**
 - **해당**: `horizontalRule`, 모든 `atom: true` 노드
 - **증상**: 노드 위 호버해도 위치 감지 실패
 - **원인**: atom 노드는 내부 콘텐츠 없어 posAtCoords 부정확
 
-#### 원인 3: draggable 속성 미설정 (8개 extension)
+**2. draggable 속성 미설정 (8개 extension)**
 - **해당 노드**: `apiBlock`, `diagram`, `graphql`, `logBlock`, `metadata`, `openapi`, `stackTrace`, `terminal`
 - **해결**: 각 extension에 `draggable: true` 추가 필요
 
-#### 검증 필요 블록
-- `callout`, `toggle`, `image` (content 있는 NodeView)
-- `bookmark`, `embed`, `math`, `mermaid` 등 (draggable: true 설정됨)
-
-#### 추가 요구사항
-- 테이블 행(tableRow) 개별 드래그 지원 필요
-- 테이블 전체 드래그도 동시 지원 필요
-- Table 설정에 `allowTableNodeSelection: true` 추가 필요
+#### 추가 요구사항 (향후)
+- 테이블 행(tableRow) 개별 드래그 지원
+- Table 설정에 `allowTableNodeSelection: true` 추가
 
 ---
 
 ## 최근 개선 사항
+
+### DragHandle 드래그 앤 드롭 수정 - 2026-01-25 🔧
+
+#### 드래그 중 문서 변경 문제 해결
+- **문제**: 드래그 시작 시 저장한 위치가 드롭 시점에 무효화됨
+- **해결**: `handleDragStart`에서 노드 JSON 저장, `handleDrop`에서 JSON으로 노드 재생성
+- 원본 위치의 노드가 존재하고 타입이 일치할 때만 삭제
+
+#### 테이블 드래그 지원
+- `TABLE_INTERNAL_TYPES` 분리 (`tableCell`, `tableHeader`, `tableRow`)
+- 테이블 내부 요소 위 호버 시 `table` 노드 반환
+- `NON_DRAGGABLE_TYPES`를 빈 배열로 변경 (모든 블록 드래그 가능)
 
 ### DragHandle 대폭 개선 - 2026-01-25 ✅
 
@@ -202,7 +216,7 @@
 - 드롭 대상 감지 폴백 로직 (빈 paragraph, 블록 사이 등)
 
 #### 코드 품질 개선
-- `DEBUG = false` (프로덕션 모드)
+- `DEBUG = true` (디버그 모드 - 테스트 중)
 - stale closure 문제 해결 (`isDraggingRef` ref 추가)
 - magic number 상수화 (`MIN_LEFT_MARGIN`, `LEFT_MARGIN_X_OFFSET`)
 - 예외 처리 강화 (pos+1 resolve 시 try-catch)
