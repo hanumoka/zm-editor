@@ -10,13 +10,18 @@
 
 | 항목 | 상태 |
 |------|------|
-| **현재 Phase** | Phase 15 완료 ✅, Phase 14 대기 |
+| **현재 Phase** | Phase 13 진행중 🔄, Phase 14 대기 |
 | **빌드 상태** | 성공 ✅ |
 | **타입 체크** | 성공 ✅ |
 | **Git 상태** | Clean |
 | **개발 서버** | 포트 3100 (FE), 포트 4000 (API) |
 
 ### 최근 완료 ✅
+
+- Phase 13: 안정화 및 최적화 진행중 🔄
+  - 메모리 누수 수정 완료 (DiagramNode, GraphQLNode, LogBlockNode, StackTraceNode)
+  - 접근성(a11y) 개선 완료 (SlashMenu, MentionList, DragHandle)
+  - 번들 크기 확인 (Core: 11KB gzip, React: 70KB gzip)
 
 - 데모 앱 기능 테스트 환경 완성 ✅
   - 멘션 기능 테스트 가능 (Mock 사용자 8명)
@@ -28,9 +33,6 @@
   - 멘션 (@) 기능 (Mention 확장 + MentionList 컴포넌트)
   - 드래그 앤 드롭 블록 이동 (DragHandle 컴포넌트)
   - 협업 편집 (CollaborationProvider - Y.js 기반)
-
-- Phase 13: 안정화 및 최적화
-  - 접근성(a11y) 개선: BubbleMenu, TableBubbleMenu, Editor 컴포넌트
 
 - Phase 12: 개발자 기능 (선택) 완료 ✅
 

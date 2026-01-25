@@ -230,10 +230,14 @@
 - [x] 메모리 누수 수정 (copy timeout cleanup)
   - DiagramNode, GraphQLNode, LogBlockNode, StackTraceNode
   - 기존 완료: CodeBlock, DiffBlockNode, EnvBlockNode, OsCommandNode, TerminalNode, ApiBlockNode
+- [x] 접근성(a11y) 개선
+  - SlashMenu: role="listbox", aria-selected, aria-activedescendant
+  - MentionList: role="listbox", aria-selected, aria-activedescendant
+  - DragHandle: role="button", tabIndex, aria-label
+  - 아이콘에 aria-hidden 추가
+- [x] 번들 크기 확인 (Core: 11KB gzip, React: 70KB gzip)
 - [ ] 성능 최적화 검증
 - [ ] 다양한 브라우저 호환성 테스트
-- [ ] 접근성(a11y) 개선
-- [ ] 번들 크기 최적화
 
 ### Phase 14: npm 배포 준비
 
