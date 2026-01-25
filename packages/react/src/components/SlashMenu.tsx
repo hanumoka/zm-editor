@@ -52,18 +52,28 @@ export const SlashMenu = forwardRef<SlashMenuRef, SlashMenuProps>(
 
     if (items.length === 0) {
       return (
-        <div className="zm-slash-menu zm-slash-menu-empty">
+        <div className="zm-slash-menu zm-slash-menu-empty" role="listbox" aria-label="No results">
           No results found
         </div>
       );
     }
 
+    const selectedItemId = items[selectedIndex] ? `slash-menu-item-${selectedIndex}` : undefined;
+
     return (
-      <div className="zm-slash-menu">
+      <div
+        className="zm-slash-menu"
+        role="listbox"
+        aria-label="Commands"
+        aria-activedescendant={selectedItemId}
+      >
         {items.map((item, index) => (
           <button
             key={item.title}
+            id={`slash-menu-item-${index}`}
             type="button"
+            role="option"
+            aria-selected={index === selectedIndex}
             className={`zm-slash-menu-item ${
               index === selectedIndex ? 'selected' : ''
             }`}
@@ -71,7 +81,7 @@ export const SlashMenu = forwardRef<SlashMenuRef, SlashMenuProps>(
             onMouseEnter={() => setSelectedIndex(index)}
           >
             {item.icon && (
-              <span className="zm-slash-menu-item-icon">{item.icon}</span>
+              <span className="zm-slash-menu-item-icon" aria-hidden="true">{item.icon}</span>
             )}
             <div className="zm-slash-menu-item-content">
               <div className="zm-slash-menu-item-title">{item.title}</div>

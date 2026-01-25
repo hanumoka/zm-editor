@@ -227,8 +227,10 @@
 
 ### Phase 13: 안정화 및 최적화
 
+- [x] 메모리 누수 수정 (copy timeout cleanup)
+  - DiagramNode, GraphQLNode, LogBlockNode, StackTraceNode
+  - 기존 완료: CodeBlock, DiffBlockNode, EnvBlockNode, OsCommandNode, TerminalNode, ApiBlockNode
 - [ ] 성능 최적화 검증
-- [ ] 메모리 누수 테스트
 - [ ] 다양한 브라우저 호환성 테스트
 - [ ] 접근성(a11y) 개선
 - [ ] 번들 크기 최적화

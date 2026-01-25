@@ -69,18 +69,28 @@ export const MentionList = forwardRef<MentionListRef, MentionListProps>(
 
     if (items.length === 0) {
       return (
-        <div className="zm-mention-list zm-mention-list-empty">
+        <div className="zm-mention-list zm-mention-list-empty" role="listbox" aria-label="No users found">
           No users found
         </div>
       );
     }
 
+    const selectedItemId = items[selectedIndex] ? `mention-item-${items[selectedIndex].id}` : undefined;
+
     return (
-      <div className="zm-mention-list">
+      <div
+        className="zm-mention-list"
+        role="listbox"
+        aria-label="Mention suggestions"
+        aria-activedescendant={selectedItemId}
+      >
         {items.map((item, index) => (
           <button
             key={item.id}
+            id={`mention-item-${item.id}`}
             type="button"
+            role="option"
+            aria-selected={index === selectedIndex}
             className={`zm-mention-list-item ${
               index === selectedIndex ? 'selected' : ''
             }`}
@@ -90,11 +100,12 @@ export const MentionList = forwardRef<MentionListRef, MentionListProps>(
             {item.avatar ? (
               <img
                 src={item.avatar}
-                alt={item.label}
+                alt=""
+                aria-hidden="true"
                 className="zm-mention-list-avatar"
               />
             ) : (
-              <div className="zm-mention-list-avatar-placeholder">
+              <div className="zm-mention-list-avatar-placeholder" aria-hidden="true">
                 {item.label.charAt(0).toUpperCase()}
               </div>
             )}

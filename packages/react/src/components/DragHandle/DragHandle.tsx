@@ -1470,6 +1470,10 @@ export function DragHandle({ editor }: DragHandleProps) {
         zIndex: 100,
       }}
       draggable
+      role="button"
+      tabIndex={0}
+      aria-label="Drag to reorder block"
+      aria-grabbed={false}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onMouseEnter={handleMouseEnterHandle}
@@ -1492,6 +1496,7 @@ function DragIcon() {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      aria-hidden="true"
     >
       <circle cx="9" cy="5" r="1" fill="currentColor" />
       <circle cx="9" cy="12" r="1" fill="currentColor" />
