@@ -21,6 +21,16 @@ export function GraphQLNode({ node, updateAttributes, selected }: GraphQLNodePro
   const [activeTab, setActiveTab] = useState<'query' | 'variables' | 'response'>('query');
   const [copied, setCopied] = useState(false);
   const endpointInputRef = useRef<HTMLInputElement>(null);
+  const copyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) {
+        clearTimeout(copyTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Initial edit mode
   useEffect(() => {
@@ -90,7 +100,10 @@ export function GraphQLNode({ node, updateAttributes, selected }: GraphQLNodePro
     }
     navigator.clipboard.writeText(textToCopy);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    if (copyTimeoutRef.current) {
+      clearTimeout(copyTimeoutRef.current);
+    }
+    copyTimeoutRef.current = setTimeout(() => setCopied(false), 2000);
   }, [activeTab, query, variables, response]);
 
   // Edit mode

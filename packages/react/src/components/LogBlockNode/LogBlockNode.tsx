@@ -46,6 +46,16 @@ export function LogBlockNode({ node, updateAttributes, selected }: LogBlockNodeP
   const [sourceValue, setSourceValue] = useState(source);
   const [copied, setCopied] = useState(false);
   const messageInputRef = useRef<HTMLTextAreaElement>(null);
+  const copyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) {
+        clearTimeout(copyTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Initial edit mode
   useEffect(() => {
@@ -119,7 +129,10 @@ export function LogBlockNode({ node, updateAttributes, selected }: LogBlockNodeP
       .join(' ');
     navigator.clipboard.writeText(text);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    if (copyTimeoutRef.current) {
+      clearTimeout(copyTimeoutRef.current);
+    }
+    copyTimeoutRef.current = setTimeout(() => setCopied(false), 2000);
   }, [timestamp, source, logLevel, message]);
 
   // Edit mode

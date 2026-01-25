@@ -35,6 +35,16 @@ export function StackTraceNode({ node, updateAttributes, selected }: StackTraceN
   const [stackTraceValue, setStackTraceValue] = useState(stackTrace);
   const [copied, setCopied] = useState(false);
   const errorTypeInputRef = useRef<HTMLInputElement>(null);
+  const copyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) {
+        clearTimeout(copyTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Initial edit mode
   useEffect(() => {
@@ -96,7 +106,10 @@ export function StackTraceNode({ node, updateAttributes, selected }: StackTraceN
     const text = [errorType, errorMessage, '', stackTrace].filter(Boolean).join('\n');
     navigator.clipboard.writeText(text);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    if (copyTimeoutRef.current) {
+      clearTimeout(copyTimeoutRef.current);
+    }
+    copyTimeoutRef.current = setTimeout(() => setCopied(false), 2000);
   }, [errorType, errorMessage, stackTrace]);
 
   // Parse stack trace for highlighting

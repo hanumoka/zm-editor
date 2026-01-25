@@ -37,6 +37,16 @@ export function DiagramNode({ node, updateAttributes, selected }: DiagramNodePro
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const codeInputRef = useRef<HTMLTextAreaElement>(null);
+  const copyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) {
+        clearTimeout(copyTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Initial edit mode
   useEffect(() => {
@@ -96,7 +106,10 @@ export function DiagramNode({ node, updateAttributes, selected }: DiagramNodePro
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(code);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    if (copyTimeoutRef.current) {
+      clearTimeout(copyTimeoutRef.current);
+    }
+    copyTimeoutRef.current = setTimeout(() => setCopied(false), 2000);
   }, [code]);
 
   // Generate image URL for PlantUML
