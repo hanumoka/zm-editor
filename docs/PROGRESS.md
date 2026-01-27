@@ -1,13 +1,25 @@
 # zm-editor 진행상황
 
-> 최종 업데이트: 2026-01-25
+> 최종 업데이트: 2026-01-27
 
 ## 현재 버전
 
-- **버전**: 0.1.0 (개발 중)
-- **상태**: Alpha
-- **완료**: Phase 1~12 완료
-- **다음**: Phase 13 (안정화 및 최적화)
+- **버전**: 0.1.0 (배포 완료) 🎉
+- **상태**: Released
+- **완료**: Phase 1~14 완료
+- **다음**: Phase 13 잔여 작업 (선택)
+
+### npm 패키지
+
+| 패키지 | 버전 | npm |
+|--------|------|-----|
+| `@zm-editor/core` | 0.1.0 | https://www.npmjs.com/package/@zm-editor/core |
+| `@zm-editor/react` | 0.1.0 | https://www.npmjs.com/package/@zm-editor/react |
+
+```bash
+# 설치 명령어
+npm install @zm-editor/core @zm-editor/react
+```
 
 ---
 
@@ -27,8 +39,8 @@
 | 10 | 개발자 기능 (필수) | ✅ 완료 |
 | 11 | 개발자 기능 (권장) | ✅ 완료 |
 | 12 | 개발자 기능 (선택) | ✅ 완료 |
-| 13 | 안정화 및 최적화 | 🔄 진행중 |
-| 14 | npm 배포 준비 | 📋 대기 |
+| 13 | 안정화 및 최적화 | 🔄 일부 완료 |
+| 14 | npm 배포 준비 | ✅ 완료 |
 | 15 | 추가 기능 (선택) | ✅ 완료 |
 
 ---
@@ -235,18 +247,23 @@
   - MentionList: role="listbox", aria-selected, aria-activedescendant
   - DragHandle: role="button", tabIndex, aria-label
   - 아이콘에 aria-hidden 추가
-- [x] 번들 크기 확인 (Core: 11KB gzip, React: 70KB gzip)
+- [x] 번들 크기 확인 (Core: 17.8KB, React: 79.8KB)
+- [x] Mermaid orphan SVG 정리 (구문 오류 시 document.body에 누적되는 문제 수정)
 - [ ] 성능 최적화 검증
 - [ ] 다양한 브라우저 호환성 테스트
 
-### Phase 14: npm 배포 준비
+### Phase 14: npm 배포 준비 ✅
 
-- [ ] README.md 작성
-- [ ] API 문서화
-- [ ] 사용 예제 추가
-- [ ] 라이센스 확인 (MIT)
-- [ ] npm publish 설정
-- [ ] CHANGELOG.md 작성
+- [x] npm 계정/Organization 생성 (`@zm-editor`)
+- [x] package.json 메타데이터 업데이트 (author, repository, homepage, bugs, keywords)
+- [x] README.md 작성 (설치, 사용법, Props, 슬래시 명령어, 라이센스)
+- [x] CHANGELOG.md 작성 (Keep a Changelog 형식)
+- [x] .npmignore 설정 (src/, dev 파일 제외)
+- [x] pdfjs-dist 타입 선언 추가 (`packages/react/src/types/pdfjs-dist.d.ts`)
+- [x] workspace 의존성 → 버전 의존성 변경 (`@zm-editor/core`: `workspace:*` → `^0.1.0`)
+- [x] `@zm-editor/core@0.1.0` npm 배포 완료
+- [x] `@zm-editor/react@0.1.0` npm 배포 완료
+- [ ] GitHub Actions CI/CD 자동 배포 (선택)
 
 ### Phase 15: 추가 기능 (선택) ✅
 
@@ -271,6 +288,45 @@
 ---
 
 ## 변경 이력
+
+### 2026-01-27
+
+**Phase 14: npm 배포 완료** 🎉
+
+#### npm Organization 및 패키지 배포
+- npm Organization `@zm-editor` 생성
+- `@zm-editor/core@0.1.0` 배포
+- `@zm-editor/react@0.1.0` 배포
+
+#### package.json 메타데이터 업데이트
+- `packages/core/package.json` - author, repository, homepage, bugs, keywords 추가
+- `packages/react/package.json` - 동일 메타데이터 추가 + `@zm-editor/core` 의존성 버전 변경
+
+#### 문서 작성
+- `README.md` - 설치, 사용법, Props, 슬래시 명령어, 라이센스 포함
+- `CHANGELOG.md` - Keep a Changelog 형식, v0.1.0 변경사항
+- `packages/core/.npmignore` - src/, dev 파일 제외
+- `packages/react/.npmignore` - src/, dev 파일 제외
+
+#### 빌드 오류 수정
+- `packages/react/src/types/pdfjs-dist.d.ts` 생성 (optional peer dependency 타입 선언)
+- `@zm-editor/core` 의존성: `workspace:*` → `^0.1.0` 변경
+
+---
+
+**Mermaid orphan SVG 이슈 수정**
+
+#### 문제
+- Mermaid 구문 오류 시 에러 SVG가 document.body에 직접 렌더링되어 누적
+- 브라우저 하단에 "bomb" 아이콘이 계속 쌓이는 현상
+
+#### 해결
+- `packages/react/src/components/MermaidNode/MermaidNode.tsx`
+- `cleanupOrphanMermaidElements()` 함수 추가
+- 렌더링 실패 후 orphan SVG 요소 정리
+- `data-mermaid-temp` 속성을 가진 요소 및 `body > svg.mermaid` 요소 제거
+
+---
 
 ### 2026-01-25
 
