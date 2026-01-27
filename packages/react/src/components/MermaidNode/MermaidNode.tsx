@@ -35,9 +35,39 @@ async function renderMermaid(code: string, id: string): Promise<{ svg: string; e
     const { svg } = await mermaid.render(id, code);
     return { svg, error: null };
   } catch (err) {
+    // Mermaid render 실패 시 document.body에 orphan 에러 SVG가 생성됨
+    // 이를 정리해야 함
+    cleanupOrphanMermaidElements(id);
+
     const errorMessage = err instanceof Error ? err.message : 'Unknown error';
     return { svg: '', error: errorMessage };
   }
+}
+
+/**
+ * Mermaid render 실패 시 생성되는 orphan SVG 요소들을 정리
+ */
+function cleanupOrphanMermaidElements(id: string) {
+  if (typeof document === 'undefined') return;
+
+  // ID로 생성된 요소 제거
+  const element = document.getElementById(id);
+  if (element) {
+    element.remove();
+  }
+
+  // Mermaid 에러 컨테이너 제거 (d로 시작하는 임시 ID)
+  const errorContainers = document.querySelectorAll('[id^="d"][id$="-svg"]');
+  errorContainers.forEach((el) => {
+    // body에 직접 붙어있는 mermaid 에러 SVG만 제거
+    if (el.parentElement === document.body && el.classList.contains('mermaid')) {
+      el.remove();
+    }
+  });
+
+  // 일반적인 mermaid orphan SVG 제거 (body 직속 자식 중 mermaid 클래스)
+  const orphanSvgs = document.querySelectorAll('body > svg.mermaid, body > [data-mermaid-temp]');
+  orphanSvgs.forEach((el) => el.remove());
 }
 
 /**
