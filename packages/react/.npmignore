@@ -1,0 +1,24 @@
+# Source files (dist is published)
+src/
+tsconfig.json
+tsup.config.ts
+
+# Development
+.turbo/
+*.tsbuildinfo
+
+# Tests
+__tests__/
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+coverage/
+
+# IDE
+.vscode/
+.idea/
+
+# Misc
+*.log
+.DS_Store

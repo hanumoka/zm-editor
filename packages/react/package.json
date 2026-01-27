@@ -27,7 +27,7 @@
     "@tiptap/core": "^2.11.0",
     "@tiptap/extension-image": "^2.11.0",
     "@tiptap/react": "^2.11.0",
-    "@zm-editor/core": "workspace:*",
+    "@zm-editor/core": "^0.1.0",
     "katex": "^0.16.27",
     "mermaid": "^11.12.2"
   },
@@ -54,12 +54,24 @@
     "react",
     "editor",
     "rich-text",
+    "wysiwyg",
     "notion",
     "tiptap",
-    "nextjs"
+    "prosemirror",
+    "nextjs",
+    "markdown",
+    "code-block",
+    "mermaid",
+    "katex"
   ],
+  "author": "hanumoka",
+  "homepage": "https://github.com/hanumoka/zm-editor#readme",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/hanumoka/zm-editor.git",
+    "directory": "packages/react"
+  },
+  "bugs": {
+    "url": "https://github.com/hanumoka/zm-editor/issues"
   }
 }
