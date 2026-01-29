@@ -1,0 +1,480 @@
+/**
+ * @zm-editor/react - CSS Variables (Design Tokens)
+ *
+ * Customize zm-editor by overriding these CSS variables in your application.
+ *
+ * Example:
+ *   :root {
+ *     --zm-colors-editor-background: #ffffff;
+ *     --zm-colors-editor-text: #374151;
+ *   }
+ *
+ *   .dark, [data-theme="dark"] {
+ *     --zm-colors-editor-background: #1f2937;
+ *     --zm-colors-editor-text: #d1d5db;
+ *   }
+ */
+
+:root {
+  /* ====================================
+   * Editor Base Colors
+   * ==================================== */
+  --zm-colors-editor-background: #ffffff;
+  --zm-colors-editor-text: #374151;
+  --zm-colors-editor-text-muted: #6b7280;
+  --zm-colors-editor-border: #e5e7eb;
+  --zm-colors-editor-border-hover: #d1d5db;
+
+  /* Heading Colors */
+  --zm-colors-heading: #111827;
+
+  /* ====================================
+   * Menu & UI Colors
+   * ==================================== */
+  --zm-colors-menu-background: #ffffff;
+  --zm-colors-menu-text: #374151;
+  --zm-colors-menu-text-muted: #6b7280;
+  --zm-colors-menu-border: #e5e7eb;
+  --zm-colors-menu-hover: #f3f4f6;
+  --zm-colors-menu-selected: #eff6ff;
+  --zm-colors-menu-selected-text: #2563eb;
+
+  /* ====================================
+   * Interactive Elements
+   * ==================================== */
+  --zm-colors-primary: #3b82f6;
+  --zm-colors-primary-hover: #2563eb;
+  --zm-colors-primary-text: #ffffff;
+  --zm-colors-secondary: #6b7280;
+  --zm-colors-secondary-hover: #4b5563;
+
+  /* ====================================
+   * Code Block Colors
+   * ==================================== */
+  --zm-colors-code-background: #f3f4f6;
+  --zm-colors-code-text: #374151;
+  --zm-colors-codeblock-background: #1f2937;
+  --zm-colors-codeblock-text: #f9fafb;
+  --zm-colors-codeblock-header: #374151;
+  --zm-colors-codeblock-border: #4b5563;
+
+  /* ====================================
+   * Blockquote Colors
+   * ==================================== */
+  --zm-colors-blockquote-border: #e5e7eb;
+  --zm-colors-blockquote-text: #6b7280;
+  --zm-colors-blockquote-background: transparent;
+
+  /* ====================================
+   * Link Colors
+   * ==================================== */
+  --zm-colors-link: #3b82f6;
+  --zm-colors-link-hover: #2563eb;
+
+  /* ====================================
+   * Highlight Colors
+   * ==================================== */
+  --zm-colors-highlight-yellow: #fef3c7;
+  --zm-colors-highlight-green: #d1fae5;
+  --zm-colors-highlight-blue: #dbeafe;
+  --zm-colors-highlight-red: #fee2e2;
+  --zm-colors-highlight-purple: #ede9fe;
+
+  /* ====================================
+   * Status Colors
+   * ==================================== */
+  --zm-colors-success: #10b981;
+  --zm-colors-success-background: #ecfdf5;
+  --zm-colors-warning: #f59e0b;
+  --zm-colors-warning-background: #fffbeb;
+  --zm-colors-error: #ef4444;
+  --zm-colors-error-background: #fef2f2;
+  --zm-colors-info: #3b82f6;
+  --zm-colors-info-background: #eff6ff;
+
+  /* ====================================
+   * Callout Colors
+   * ==================================== */
+  --zm-colors-callout-note-background: #eff6ff;
+  --zm-colors-callout-note-border: #3b82f6;
+  --zm-colors-callout-note-icon: #3b82f6;
+  --zm-colors-callout-tip-background: #ecfdf5;
+  --zm-colors-callout-tip-border: #10b981;
+  --zm-colors-callout-tip-icon: #10b981;
+  --zm-colors-callout-warning-background: #fffbeb;
+  --zm-colors-callout-warning-border: #f59e0b;
+  --zm-colors-callout-warning-icon: #f59e0b;
+  --zm-colors-callout-danger-background: #fef2f2;
+  --zm-colors-callout-danger-border: #ef4444;
+  --zm-colors-callout-danger-icon: #ef4444;
+
+  /* ====================================
+   * Terminal Colors
+   * ==================================== */
+  --zm-colors-terminal-background: #1f2937;
+  --zm-colors-terminal-text: #f9fafb;
+  --zm-colors-terminal-header: #374151;
+  --zm-colors-terminal-prompt: #10b981;
+  --zm-colors-terminal-border: #4b5563;
+
+  /* ====================================
+   * Table Colors
+   * ==================================== */
+  --zm-colors-table-border: #e5e7eb;
+  --zm-colors-table-header-background: #f9fafb;
+  --zm-colors-table-header-text: #374151;
+  --zm-colors-table-cell-background: transparent;
+  --zm-colors-table-selected: rgba(59, 130, 246, 0.1);
+
+  /* ====================================
+   * Image Colors
+   * ==================================== */
+  --zm-colors-image-border: #e5e7eb;
+  --zm-colors-image-selected: #3b82f6;
+  --zm-colors-image-caption: #6b7280;
+
+  /* ====================================
+   * Horizontal Rule
+   * ==================================== */
+  --zm-colors-hr: #e5e7eb;
+  --zm-colors-hr-hover: #d1d5db;
+
+  /* ====================================
+   * Placeholder
+   * ==================================== */
+  --zm-colors-placeholder: #9ca3af;
+
+  /* ====================================
+   * Bubble Menu
+   * ==================================== */
+  --zm-colors-bubble-background: #1f2937;
+  --zm-colors-bubble-text: #f9fafb;
+  --zm-colors-bubble-border: #374151;
+  --zm-colors-bubble-hover: #374151;
+  --zm-colors-bubble-active: #3b82f6;
+
+  /* ====================================
+   * Slash Command Menu
+   * ==================================== */
+  --zm-colors-slash-background: #ffffff;
+  --zm-colors-slash-text: #374151;
+  --zm-colors-slash-text-muted: #6b7280;
+  --zm-colors-slash-border: #e5e7eb;
+  --zm-colors-slash-hover: #f3f4f6;
+  --zm-colors-slash-selected: #eff6ff;
+  --zm-colors-slash-icon: #6b7280;
+
+  /* ====================================
+   * Tooltip
+   * ==================================== */
+  --zm-colors-tooltip-background: #1f2937;
+  --zm-colors-tooltip-text: #f9fafb;
+
+  /* ====================================
+   * Spacing (can be overridden)
+   * ==================================== */
+  --zm-spacing-xs: 0.25rem;
+  --zm-spacing-sm: 0.5rem;
+  --zm-spacing-md: 1rem;
+  --zm-spacing-lg: 1.5rem;
+  --zm-spacing-xl: 2rem;
+
+  /* ====================================
+   * Border Radius
+   * ==================================== */
+  --zm-radius-sm: 4px;
+  --zm-radius-md: 6px;
+  --zm-radius-lg: 8px;
+  --zm-radius-xl: 12px;
+
+  /* ====================================
+   * Typography
+   * ==================================== */
+  --zm-font-family-sans: ui-sans-serif, system-ui, sans-serif;
+  --zm-font-family-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  --zm-font-size-xs: 0.75rem;
+  --zm-font-size-sm: 0.875rem;
+  --zm-font-size-base: 1rem;
+  --zm-font-size-lg: 1.125rem;
+  --zm-font-size-xl: 1.25rem;
+  --zm-font-size-2xl: 1.5rem;
+  --zm-font-size-3xl: 2rem;
+  --zm-line-height: 1.6;
+
+  /* ====================================
+   * Shadows
+   * ==================================== */
+  --zm-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --zm-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --zm-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  /* ====================================
+   * Transitions
+   * ==================================== */
+  --zm-transition-fast: 150ms;
+  --zm-transition-normal: 200ms;
+  --zm-transition-slow: 300ms;
+}
+
+/* ====================================
+ * Dark Mode Variables
+ * ==================================== */
+.dark,
+[data-theme='dark'] {
+  /* Editor Base Colors */
+  --zm-colors-editor-background: #1f2937;
+  --zm-colors-editor-text: #d1d5db;
+  --zm-colors-editor-text-muted: #9ca3af;
+  --zm-colors-editor-border: #374151;
+  --zm-colors-editor-border-hover: #4b5563;
+
+  /* Heading Colors */
+  --zm-colors-heading: #f3f4f6;
+
+  /* Menu & UI Colors */
+  --zm-colors-menu-background: #1f2937;
+  --zm-colors-menu-text: #d1d5db;
+  --zm-colors-menu-text-muted: #9ca3af;
+  --zm-colors-menu-border: #374151;
+  --zm-colors-menu-hover: #374151;
+  --zm-colors-menu-selected: #1e3a5f;
+  --zm-colors-menu-selected-text: #60a5fa;
+
+  /* Interactive Elements */
+  --zm-colors-primary: #3b82f6;
+  --zm-colors-primary-hover: #60a5fa;
+  --zm-colors-primary-text: #ffffff;
+  --zm-colors-secondary: #9ca3af;
+  --zm-colors-secondary-hover: #d1d5db;
+
+  /* Code Block Colors */
+  --zm-colors-code-background: #374151;
+  --zm-colors-code-text: #e5e7eb;
+  --zm-colors-codeblock-background: #111827;
+  --zm-colors-codeblock-text: #f9fafb;
+  --zm-colors-codeblock-header: #1f2937;
+  --zm-colors-codeblock-border: #374151;
+
+  /* Blockquote Colors */
+  --zm-colors-blockquote-border: #4b5563;
+  --zm-colors-blockquote-text: #9ca3af;
+  --zm-colors-blockquote-background: transparent;
+
+  /* Link Colors */
+  --zm-colors-link: #60a5fa;
+  --zm-colors-link-hover: #93c5fd;
+
+  /* Highlight Colors (adjusted for dark mode) */
+  --zm-colors-highlight-yellow: rgba(251, 191, 36, 0.3);
+  --zm-colors-highlight-green: rgba(52, 211, 153, 0.3);
+  --zm-colors-highlight-blue: rgba(96, 165, 250, 0.3);
+  --zm-colors-highlight-red: rgba(248, 113, 113, 0.3);
+  --zm-colors-highlight-purple: rgba(167, 139, 250, 0.3);
+
+  /* Status Colors */
+  --zm-colors-success: #34d399;
+  --zm-colors-success-background: rgba(16, 185, 129, 0.2);
+  --zm-colors-warning: #fbbf24;
+  --zm-colors-warning-background: rgba(245, 158, 11, 0.2);
+  --zm-colors-error: #f87171;
+  --zm-colors-error-background: rgba(239, 68, 68, 0.2);
+  --zm-colors-info: #60a5fa;
+  --zm-colors-info-background: rgba(59, 130, 246, 0.2);
+
+  /* Callout Colors */
+  --zm-colors-callout-note-background: rgba(59, 130, 246, 0.15);
+  --zm-colors-callout-note-border: #3b82f6;
+  --zm-colors-callout-note-icon: #60a5fa;
+  --zm-colors-callout-tip-background: rgba(16, 185, 129, 0.15);
+  --zm-colors-callout-tip-border: #10b981;
+  --zm-colors-callout-tip-icon: #34d399;
+  --zm-colors-callout-warning-background: rgba(245, 158, 11, 0.15);
+  --zm-colors-callout-warning-border: #f59e0b;
+  --zm-colors-callout-warning-icon: #fbbf24;
+  --zm-colors-callout-danger-background: rgba(239, 68, 68, 0.15);
+  --zm-colors-callout-danger-border: #ef4444;
+  --zm-colors-callout-danger-icon: #f87171;
+
+  /* Terminal Colors */
+  --zm-colors-terminal-background: #111827;
+  --zm-colors-terminal-text: #f9fafb;
+  --zm-colors-terminal-header: #1f2937;
+  --zm-colors-terminal-prompt: #34d399;
+  --zm-colors-terminal-border: #374151;
+
+  /* Table Colors */
+  --zm-colors-table-border: #374151;
+  --zm-colors-table-header-background: #1f2937;
+  --zm-colors-table-header-text: #e5e7eb;
+  --zm-colors-table-cell-background: transparent;
+  --zm-colors-table-selected: rgba(59, 130, 246, 0.2);
+
+  /* Image Colors */
+  --zm-colors-image-border: #374151;
+  --zm-colors-image-selected: #3b82f6;
+  --zm-colors-image-caption: #9ca3af;
+
+  /* Horizontal Rule */
+  --zm-colors-hr: #374151;
+  --zm-colors-hr-hover: #4b5563;
+
+  /* Placeholder */
+  --zm-colors-placeholder: #6b7280;
+
+  /* Bubble Menu */
+  --zm-colors-bubble-background: #111827;
+  --zm-colors-bubble-text: #f9fafb;
+  --zm-colors-bubble-border: #374151;
+  --zm-colors-bubble-hover: #1f2937;
+  --zm-colors-bubble-active: #3b82f6;
+
+  /* Slash Command Menu */
+  --zm-colors-slash-background: #1f2937;
+  --zm-colors-slash-text: #d1d5db;
+  --zm-colors-slash-text-muted: #9ca3af;
+  --zm-colors-slash-border: #374151;
+  --zm-colors-slash-hover: #374151;
+  --zm-colors-slash-selected: #1e3a5f;
+  --zm-colors-slash-icon: #9ca3af;
+
+  /* Tooltip */
+  --zm-colors-tooltip-background: #374151;
+  --zm-colors-tooltip-text: #f9fafb;
+
+  /* Shadows (lighter for dark mode) */
+  --zm-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --zm-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --zm-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+}
+
+/* ====================================
+ * System preference dark mode
+ * ==================================== */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light):not([data-theme='light']) {
+    /* Editor Base Colors */
+    --zm-colors-editor-background: #1f2937;
+    --zm-colors-editor-text: #d1d5db;
+    --zm-colors-editor-text-muted: #9ca3af;
+    --zm-colors-editor-border: #374151;
+    --zm-colors-editor-border-hover: #4b5563;
+
+    /* Heading Colors */
+    --zm-colors-heading: #f3f4f6;
+
+    /* Menu & UI Colors */
+    --zm-colors-menu-background: #1f2937;
+    --zm-colors-menu-text: #d1d5db;
+    --zm-colors-menu-text-muted: #9ca3af;
+    --zm-colors-menu-border: #374151;
+    --zm-colors-menu-hover: #374151;
+    --zm-colors-menu-selected: #1e3a5f;
+    --zm-colors-menu-selected-text: #60a5fa;
+
+    /* Interactive Elements */
+    --zm-colors-primary: #3b82f6;
+    --zm-colors-primary-hover: #60a5fa;
+    --zm-colors-primary-text: #ffffff;
+    --zm-colors-secondary: #9ca3af;
+    --zm-colors-secondary-hover: #d1d5db;
+
+    /* Code Block Colors */
+    --zm-colors-code-background: #374151;
+    --zm-colors-code-text: #e5e7eb;
+    --zm-colors-codeblock-background: #111827;
+    --zm-colors-codeblock-text: #f9fafb;
+    --zm-colors-codeblock-header: #1f2937;
+    --zm-colors-codeblock-border: #374151;
+
+    /* Blockquote Colors */
+    --zm-colors-blockquote-border: #4b5563;
+    --zm-colors-blockquote-text: #9ca3af;
+    --zm-colors-blockquote-background: transparent;
+
+    /* Link Colors */
+    --zm-colors-link: #60a5fa;
+    --zm-colors-link-hover: #93c5fd;
+
+    /* Highlight Colors */
+    --zm-colors-highlight-yellow: rgba(251, 191, 36, 0.3);
+    --zm-colors-highlight-green: rgba(52, 211, 153, 0.3);
+    --zm-colors-highlight-blue: rgba(96, 165, 250, 0.3);
+    --zm-colors-highlight-red: rgba(248, 113, 113, 0.3);
+    --zm-colors-highlight-purple: rgba(167, 139, 250, 0.3);
+
+    /* Status Colors */
+    --zm-colors-success: #34d399;
+    --zm-colors-success-background: rgba(16, 185, 129, 0.2);
+    --zm-colors-warning: #fbbf24;
+    --zm-colors-warning-background: rgba(245, 158, 11, 0.2);
+    --zm-colors-error: #f87171;
+    --zm-colors-error-background: rgba(239, 68, 68, 0.2);
+    --zm-colors-info: #60a5fa;
+    --zm-colors-info-background: rgba(59, 130, 246, 0.2);
+
+    /* Callout Colors */
+    --zm-colors-callout-note-background: rgba(59, 130, 246, 0.15);
+    --zm-colors-callout-note-border: #3b82f6;
+    --zm-colors-callout-note-icon: #60a5fa;
+    --zm-colors-callout-tip-background: rgba(16, 185, 129, 0.15);
+    --zm-colors-callout-tip-border: #10b981;
+    --zm-colors-callout-tip-icon: #34d399;
+    --zm-colors-callout-warning-background: rgba(245, 158, 11, 0.15);
+    --zm-colors-callout-warning-border: #f59e0b;
+    --zm-colors-callout-warning-icon: #fbbf24;
+    --zm-colors-callout-danger-background: rgba(239, 68, 68, 0.15);
+    --zm-colors-callout-danger-border: #ef4444;
+    --zm-colors-callout-danger-icon: #f87171;
+
+    /* Terminal Colors */
+    --zm-colors-terminal-background: #111827;
+    --zm-colors-terminal-text: #f9fafb;
+    --zm-colors-terminal-header: #1f2937;
+    --zm-colors-terminal-prompt: #34d399;
+    --zm-colors-terminal-border: #374151;
+
+    /* Table Colors */
+    --zm-colors-table-border: #374151;
+    --zm-colors-table-header-background: #1f2937;
+    --zm-colors-table-header-text: #e5e7eb;
+    --zm-colors-table-cell-background: transparent;
+    --zm-colors-table-selected: rgba(59, 130, 246, 0.2);
+
+    /* Image Colors */
+    --zm-colors-image-border: #374151;
+    --zm-colors-image-selected: #3b82f6;
+    --zm-colors-image-caption: #9ca3af;
+
+    /* Horizontal Rule */
+    --zm-colors-hr: #374151;
+    --zm-colors-hr-hover: #4b5563;
+
+    /* Placeholder */
+    --zm-colors-placeholder: #6b7280;
+
+    /* Bubble Menu */
+    --zm-colors-bubble-background: #111827;
+    --zm-colors-bubble-text: #f9fafb;
+    --zm-colors-bubble-border: #374151;
+    --zm-colors-bubble-hover: #1f2937;
+    --zm-colors-bubble-active: #3b82f6;
+
+    /* Slash Command Menu */
+    --zm-colors-slash-background: #1f2937;
+    --zm-colors-slash-text: #d1d5db;
+    --zm-colors-slash-text-muted: #9ca3af;
+    --zm-colors-slash-border: #374151;
+    --zm-colors-slash-hover: #374151;
+    --zm-colors-slash-selected: #1e3a5f;
+    --zm-colors-slash-icon: #9ca3af;
+
+    /* Tooltip */
+    --zm-colors-tooltip-background: #374151;
+    --zm-colors-tooltip-text: #f9fafb;
+
+    /* Shadows */
+    --zm-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --zm-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+    --zm-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+  }
+}

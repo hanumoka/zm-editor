@@ -197,6 +197,71 @@ function MyEditor() {
 }
 ```
 
+## Theming & Customization
+
+zm-editor uses CSS custom properties (variables) for theming, making it easy to customize colors, spacing, and more.
+
+### Import Styles
+
+```tsx
+// Import in your layout or global CSS
+import '@zm-editor/react/styles.css';
+```
+
+### Customize with CSS Variables
+
+Override CSS variables to customize the editor appearance:
+
+```css
+/* In your global CSS */
+:root {
+  /* Primary colors */
+  --zm-colors-primary: #8b5cf6;
+  --zm-colors-primary-hover: #7c3aed;
+
+  /* Editor background & text */
+  --zm-colors-editor-background: #ffffff;
+  --zm-colors-editor-text: #374151;
+  --zm-colors-editor-border: #e5e7eb;
+
+  /* Menu colors */
+  --zm-colors-menu-background: #ffffff;
+  --zm-colors-menu-hover: #f3f4f6;
+  --zm-colors-menu-selected: #eff6ff;
+}
+
+/* Dark mode */
+.dark,
+[data-theme='dark'] {
+  --zm-colors-primary: #a78bfa;
+  --zm-colors-editor-background: #1f2937;
+  --zm-colors-editor-text: #d1d5db;
+  --zm-colors-editor-border: #374151;
+}
+```
+
+### Available CSS Variables
+
+| Category | Variables |
+|----------|-----------|
+| **Editor** | `--zm-colors-editor-background`, `--zm-colors-editor-text`, `--zm-colors-editor-border`, `--zm-colors-heading` |
+| **Menu** | `--zm-colors-menu-background`, `--zm-colors-menu-text`, `--zm-colors-menu-hover`, `--zm-colors-menu-selected` |
+| **Primary** | `--zm-colors-primary`, `--zm-colors-primary-hover`, `--zm-colors-primary-text` |
+| **Code** | `--zm-colors-code-background`, `--zm-colors-codeblock-background`, `--zm-colors-codeblock-text` |
+| **Status** | `--zm-colors-success`, `--zm-colors-warning`, `--zm-colors-error`, `--zm-colors-info` |
+| **Spacing** | `--zm-spacing-xs` (0.25rem), `--zm-spacing-sm` (0.5rem), `--zm-spacing-md` (1rem), `--zm-spacing-lg` (1.5rem) |
+| **Radius** | `--zm-radius-sm` (4px), `--zm-radius-md` (6px), `--zm-radius-lg` (8px) |
+| **Typography** | `--zm-font-family-sans`, `--zm-font-family-mono`, `--zm-font-size-*` |
+
+See `variables.css` for the complete list of available variables.
+
+### Dark Mode Support
+
+zm-editor automatically supports dark mode via:
+- `.dark` class (Tailwind CSS / next-themes)
+- `[data-theme="dark"]` attribute
+- `@media (prefers-color-scheme: dark)` system preference
+
 ## Browser Support
 
 - Chrome (latest)

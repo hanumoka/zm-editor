@@ -1,12 +1,12 @@
 # zm-editor 진행상황
 
-> 최종 업데이트: 2026-01-27
+> 최종 업데이트: 2026-01-29
 
 ## 현재 버전
 
 - **버전**: 0.1.0 (배포 완료) 🎉
 - **상태**: Released
-- **완료**: Phase 1~14 완료
+- **완료**: Phase 1~14 완료, CSS 변수 테마 시스템 추가
 - **다음**: Phase 13 잔여 작업 (선택)
 
 ### npm 패키지
@@ -288,6 +288,52 @@ npm install @zm-editor/core @zm-editor/react
 ---
 
 ## 변경 이력
+
+### 2026-01-29
+
+**CSS 변수 기반 테마 시스템 추가** 🎨
+
+#### 디자인 시스템 개선
+- `packages/react/src/styles/variables.css` 신규 생성
+- 80개 이상의 CSS 변수 정의 (`--zm-` 접두사)
+- 색상, 간격, 테두리 반경, 타이포그래피, 그림자 등 모든 디자인 토큰 포함
+
+#### CSS 변수 카테고리
+- **에디터 기본**: `--zm-colors-editor-background`, `--zm-colors-editor-text`, `--zm-colors-editor-border`
+- **메뉴/UI**: `--zm-colors-menu-*`, `--zm-colors-slash-*`, `--zm-colors-bubble-*`
+- **코드 블록**: `--zm-colors-code-*`, `--zm-colors-codeblock-*`
+- **상태 색상**: `--zm-colors-success`, `--zm-colors-warning`, `--zm-colors-error`, `--zm-colors-info`
+- **간격**: `--zm-spacing-xs` ~ `--zm-spacing-xl`
+- **테두리**: `--zm-radius-sm` ~ `--zm-radius-xl`
+- **타이포그래피**: `--zm-font-family-*`, `--zm-font-size-*`
+- **그림자**: `--zm-shadow-sm`, `--zm-shadow-md`, `--zm-shadow-lg`
+
+#### 다크 모드 지원 개선
+- `.dark` 클래스 (Tailwind CSS / next-themes)
+- `[data-theme="dark"]` 속성
+- `@media (prefers-color-scheme: dark)` 시스템 설정 자동 감지
+
+#### 파일 수정
+- `packages/react/src/styles/editor.css` - CSS 변수 import 및 하드코딩된 값 대체
+- `packages/react/package.json` - `./variables.css` export 추가
+- `packages/react/tsup.config.ts` - variables.css 복사 로직 추가
+- `packages/react/README.md` - "Theming & Customization" 섹션 추가
+- `apps/demo/src/app/globals.css` - 간소화 및 테마 커스터마이징 예제 추가
+
+#### 사용 예시
+```css
+:root {
+  --zm-colors-primary: #8b5cf6;
+  --zm-colors-editor-background: #fafafa;
+}
+
+.dark, [data-theme="dark"] {
+  --zm-colors-primary: #a78bfa;
+  --zm-colors-editor-background: #1a1a2e;
+}
+```
+
+---
 
 ### 2026-01-27
 

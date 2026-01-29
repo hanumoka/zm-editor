@@ -47,6 +47,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **CSS Variable Theming System**: 80+ CSS custom properties (`--zm-*`) for easy customization
+  - Color tokens: editor, menu, code blocks, status colors, callouts, terminal
+  - Spacing tokens: `--zm-spacing-xs` to `--zm-spacing-xl`
+  - Border radius: `--zm-radius-sm` to `--zm-radius-xl`
+  - Typography: font families, sizes, line height
+  - Shadows: `--zm-shadow-sm`, `--zm-shadow-md`, `--zm-shadow-lg`
+- **Dark mode improvements**: Automatic support via `.dark` class, `[data-theme="dark"]`, and `prefers-color-scheme`
+- **New export**: `@zm-editor/react/variables.css` for standalone variable access
+- **README documentation**: "Theming & Customization" section with examples
+
 ### Planned
 - Additional language locales
 - More diagram types

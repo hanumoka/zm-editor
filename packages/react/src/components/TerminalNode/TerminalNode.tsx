@@ -133,8 +133,8 @@ export function TerminalNode({ node, updateAttributes, selected }: TerminalNodeP
   );
 
   // 출력 영역 높이 자동 조절
-  const handleOutputInput = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const textarea = e.target;
+  const handleOutputInput = useCallback((e: React.FormEvent<HTMLTextAreaElement>) => {
+    const textarea = e.currentTarget;
     textarea.style.height = 'auto';
     textarea.style.height = `${textarea.scrollHeight}px`;
   }, []);
