@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2026-01-31
+
+### Fixed
+- **@zm-editor/react**: Replace `workspace:*` with explicit version `^0.1.1` for `@zm-editor/core` dependency
+  - Fixes npm install failure when using published package from npm registry
+  - `workspace:*` protocol is pnpm-specific and was not being converted during publish
+
+---
+
+## [0.1.1] - 2026-01-30
+
+### Changed
+- **Bundle size optimization**: Mermaid (~400KB) and KaTeX (~300KB) moved to optional peerDependencies
+  - Total bundle reduced from ~1.1MB to ~441KB
+  - Dynamic imports for lazy loading
+  - Graceful fallback UI when optional deps not installed
+
+### Added
+- **Bilingual README**: Korean (README.ko.md) documentation for both packages
+- **Installation prompts**: Helpful messages when mermaid/katex not installed
+
+---
+
 ## [0.1.0] - 2026-01-27
 
 ### Added
