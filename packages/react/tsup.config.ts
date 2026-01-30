@@ -7,7 +7,7 @@ export default defineConfig({
   format: ['esm'],
   dts: true,
   clean: true,
-  external: ['react', 'react-dom', '@tiptap/core', '@tiptap/react', '@tiptap/pm'],
+  external: ['react', 'react-dom', '@tiptap/core', '@tiptap/react', '@tiptap/pm', 'mermaid', 'katex'],
   treeshake: true,
   splitting: false,
   injectStyle: false,

@@ -5,6 +5,8 @@ Core Tiptap extensions and utilities for zm-editor - a Notion-style rich text ed
 [![npm version](https://img.shields.io/npm/v/@zm-editor/core.svg)](https://www.npmjs.com/package/@zm-editor/core)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+**English** | [한국어](./README.ko.md)
+
 ## Installation
 
 ```bash

@@ -5,6 +5,8 @@ React components for zm-editor - a Notion-style rich text editor built on [Tipta
 [![npm version](https://img.shields.io/npm/v/@zm-editor/react.svg)](https://www.npmjs.com/package/@zm-editor/react)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+**English** | [한국어](./README.ko.md)
+
 ## Features
 
 - **Notion-like UX** - Slash commands, bubble menu, drag & drop blocks
@@ -32,12 +34,20 @@ npm install react react-dom
 ### Optional Dependencies
 
 ```bash
+# For Mermaid diagrams (flowcharts, sequence diagrams, etc.)
+npm install mermaid
+
+# For Math equations (LaTeX rendering)
+npm install katex
+
 # For PDF preview in file attachments
 npm install pdfjs-dist
 
 # For HTML sanitization
 npm install dompurify
 ```
+
+> **Note:** Mermaid and KaTeX are optional. If not installed, the editor will display a helpful installation prompt when you try to use diagram or math blocks.
 
 ## Quick Start
 

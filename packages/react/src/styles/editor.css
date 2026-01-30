@@ -3134,6 +3134,125 @@ kbd {
   }
 }
 
+/* Mermaid Unavailable State */
+.zm-mermaid-unavailable {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+  padding: 1.5rem;
+  background-color: #f9fafb;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+}
+
+.zm-mermaid-unavailable-content {
+  text-align: center;
+  color: #6b7280;
+}
+
+.zm-mermaid-unavailable-content svg {
+  margin: 0 auto 0.75rem;
+  opacity: 0.5;
+}
+
+.zm-mermaid-unavailable-title {
+  font-weight: 600;
+  font-size: 0.9375rem;
+  margin-bottom: 0.5rem;
+  color: #374151;
+}
+
+.zm-mermaid-unavailable-message {
+  font-size: 0.8125rem;
+  margin-bottom: 0.75rem;
+}
+
+.zm-mermaid-unavailable-code {
+  display: inline-block;
+  padding: 0.375rem 0.75rem;
+  background-color: #1f2937;
+  color: #e5e7eb;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8125rem;
+}
+
+/* Math Unavailable State */
+.zm-math-unavailable {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100px;
+  padding: 1.5rem;
+  background-color: #f9fafb;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+}
+
+.zm-math-unavailable-content {
+  text-align: center;
+  color: #6b7280;
+}
+
+.zm-math-unavailable-content svg {
+  margin: 0 auto 0.75rem;
+  opacity: 0.5;
+}
+
+.zm-math-unavailable-title {
+  font-weight: 600;
+  font-size: 0.9375rem;
+  margin-bottom: 0.5rem;
+  color: #374151;
+}
+
+.zm-math-unavailable-message {
+  font-size: 0.8125rem;
+  margin-bottom: 0.75rem;
+}
+
+.zm-math-unavailable-code {
+  display: inline-block;
+  padding: 0.375rem 0.75rem;
+  background-color: #1f2937;
+  color: #e5e7eb;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8125rem;
+}
+
+/* Dark mode for unavailable states */
+.dark .zm-mermaid-unavailable,
+[data-theme="dark"] .zm-mermaid-unavailable,
+.dark .zm-math-unavailable,
+[data-theme="dark"] .zm-math-unavailable {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+.dark .zm-mermaid-unavailable-content,
+[data-theme="dark"] .zm-mermaid-unavailable-content,
+.dark .zm-math-unavailable-content,
+[data-theme="dark"] .zm-math-unavailable-content {
+  color: #9ca3af;
+}
+
+.dark .zm-mermaid-unavailable-title,
+[data-theme="dark"] .zm-mermaid-unavailable-title,
+.dark .zm-math-unavailable-title,
+[data-theme="dark"] .zm-math-unavailable-title {
+  color: #e5e7eb;
+}
+
+.dark .zm-mermaid-unavailable-code,
+[data-theme="dark"] .zm-mermaid-unavailable-code,
+.dark .zm-math-unavailable-code,
+[data-theme="dark"] .zm-math-unavailable-code {
+  background-color: #111827;
+  color: #d1d5db;
+}
+
 /* ========================================
    Error Message Node
    ======================================== */

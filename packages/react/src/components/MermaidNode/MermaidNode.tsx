@@ -2,15 +2,36 @@
 
 import { NodeViewWrapper, NodeViewProps } from '@tiptap/react';
 import { useCallback, useState, useRef, useEffect } from 'react';
-import mermaid from 'mermaid';
 import { useLocale } from '../../context';
 
 export type MermaidNodeProps = NodeViewProps;
 
-// Initialize mermaid with default config
+// Mermaid module reference (loaded dynamically)
+let mermaidModule: typeof import('mermaid') | null = null;
+let mermaidLoadError: string | null = null;
 let mermaidInitialized = false;
 
-function initializeMermaid() {
+/**
+ * Dynamically load mermaid library
+ */
+async function loadMermaid(): Promise<typeof import('mermaid') | null> {
+  if (mermaidModule) return mermaidModule;
+  if (mermaidLoadError) return null;
+
+  try {
+    mermaidModule = await import('mermaid');
+    return mermaidModule;
+  } catch (err) {
+    mermaidLoadError = 'Mermaid library is not installed. Please run: npm install mermaid';
+    console.warn('[zm-editor] Mermaid not available:', mermaidLoadError);
+    return null;
+  }
+}
+
+/**
+ * Initialize mermaid with default config
+ */
+function initializeMermaid(mermaid: typeof import('mermaid')['default']) {
   if (mermaidInitialized) return;
   mermaid.initialize({
     startOnLoad: false,
@@ -29,10 +50,15 @@ async function renderMermaid(code: string, id: string): Promise<{ svg: string; e
     return { svg: '', error: null };
   }
 
-  initializeMermaid();
+  const mermaid = await loadMermaid();
+  if (!mermaid) {
+    return { svg: '', error: mermaidLoadError || 'Mermaid library not available' };
+  }
+
+  initializeMermaid(mermaid.default);
 
   try {
-    const { svg } = await mermaid.render(id, code);
+    const { svg } = await mermaid.default.render(id, code);
     return { svg, error: null };
   } catch (err) {
     // Mermaid render 실패 시 document.body에 orphan 에러 SVG가 생성됨
@@ -83,9 +109,15 @@ export function MermaidNode({ node, updateAttributes, selected }: MermaidNodePro
   const [renderedSvg, setRenderedSvg] = useState<string>('');
   const [renderError, setRenderError] = useState<string | null>(null);
   const [isRendering, setIsRendering] = useState(false);
+  const [isMermaidAvailable, setIsMermaidAvailable] = useState<boolean | null>(null);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const renderIdRef = useRef(0);
+
+  // Check if mermaid is available on mount
+  useEffect(() => {
+    loadMermaid().then((m) => setIsMermaidAvailable(m !== null));
+  }, []);
 
   // 클라이언트 마운트 후 초기 편집 상태 설정
   useEffect(() => {
@@ -175,6 +207,24 @@ export function MermaidNode({ node, updateAttributes, selected }: MermaidNodePro
   useEffect(() => {
     adjustTextareaHeight();
   }, [codeValue, adjustTextareaHeight]);
+
+  // Mermaid not available - show installation message
+  if (isMermaidAvailable === false) {
+    return (
+      <NodeViewWrapper className="zm-mermaid-node-wrapper">
+        <div className={`zm-mermaid-node zm-mermaid-unavailable ${selected ? 'is-selected' : ''}`}>
+          <div className="zm-mermaid-unavailable-content">
+            <MermaidIcon />
+            <div className="zm-mermaid-unavailable-title">Mermaid Diagrams</div>
+            <div className="zm-mermaid-unavailable-message">
+              To use Mermaid diagrams, please install the mermaid package:
+            </div>
+            <code className="zm-mermaid-unavailable-code">npm install mermaid</code>
+          </div>
+        </div>
+      </NodeViewWrapper>
+    );
+  }
 
   // 편집 모드
   if (isEditing || !code) {

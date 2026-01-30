@@ -1,20 +1,50 @@
+'use client';
+
 import { NodeViewWrapper, NodeViewProps } from '@tiptap/react';
-import { useCallback, useState, useRef, useEffect, useMemo } from 'react';
-import katex from 'katex';
+import { useCallback, useState, useRef, useEffect } from 'react';
 import { useLocale } from '../../context';
 
 export type MathNodeProps = NodeViewProps;
 
+// KaTeX module reference (loaded dynamically)
+let katexModule: typeof import('katex') | null = null;
+let katexLoadError: string | null = null;
+
+/**
+ * Dynamically load katex library
+ */
+async function loadKatex(): Promise<typeof import('katex') | null> {
+  if (katexModule) return katexModule;
+  if (katexLoadError) return null;
+
+  try {
+    katexModule = await import('katex');
+    return katexModule;
+  } catch (err) {
+    katexLoadError = 'KaTeX library is not installed. Please run: npm install katex';
+    console.warn('[zm-editor] KaTeX not available:', katexLoadError);
+    return null;
+  }
+}
+
 /**
  * LaTeX를 HTML로 렌더링
  */
-function renderLatex(latex: string, displayMode: boolean): { html: string; error: string | null } {
+async function renderLatexAsync(
+  latex: string,
+  displayMode: boolean
+): Promise<{ html: string; error: string | null }> {
   if (!latex.trim()) {
     return { html: '', error: null };
   }
 
+  const katex = await loadKatex();
+  if (!katex) {
+    return { html: '', error: katexLoadError || 'KaTeX library not available' };
+  }
+
   try {
-    const html = katex.renderToString(latex, {
+    const html = katex.default.renderToString(latex, {
       displayMode,
       throwOnError: true,
       strict: false,
@@ -38,6 +68,16 @@ export function MathNode({ node, updateAttributes, selected }: MathNodeProps) {
   // 편집 상태 (hydration 불일치 방지를 위해 초기값 false)
   const [isEditing, setIsEditing] = useState(false);
   const [latexValue, setLatexValue] = useState(latex);
+  const [renderedHtml, setRenderedHtml] = useState<string>('');
+  const [renderError, setRenderError] = useState<string | null>(null);
+  const [isKatexAvailable, setIsKatexAvailable] = useState<boolean | null>(null);
+
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Check if katex is available on mount
+  useEffect(() => {
+    loadKatex().then((k) => setIsKatexAvailable(k !== null));
+  }, []);
 
   // 클라이언트 마운트 후 초기 편집 상태 설정
   useEffect(() => {
@@ -45,10 +85,6 @@ export function MathNode({ node, updateAttributes, selected }: MathNodeProps) {
       setIsEditing(true);
     }
   }, []);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  // LaTeX 렌더링 결과
-  const rendered = useMemo(() => renderLatex(latexValue, displayMode), [latexValue, displayMode]);
 
   // LaTeX 동기화
   useEffect(() => {
@@ -57,6 +93,20 @@ export function MathNode({ node, updateAttributes, selected }: MathNodeProps) {
       setIsEditing(false);
     }
   }, [latex]);
+
+  // Render latex when latexValue changes
+  useEffect(() => {
+    if (!latexValue.trim()) {
+      setRenderedHtml('');
+      setRenderError(null);
+      return;
+    }
+
+    renderLatexAsync(latexValue, displayMode).then((result) => {
+      setRenderedHtml(result.html);
+      setRenderError(result.error);
+    });
+  }, [latexValue, displayMode]);
 
   // 저장
   const handleSave = useCallback(() => {
@@ -111,6 +161,24 @@ export function MathNode({ node, updateAttributes, selected }: MathNodeProps) {
     adjustTextareaHeight();
   }, [latexValue, adjustTextareaHeight]);
 
+  // KaTeX not available - show installation message
+  if (isKatexAvailable === false) {
+    return (
+      <NodeViewWrapper className="zm-math-node-wrapper">
+        <div className={`zm-math-node zm-math-unavailable ${selected ? 'is-selected' : ''}`}>
+          <div className="zm-math-unavailable-content">
+            <MathIcon />
+            <div className="zm-math-unavailable-title">Math Equations</div>
+            <div className="zm-math-unavailable-message">
+              To use math equations, please install the KaTeX package:
+            </div>
+            <code className="zm-math-unavailable-code">npm install katex</code>
+          </div>
+        </div>
+      </NodeViewWrapper>
+    );
+  }
+
   // 편집 모드
   if (isEditing || !latex) {
     return (
@@ -140,14 +208,14 @@ export function MathNode({ node, updateAttributes, selected }: MathNodeProps) {
             {/* 실시간 미리보기 */}
             {latexValue.trim() && (
               <div className="zm-math-preview">
-                {rendered.error ? (
-                  <div className="zm-math-error">{rendered.error}</div>
-                ) : (
+                {renderError ? (
+                  <div className="zm-math-error">{renderError}</div>
+                ) : renderedHtml ? (
                   <div
                     className="zm-math-rendered"
-                    dangerouslySetInnerHTML={{ __html: rendered.html }}
+                    dangerouslySetInnerHTML={{ __html: renderedHtml }}
                   />
-                )}
+                ) : null}
               </div>
             )}
             <div className="zm-math-hint">{locale.nodes.math.hint}</div>
@@ -157,9 +225,7 @@ export function MathNode({ node, updateAttributes, selected }: MathNodeProps) {
     );
   }
 
-  // 렌더링 결과
-  const finalRendered = renderLatex(latex, displayMode);
-
+  // 렌더링 결과 (display mode)
   return (
     <NodeViewWrapper className="zm-math-node-wrapper">
       <div
@@ -167,19 +233,21 @@ export function MathNode({ node, updateAttributes, selected }: MathNodeProps) {
         data-drag-handle
         onClick={handleEdit}
       >
-        {finalRendered.error ? (
+        {renderError ? (
           <div className="zm-math-error-display">
             <div className="zm-math-error-icon">
               <ErrorIcon />
             </div>
-            <div className="zm-math-error-message">{finalRendered.error}</div>
+            <div className="zm-math-error-message">{renderError}</div>
             <div className="zm-math-error-source">{latex}</div>
           </div>
-        ) : (
+        ) : renderedHtml ? (
           <div
             className="zm-math-rendered"
-            dangerouslySetInnerHTML={{ __html: finalRendered.html }}
+            dangerouslySetInnerHTML={{ __html: renderedHtml }}
           />
+        ) : (
+          <div className="zm-math-loading">Loading...</div>
         )}
       </div>
 

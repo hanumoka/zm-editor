@@ -1,6 +1,6 @@
 {
   "name": "@zm-editor/react",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React components for zm-editor - Notion-like rich text editor",
   "license": "MIT",
   "type": "module",
@@ -28,9 +28,7 @@
     "@tiptap/core": "^2.11.0",
     "@tiptap/extension-image": "^2.11.0",
     "@tiptap/react": "^2.11.0",
-    "@zm-editor/core": "^0.1.0",
-    "katex": "^0.16.27",
-    "mermaid": "^11.12.2"
+    "@zm-editor/core": "workspace:*"
   },
   "devDependencies": {
     "@types/katex": "^0.16.8",
@@ -44,9 +42,17 @@
   "peerDependencies": {
     "react": ">=18",
     "react-dom": ">=18",
+    "mermaid": "^11.0.0",
+    "katex": "^0.16.0",
     "pdfjs-dist": "^4.0.0"
   },
   "peerDependenciesMeta": {
+    "mermaid": {
+      "optional": true
+    },
+    "katex": {
+      "optional": true
+    },
     "pdfjs-dist": {
       "optional": true
     }
