@@ -1675,10 +1675,26 @@ class SlashMenuComponent {
     const rect = this.props.clientRect?.();
     if (rect) {
       // position: fixed + viewport 기준 좌표 사용
-      // 스크롤 시 scrollHandler에서 위치 업데이트
       this.element.style.position = 'fixed';
       this.element.style.left = `${rect.left}px`;
-      this.element.style.top = `${rect.bottom + 8}px`;
+
+      // 뷰포트 경계 체크: 아래 공간 부족 시 위로 flip
+      const menuMaxHeight = 320;
+      const gap = 8;
+      const spaceBelow = window.innerHeight - rect.bottom - gap;
+      const spaceAbove = rect.top - gap;
+
+      if (spaceBelow < menuMaxHeight && spaceAbove > spaceBelow) {
+        // 위로 표시
+        const availableHeight = Math.min(menuMaxHeight, spaceAbove);
+        this.element.style.top = `${rect.top - availableHeight - gap}px`;
+        this.element.style.maxHeight = `${availableHeight}px`;
+      } else {
+        // 아래로 표시 (기본)
+        this.element.style.top = `${rect.bottom + gap}px`;
+        const availableHeight = Math.min(menuMaxHeight, spaceBelow);
+        this.element.style.maxHeight = `${availableHeight}px`;
+      }
     }
 
     // 기존 이벤트 리스너 제거
@@ -1853,7 +1869,22 @@ class MentionMenuComponent {
     if (rect) {
       this.element.style.position = 'fixed';
       this.element.style.left = `${rect.left}px`;
-      this.element.style.top = `${rect.bottom + 8}px`;
+
+      // 뷰포트 경계 체크: 아래 공간 부족 시 위로 flip
+      const menuMaxHeight = 240;
+      const gap = 8;
+      const spaceBelow = window.innerHeight - rect.bottom - gap;
+      const spaceAbove = rect.top - gap;
+
+      if (spaceBelow < menuMaxHeight && spaceAbove > spaceBelow) {
+        const availableHeight = Math.min(menuMaxHeight, spaceAbove);
+        this.element.style.top = `${rect.top - availableHeight - gap}px`;
+        this.element.style.maxHeight = `${availableHeight}px`;
+      } else {
+        this.element.style.top = `${rect.bottom + gap}px`;
+        const availableHeight = Math.min(menuMaxHeight, spaceBelow);
+        this.element.style.maxHeight = `${availableHeight}px`;
+      }
     }
 
     this.removeEventListeners();
