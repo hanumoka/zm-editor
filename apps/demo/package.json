@@ -16,6 +16,11 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
+  "dependenciesMeta": {
+    "@zm-editor/react": {
+      "injected": true
+    }
+  },
   "devDependencies": {
     "@types/node": "^22",
     "@types/react": "^19",

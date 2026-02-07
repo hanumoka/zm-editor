@@ -25,7 +25,7 @@ importers:
     dependencies:
       '@zm-editor/react':
         specifier: workspace:*
-        version: link:../../packages/react
+        version: file:packages/react(@tiptap/pm@2.27.2)(dompurify@3.3.1)(katex@0.16.27)(mermaid@11.12.2)(pdfjs-dist@4.10.38)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       katex:
         specifier: ^0.16.27
         version: 0.16.27
@@ -66,6 +66,9 @@ importers:
       typescript:
         specifier: ^5.7.0
         version: 5.9.3
+    dependenciesMeta:
+      '@zm-editor/react':
+        injected: true
 
   apps/demoapi:
     dependencies:
@@ -2213,6 +2216,22 @@ packages:
       dompurify:
         optional: true
 
+  '@zm-editor/react@file:packages/react':
+    resolution: {directory: packages/react, type: directory}
+    peerDependencies:
+      katex: ^0.16.0
+      mermaid: ^11.0.0
+      pdfjs-dist: ^4.0.0
+      react: '>=18'
+      react-dom: '>=18'
+    peerDependenciesMeta:
+      katex:
+        optional: true
+      mermaid:
+        optional: true
+      pdfjs-dist:
+        optional: true
+
   accepts@2.0.0:
     resolution: {integrity: sha512-5cvg6CtKwfgdmVqY1WIiXKc3Q1bkRqGLi+2W/6ao+6Y7gu/RCwRuAhGEzh5B4KlszSuTLgZYuqFqo5bImjNKng==}
     engines: {node: '>= 0.6'}
@@ -3409,6 +3428,7 @@ packages:
 
   glob@10.5.0:
     resolution: {integrity: sha512-DfXN8DfhJ7NH3Oe7cFmu3NCu1wKbkReJ8TorzSAFbSKrlNaQSKfIzqYqVY8zlbs2NLBbWpRiU52GX2PbaBVNkg==}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   glob@13.0.0:
@@ -3417,7 +3437,7 @@ packages:
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   globals@14.0.0:
     resolution: {integrity: sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==}
@@ -7358,6 +7378,24 @@ snapshots:
       dompurify: 3.3.1
     transitivePeerDependencies:
       - '@tiptap/extension-code-block'
+      - highlight.js
+
+  '@zm-editor/react@file:packages/react(@tiptap/pm@2.27.2)(dompurify@3.3.1)(katex@0.16.27)(mermaid@11.12.2)(pdfjs-dist@4.10.38)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
+    dependencies:
+      '@tiptap/core': 2.27.2(@tiptap/pm@2.27.2)
+      '@tiptap/extension-image': 2.27.2(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))
+      '@tiptap/react': 2.27.2(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@tiptap/pm@2.27.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@zm-editor/core': 0.1.1(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@tiptap/extension-code-block@2.27.2(@tiptap/core@2.27.2(@tiptap/pm@2.27.2))(@tiptap/pm@2.27.2))(dompurify@3.3.1)(highlight.js@11.11.1)
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
+    optionalDependencies:
+      katex: 0.16.27
+      mermaid: 11.12.2
+      pdfjs-dist: 4.10.38
+    transitivePeerDependencies:
+      - '@tiptap/extension-code-block'
+      - '@tiptap/pm'
+      - dompurify
       - highlight.js
 
   accepts@2.0.0:
