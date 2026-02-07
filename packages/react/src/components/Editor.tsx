@@ -1672,35 +1672,8 @@ class SlashMenuComponent {
       document.body.appendChild(this.element);
     }
 
-    const rect = this.props.clientRect?.();
-    if (rect) {
-      // position: fixed + viewport 기준 좌표 사용
-      this.element.style.position = 'fixed';
-      this.element.style.left = `${rect.left}px`;
-
-      // 뷰포트 경계 체크: 아래 공간 부족 시 위로 flip
-      const menuMaxHeight = 320;
-      const gap = 8;
-      const spaceBelow = window.innerHeight - rect.bottom - gap;
-      const spaceAbove = rect.top - gap;
-
-      if (spaceBelow < menuMaxHeight && spaceAbove > spaceBelow) {
-        // 위로 표시
-        const availableHeight = Math.min(menuMaxHeight, spaceAbove);
-        this.element.style.top = `${rect.top - availableHeight - gap}px`;
-        this.element.style.maxHeight = `${availableHeight}px`;
-      } else {
-        // 아래로 표시 (기본)
-        this.element.style.top = `${rect.bottom + gap}px`;
-        const availableHeight = Math.min(menuMaxHeight, spaceBelow);
-        this.element.style.maxHeight = `${availableHeight}px`;
-      }
-    }
-
-    // 기존 이벤트 리스너 제거
+    // 1단계: 아이템 먼저 렌더링 (높이 측정을 위해)
     this.removeEventListeners();
-
-    // DOM 생성 (textContent 사용으로 XSS 방지)
     this.element.innerHTML = '';
 
     if (this.props.items.length === 0) {
@@ -1708,39 +1681,64 @@ class SlashMenuComponent {
       emptyDiv.className = 'zm-slash-menu-empty';
       emptyDiv.textContent = this.props.noResultsText ?? 'No results found';
       this.element.appendChild(emptyDiv);
-      return;
+    } else {
+      this.props.items.forEach((item, index) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = `zm-slash-menu-item ${index === this.selectedIndex ? 'selected' : ''}`;
+        itemDiv.dataset.index = String(index);
+
+        const titleDiv = document.createElement('div');
+        titleDiv.className = 'zm-slash-menu-item-title';
+        titleDiv.textContent = item.title; // XSS 방지: textContent 사용
+
+        const descDiv = document.createElement('div');
+        descDiv.className = 'zm-slash-menu-item-description';
+        descDiv.textContent = item.description; // XSS 방지: textContent 사용
+
+        itemDiv.appendChild(titleDiv);
+        itemDiv.appendChild(descDiv);
+        this.element!.appendChild(itemDiv);
+
+        // 클릭 이벤트 바인딩 (핸들러 저장하여 나중에 제거)
+        const handler = () => {
+          this.props.command(item);
+        };
+        itemDiv.addEventListener('click', handler);
+        this.clickHandlers.push({ element: itemDiv, handler });
+
+        // 마우스 호버 시 선택
+        itemDiv.addEventListener('mouseenter', () => {
+          this.selectedIndex = index;
+          this.updateSelection();
+        });
+      });
     }
 
-    this.props.items.forEach((item, index) => {
-      const itemDiv = document.createElement('div');
-      itemDiv.className = `zm-slash-menu-item ${index === this.selectedIndex ? 'selected' : ''}`;
-      itemDiv.dataset.index = String(index);
+    // 2단계: 아이템 렌더 후 실제 높이 기반으로 위치 결정
+    const rect = this.props.clientRect?.();
+    if (rect) {
+      this.element.style.position = 'fixed';
+      this.element.style.left = `${rect.left}px`;
 
-      const titleDiv = document.createElement('div');
-      titleDiv.className = 'zm-slash-menu-item-title';
-      titleDiv.textContent = item.title; // XSS 방지: textContent 사용
+      const menuMaxHeight = 320;
+      const gap = 8;
+      // 실제 렌더된 콘텐츠 높이 (max-height 적용 전)
+      const menuHeight = Math.min(this.element.scrollHeight, menuMaxHeight);
+      const spaceBelow = window.innerHeight - rect.bottom - gap;
+      const spaceAbove = rect.top - gap;
 
-      const descDiv = document.createElement('div');
-      descDiv.className = 'zm-slash-menu-item-description';
-      descDiv.textContent = item.description; // XSS 방지: textContent 사용
-
-      itemDiv.appendChild(titleDiv);
-      itemDiv.appendChild(descDiv);
-      this.element!.appendChild(itemDiv);
-
-      // 클릭 이벤트 바인딩 (핸들러 저장하여 나중에 제거)
-      const handler = () => {
-        this.props.command(item);
-      };
-      itemDiv.addEventListener('click', handler);
-      this.clickHandlers.push({ element: itemDiv, handler });
-
-      // 마우스 호버 시 선택
-      itemDiv.addEventListener('mouseenter', () => {
-        this.selectedIndex = index;
-        this.updateSelection();
-      });
-    });
+      if (spaceAbove >= menuHeight || spaceAbove > spaceBelow) {
+        // 위로 표시 (기본): 커서 위에 메뉴 배치
+        const availableHeight = Math.min(menuMaxHeight, spaceAbove);
+        this.element.style.top = `${rect.top - Math.min(menuHeight, availableHeight) - gap}px`;
+        this.element.style.maxHeight = `${availableHeight}px`;
+      } else {
+        // 아래로 표시 (위 공간 부족 시 fallback)
+        this.element.style.top = `${rect.bottom + gap}px`;
+        const availableHeight = Math.min(menuMaxHeight, spaceBelow);
+        this.element.style.maxHeight = `${availableHeight}px`;
+      }
+    }
   }
 
   private updateSelection() {
@@ -1865,28 +1863,7 @@ class MentionMenuComponent {
       document.body.appendChild(this.element);
     }
 
-    const rect = this.props.clientRect?.();
-    if (rect) {
-      this.element.style.position = 'fixed';
-      this.element.style.left = `${rect.left}px`;
-
-      // 뷰포트 경계 체크: 아래 공간 부족 시 위로 flip
-      const menuMaxHeight = 240;
-      const gap = 8;
-      const spaceBelow = window.innerHeight - rect.bottom - gap;
-      const spaceAbove = rect.top - gap;
-
-      if (spaceBelow < menuMaxHeight && spaceAbove > spaceBelow) {
-        const availableHeight = Math.min(menuMaxHeight, spaceAbove);
-        this.element.style.top = `${rect.top - availableHeight - gap}px`;
-        this.element.style.maxHeight = `${availableHeight}px`;
-      } else {
-        this.element.style.top = `${rect.bottom + gap}px`;
-        const availableHeight = Math.min(menuMaxHeight, spaceBelow);
-        this.element.style.maxHeight = `${availableHeight}px`;
-      }
-    }
-
+    // 1단계: 아이템 먼저 렌더링 (높이 측정을 위해)
     this.removeEventListeners();
     this.element.innerHTML = '';
 
@@ -1895,57 +1872,81 @@ class MentionMenuComponent {
       emptyDiv.className = 'zm-mention-list-empty';
       emptyDiv.textContent = 'No users found';
       this.element.appendChild(emptyDiv);
-      return;
+    } else {
+      this.props.items.forEach((item, index) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = `zm-mention-list-item ${index === this.selectedIndex ? 'selected' : ''}`;
+
+        // Avatar
+        if (item.avatar) {
+          const avatarImg = document.createElement('img');
+          avatarImg.src = item.avatar;
+          avatarImg.alt = item.label;
+          avatarImg.className = 'zm-mention-list-avatar';
+          itemDiv.appendChild(avatarImg);
+        } else {
+          const avatarPlaceholder = document.createElement('div');
+          avatarPlaceholder.className = 'zm-mention-list-avatar-placeholder';
+          avatarPlaceholder.textContent = item.label.charAt(0).toUpperCase();
+          itemDiv.appendChild(avatarPlaceholder);
+        }
+
+        // Content
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'zm-mention-list-content';
+
+        const labelDiv = document.createElement('div');
+        labelDiv.className = 'zm-mention-list-label';
+        labelDiv.textContent = item.label;
+        contentDiv.appendChild(labelDiv);
+
+        if (item.description) {
+          const descDiv = document.createElement('div');
+          descDiv.className = 'zm-mention-list-description';
+          descDiv.textContent = item.description;
+          contentDiv.appendChild(descDiv);
+        }
+
+        itemDiv.appendChild(contentDiv);
+        this.element!.appendChild(itemDiv);
+
+        const handler = () => {
+          this.props.command(item);
+        };
+        itemDiv.addEventListener('click', handler);
+        this.clickHandlers.push({ element: itemDiv, handler });
+
+        itemDiv.addEventListener('mouseenter', () => {
+          this.selectedIndex = index;
+          this.updateSelection();
+        });
+      });
     }
 
-    this.props.items.forEach((item, index) => {
-      const itemDiv = document.createElement('div');
-      itemDiv.className = `zm-mention-list-item ${index === this.selectedIndex ? 'selected' : ''}`;
+    // 2단계: 아이템 렌더 후 실제 높이 기반으로 위치 결정
+    const rect = this.props.clientRect?.();
+    if (rect) {
+      this.element.style.position = 'fixed';
+      this.element.style.left = `${rect.left}px`;
 
-      // Avatar
-      if (item.avatar) {
-        const avatarImg = document.createElement('img');
-        avatarImg.src = item.avatar;
-        avatarImg.alt = item.label;
-        avatarImg.className = 'zm-mention-list-avatar';
-        itemDiv.appendChild(avatarImg);
+      const menuMaxHeight = 240;
+      const gap = 8;
+      const menuHeight = Math.min(this.element.scrollHeight, menuMaxHeight);
+      const spaceBelow = window.innerHeight - rect.bottom - gap;
+      const spaceAbove = rect.top - gap;
+
+      if (spaceAbove >= menuHeight || spaceAbove > spaceBelow) {
+        // 위로 표시 (기본): 커서 위에 메뉴 배치
+        const availableHeight = Math.min(menuMaxHeight, spaceAbove);
+        this.element.style.top = `${rect.top - Math.min(menuHeight, availableHeight) - gap}px`;
+        this.element.style.maxHeight = `${availableHeight}px`;
       } else {
-        const avatarPlaceholder = document.createElement('div');
-        avatarPlaceholder.className = 'zm-mention-list-avatar-placeholder';
-        avatarPlaceholder.textContent = item.label.charAt(0).toUpperCase();
-        itemDiv.appendChild(avatarPlaceholder);
+        // 아래로 표시 (위 공간 부족 시 fallback)
+        this.element.style.top = `${rect.bottom + gap}px`;
+        const availableHeight = Math.min(menuMaxHeight, spaceBelow);
+        this.element.style.maxHeight = `${availableHeight}px`;
       }
-
-      // Content
-      const contentDiv = document.createElement('div');
-      contentDiv.className = 'zm-mention-list-content';
-
-      const labelDiv = document.createElement('div');
-      labelDiv.className = 'zm-mention-list-label';
-      labelDiv.textContent = item.label;
-      contentDiv.appendChild(labelDiv);
-
-      if (item.description) {
-        const descDiv = document.createElement('div');
-        descDiv.className = 'zm-mention-list-description';
-        descDiv.textContent = item.description;
-        contentDiv.appendChild(descDiv);
-      }
-
-      itemDiv.appendChild(contentDiv);
-      this.element!.appendChild(itemDiv);
-
-      const handler = () => {
-        this.props.command(item);
-      };
-      itemDiv.addEventListener('click', handler);
-      this.clickHandlers.push({ element: itemDiv, handler });
-
-      itemDiv.addEventListener('mouseenter', () => {
-        this.selectedIndex = index;
-        this.updateSelection();
-      });
-    });
+    }
   }
 
   private updateSelection() {
