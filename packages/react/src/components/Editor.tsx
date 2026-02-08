@@ -1,6 +1,7 @@
 'use client';
 
 import { forwardRef, useImperativeHandle, useMemo, useCallback, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useEditor, EditorContent, Editor as TiptapEditor, ReactNodeViewRenderer } from '@tiptap/react';
 import type { JSONContent, Extension } from '@tiptap/core';
 import {
@@ -1485,8 +1486,8 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
             aria-label="Open emoji picker"
             tabIndex={-1}
           />
-          {/* 이모지 선택기 팝업 */}
-          {showEmojiPicker && (
+          {/* 이모지 선택기 팝업 - Portal로 document.body에 렌더링하여 에디터 DOM과 분리 */}
+          {showEmojiPicker && createPortal(
             <div
               className="zm-emoji-picker-overlay"
               style={{
@@ -1500,7 +1501,8 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
                 onSelect={handleEmojiSelect}
                 onClose={handleEmojiPickerClose}
               />
-            </div>
+            </div>,
+            document.body
           )}
           {enableBubbleMenu && (
             <BubbleMenu
