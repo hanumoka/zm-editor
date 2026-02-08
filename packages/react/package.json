@@ -1,6 +1,6 @@
 {
   "name": "@zm-editor/react",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "React components for zm-editor - Notion-like rich text editor",
   "license": "MIT",
   "type": "module",
