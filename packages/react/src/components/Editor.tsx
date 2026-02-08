@@ -1417,12 +1417,14 @@ export const ZmEditor = forwardRef<ZmEditorRef, ZmEditorProps>(
       setShowEmojiPicker(true);
     }, [editor]);
 
-    // 이모지 선택 핸들러
+    // 이모지 선택 핸들러 (React 리렌더와 Tiptap DOM 조작 분리)
     const handleEmojiSelect = useCallback(
       (emoji: string) => {
         if (!editor) return;
-        editor.chain().focus().insertContent(emoji).run();
         setShowEmojiPicker(false);
+        requestAnimationFrame(() => {
+          editor.chain().focus().insertContent(emoji).run();
+        });
       },
       [editor]
     );
