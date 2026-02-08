@@ -151,6 +151,26 @@ function findNodePosFromDOM(
           debugLog('findNodePosFromDOM', 'posAtDOM for direct child returned:', pos);
 
           if (pos >= 0) {
+            // ReactNodeView (예: callout)는 posAtDOM이 내부 위치를 반환할 수 있음
+            // 이 경우 $pos.before(1)로 부모 블록을 먼저 찾아야 함
+            const isReactNodeView = nodeElement.classList.contains('react-renderer');
+
+            if (isReactNodeView) {
+              // ReactNodeView: depth 1에서 부모 블록 노드를 먼저 찾기
+              const $pos = editor.state.doc.resolve(pos);
+              if ($pos.depth >= 1) {
+                const nodePos = $pos.before(1);
+                const node = editor.state.doc.nodeAt(nodePos);
+                if (node) {
+                  debugLog('findNodePosFromDOM', 'Found ReactNodeView node via $pos.before(1):', {
+                    type: node.type.name,
+                    pos: nodePos
+                  });
+                  return { pos: nodePos, node: node as ProseMirrorNode };
+                }
+              }
+            }
+
             // 해당 위치에서 노드 찾기
             const nodeAtPos = editor.state.doc.nodeAt(pos);
             if (nodeAtPos) {
@@ -162,9 +182,9 @@ function findNodePosFromDOM(
             }
 
             // depth 1에서 노드 찾기 (경계 문제 해결)
-            const $pos = editor.state.doc.resolve(pos);
-            if ($pos.depth >= 1) {
-              const nodePos = $pos.before(1);
+            const $posResolved = editor.state.doc.resolve(pos);
+            if ($posResolved.depth >= 1) {
+              const nodePos = $posResolved.before(1);
               const node = editor.state.doc.nodeAt(nodePos);
               if (node) {
                 debugLog('findNodePosFromDOM', 'Found node via $pos.before(1):', {
@@ -534,7 +554,7 @@ function getContentTop(element: HTMLElement, nodeTypeName: string): number {
   // React 컴포넌트 내부의 텍스트 요소는 정확한 위치를 제공하지 않을 수 있음
   const atomNodeTypes = [
     'apiBlock', 'terminal', 'diagram', 'graphql', 'logBlock',
-    'metadata', 'openapi', 'stackTrace', 'horizontalRule'
+    'metadata', 'openapi', 'stackTrace', 'horizontalRule', 'callout'
   ];
   if (atomNodeTypes.includes(nodeTypeName)) {
     debugLog('getContentTop', `Atom node (${nodeTypeName}): using rect.top=${rect.top}`);
@@ -612,7 +632,7 @@ function getNodeLineHeight(element: HTMLElement, nodeTypeName: string): number {
   // React 컴포넌트 내부에서 텍스트 요소를 찾는 것이 정확하지 않음
   const atomNodeTypes = [
     'apiBlock', 'terminal', 'diagram', 'graphql', 'logBlock',
-    'metadata', 'openapi', 'stackTrace', 'horizontalRule'
+    'metadata', 'openapi', 'stackTrace', 'horizontalRule', 'callout'
   ];
   if (atomNodeTypes.includes(nodeTypeName)) {
     const atomLineHeight = 24; // 고정 라인 높이

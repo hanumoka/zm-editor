@@ -1638,13 +1638,13 @@ class SlashMenuComponent {
         this.selectedIndex + 1,
         this.props.items.length - 1
       );
-      this.render();
+      this.updateSelection();
       return true;
     }
 
     if (event.key === 'ArrowUp') {
       this.selectedIndex = Math.max(this.selectedIndex - 1, 0);
-      this.render();
+      this.updateSelection();
       return true;
     }
 
@@ -1750,6 +1750,16 @@ class SlashMenuComponent {
     items.forEach((item, index) => {
       if (index === this.selectedIndex) {
         item.classList.add('selected');
+        // fixed 컨테이너 내 수동 스크롤 (scrollIntoView는 fixed에서 오동작)
+        const el = item as HTMLElement;
+        const container = this.element!;
+        const itemTop = el.offsetTop;
+        const itemBottom = itemTop + el.offsetHeight;
+        if (itemTop < container.scrollTop) {
+          container.scrollTop = itemTop;
+        } else if (itemBottom > container.scrollTop + container.clientHeight) {
+          container.scrollTop = itemBottom - container.clientHeight;
+        }
       } else {
         item.classList.remove('selected');
       }
@@ -1830,13 +1840,13 @@ class MentionMenuComponent {
         this.selectedIndex + 1,
         this.props.items.length - 1
       );
-      this.render();
+      this.updateSelection();
       return true;
     }
 
     if (event.key === 'ArrowUp') {
       this.selectedIndex = Math.max(this.selectedIndex - 1, 0);
-      this.render();
+      this.updateSelection();
       return true;
     }
 
@@ -1957,6 +1967,15 @@ class MentionMenuComponent {
     items.forEach((item, index) => {
       if (index === this.selectedIndex) {
         item.classList.add('selected');
+        const el = item as HTMLElement;
+        const container = this.element!;
+        const itemTop = el.offsetTop;
+        const itemBottom = itemTop + el.offsetHeight;
+        if (itemTop < container.scrollTop) {
+          container.scrollTop = itemTop;
+        } else if (itemBottom > container.scrollTop + container.clientHeight) {
+          container.scrollTop = itemBottom - container.clientHeight;
+        }
       } else {
         item.classList.remove('selected');
       }
